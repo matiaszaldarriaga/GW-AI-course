@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<!--
+  THE HOUSE SHELL for every page of the "what was asked, and what came back" kind.
+
+  Derived from `tutorial_template.html` in Mark Ho-Yeuk Cheung's gw_visual_workshop
+  tarball (Institute for Advanced Study, handed to MZ 2026-08-10, catalogued at
+  wiki/specimens/gw-visual-workshop.md). His chrome, his CSS, his stage machine and
+  his lazy iframe mounting, kept as they are; his content, his physics and his
+  stretch/squeeze/h-plus/h-cross colour variables removed, because those are his
+  visualisers' semantics and not ours. Reused with his permission: "the visualizers
+  and tutorial were written by Claude Code under my direction, and I am happy for
+  them to be reused and adapted for teaching." Rule 1b — see
+  course/day1/show/CREDIT.md.
+
+  Do not edit a built page. Edit this file, or the page's own stages.html, and
+  re-run code/build_show.py. Four markers -- TITLE, WHO, STAGES and PAYLOAD, each
+  written between double underscores -- must appear EXACTLY once each, which is why
+  they are not spelt out here. The builder exits on any other count.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+  :root{
+    --surface:#0b0d12; --panel:#12151d; --panel-2:#161a24; --line:#232836;
+    --ink:#e7ecf5; --ink-2:#9aa4b8; --ink-3:#5f6980;
+    --grid:#1d2230; --ghost:#2a3040; --accent:#6dcd59; --warn:#e06c33;
+
+    /* THE READING SCALE — the default, and what the students get. Mark's
+       original numbers, unchanged, moved into variables so that present mode
+       can be a root-level modifier rather than a second stylesheet. */
+    --maxw:900px; --wide:1500px;
+    --fs:16px; --lh:1.68; --gap:16px;
+    --h1:38px; --h2:26px; --h2c:34px; --h3:18px;
+    --lede:18.5px; --small:14px; --tiny:11.5px; --mono:13.5px;
+    --pad-top:78px; --pad-bot:104px;
+  }
+  /* THE PRESENTING SCALE — same page, same stylesheet, one attribute on the
+     root. `p` toggles it and it is remembered per page, so the file you read
+     on a laptop and the file you put on a projector are the same file. Only
+     the type and the measure change; the chrome does not, because the chrome
+     is not content. */
+  html[data-present="1"]{
+    --maxw:1180px; --wide:1800px;
+    --fs:21px; --lh:1.6; --gap:20px;
+    --h1:50px; --h2:35px; --h2c:46px; --h3:25px;
+    --lede:25px; --small:18px; --tiny:14px; --mono:17.5px;
+    --pad-top:92px; --pad-bot:112px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{background:var(--surface);color:var(--ink);
+    font:var(--fs)/var(--lh) ui-serif,Georgia,"Iowan Old Style","Times New Roman",serif;
+    -webkit-font-smoothing:antialiased;}
+
+  /* ---------- chrome ---------- */
+  #rail{position:fixed;top:0;left:0;right:0;height:3px;background:var(--ghost);z-index:40;}
+  #railfill{height:100%;width:0;background:var(--accent);transition:width .25s ease;}
+
+  #topbar{position:fixed;top:3px;left:0;right:0;height:44px;z-index:39;
+    display:flex;align-items:center;gap:14px;padding:0 18px;
+    background:rgba(11,13,18,.93);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:12.5px;color:var(--ink-3);}
+  #topbar .who{color:var(--ink-2);}
+  #topbar .spacer{flex:1;}
+  #dots{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
+  #dots button{width:9px;height:9px;padding:0;border-radius:50%;border:1px solid var(--ghost);
+    background:transparent;cursor:pointer;}
+  #dots button.on{background:var(--accent);border-color:var(--accent);}
+  #dots button.seen{background:var(--ink-3);border-color:var(--ink-3);}
+  #dots button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  #counter{font-variant-numeric:tabular-nums;color:var(--ink-2);min-width:52px;text-align:right;}
+  #pmode{height:24px;padding:0 9px;font-size:11.5px;border-radius:6px;
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);}
+  #pmode[aria-pressed="true"]{color:var(--surface);background:var(--accent);
+    border-color:var(--accent);}
+
+  #stagewrap{padding:var(--pad-top) 18px var(--pad-bot);min-height:100%;}
+  section.stage{display:none;max-width:var(--maxw);margin:0 auto;}
+  section.stage.active{display:block;animation:fade .32s ease;}
+  /* a headline stage: one short statement, centred in the viewport */
+  section.stage.center.active{display:flex;flex-direction:column;justify-content:center;
+    align-items:center;text-align:center;min-height:calc(100vh - 182px);}
+  section.stage.center .kicker{margin-bottom:18px;}
+  section.stage.center h2{font-size:var(--h2c);margin-bottom:22px;}
+  section.stage.center p{max-width:760px;}
+  /* a result stage: what came back needs the room */
+  section.stage.wide{max-width:var(--wide);}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  #nav{position:fixed;bottom:0;left:0;right:0;z-index:39;
+    display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 18px;
+    background:rgba(11,13,18,.93);backdrop-filter:blur(8px);border-top:1px solid var(--line);
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .btn{height:34px;padding:0 14px;border-radius:8px;border:1px solid var(--line);
+    background:#1a1f2b;color:var(--ink);cursor:pointer;font:inherit;font-size:13px;}
+  .btn:hover:not(:disabled){background:#222836;}
+  .btn:disabled{opacity:.35;cursor:default;}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  #navlabel{color:var(--ink-3);font-size:12.5px;min-width:min(38ch,44vw);text-align:center;}
+
+  /* ---------- type ---------- */
+  h1{font-size:var(--h1);line-height:1.2;margin:0 0 10px;font-weight:600;letter-spacing:-.01em;}
+  h2{font-size:var(--h2);line-height:1.25;margin:0 0 6px;font-weight:600;letter-spacing:-.005em;}
+  h3{font-size:var(--h3);margin:30px 0 8px;font-weight:600;color:var(--ink);}
+  .kicker{font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:var(--tiny);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
+    margin:0 0 14px;font-weight:600;}
+  p{margin:0 0 var(--gap);color:var(--ink);}
+  p.lede{font-size:var(--lede);color:var(--ink-2);}
+  .muted{color:var(--ink-2);}
+  .small{font-size:var(--small);color:var(--ink-2);}
+  ul,ol{margin:0 0 18px;padding-left:22px;}
+  li{margin:0 0 9px;}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(109,205,89,.35);}
+  a:hover{border-bottom-color:var(--accent);}
+  b,strong{font-weight:600;}
+  em{font-style:italic;color:var(--ink);}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;
+    background:#171b25;border:1px solid var(--line);border-radius:4px;padding:1px 5px;}
+  .eq{display:block;text-align:center;font-family:ui-serif,Georgia,serif;font-size:19px;
+    margin:20px auto;color:var(--ink);}
+  .eq .n{color:var(--ink-3);font-size:13px;margin-left:14px;}
+  /* a provenance tag — `src:` followed by a key — resolved by
+     check_provenance.py against the exercise's generated provenance.json
+     (rule 1c). Small, but visible: on this kind of page the tag is part of the
+     argument. The tag's own bracketed form is deliberately NOT written out
+     here: check_provenance.py reads the built page, and a specimen inside a
+     comment is a tag it then cannot resolve. */
+  .src{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--ink-3);}
+  /* a key never contains a space and so never breaks; a rule-1b `borrowed —
+     …` tag is a sentence and has to be allowed to wrap */
+
+  /* ---------- blocks ---------- */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:20px 22px;margin:20px 0;}
+  .card > :last-child{margin-bottom:0;}
+  .qcard{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:10px;padding:16px 20px;margin:16px 0;}
+  .qcard .qn{font-family:ui-sans-serif,sans-serif;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;}
+  .qcard > :last-child{margin-bottom:0;}
+
+  .prompt{background:#0f1218;border:1px solid var(--line);border-radius:12px;margin:22px 0;
+    overflow:hidden;}
+  .prompt .head{display:flex;align-items:center;gap:10px;padding:10px 16px;
+    background:#151924;border-bottom:1px solid var(--line);
+    font-family:ui-sans-serif,sans-serif;font-size:11.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-3);}
+  .prompt .head .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
+  .prompt pre{margin:0;padding:18px 20px;white-space:pre-wrap;word-wrap:break-word;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:var(--mono);line-height:1.62;color:var(--ink-2);}
+
+  .aside{border-left:3px solid var(--warn);background:rgba(224,108,51,.07);
+    border-radius:0 10px 10px 0;padding:14px 18px;margin:20px 0;}
+  .aside .lbl{font-family:ui-sans-serif,sans-serif;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--warn);font-weight:600;margin-bottom:5px;}
+  .aside > :last-child{margin-bottom:0;}
+
+  figure{margin:26px 0;}
+  figcaption{font-size:var(--mono);color:var(--ink-3);margin-top:10px;text-align:center;
+    font-family:ui-sans-serif,sans-serif;line-height:1.55;}
+  .figbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .figbox img{display:block;width:100%;height:auto;border-radius:4px;}
+  .figrow{display:grid;gap:14px;}
+  .figrow.c3{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .figrow.c2{grid-template-columns:repeat(2,minmax(0,1fr));}
+  @media(max-width:720px){.figrow.c3,.figrow.c2{grid-template-columns:1fr;}}
+  .figcell{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;
+    padding:10px;text-align:center;}
+  .figcell .cap{font-family:ui-sans-serif,sans-serif;font-size:12px;color:var(--ink-2);
+    margin-bottom:6px;font-weight:600;}
+  .figcell canvas,.figcell img{display:block;width:100%;height:auto;}
+  /* a page render of a PDF is portrait and would otherwise fill the stage */
+  .figcell img.pagescan{width:auto;max-width:100%;max-height:430px;margin:0 auto;}
+  .figctl{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;
+    font-family:ui-sans-serif,sans-serif;font-size:12.5px;color:var(--ink-2);flex-wrap:wrap;}
+  .figctl input[type=range]{width:170px;}
+  .swatch{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:baseline;
+    margin-right:5px;}
+
+  input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;height:20px;margin:0;cursor:pointer;}
+  input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--ghost);}
+  input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:var(--ghost);}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;
+    margin-top:-5px;border-radius:50%;background:var(--ink);border:2px solid var(--panel);}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ink);
+    border:2px solid var(--panel);}
+  input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+
+  /* ---------- embedded artefacts ----------
+     Heavy things are base64 in the payload and mounted into an iframe via srcdoc
+     only when the reader reaches that stage, so at most one animation is ever
+     running. Day 1 embeds nothing; a later day that embeds something heavy will. */
+  .viz{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;margin:18px 0;}
+  .viz iframe,.viz .ph{height:clamp(500px, calc(100vh - 355px), 880px);}
+  .viz iframe{display:block;width:100%;border:0;background:var(--surface);}
+  .viz .ph{display:grid;place-items:center;color:var(--ink-3);
+    font-family:ui-sans-serif,sans-serif;font-size:13px;}
+  .vizbar{display:flex;align-items:center;gap:12px;padding:9px 14px;border-bottom:1px solid var(--line);
+    background:#151924;font-family:ui-sans-serif,sans-serif;font-size:12px;color:var(--ink-3);}
+  .vizbar .nm{color:var(--ink-2);font-weight:600;}
+  .vizbar .spacer{flex:1;}
+  .vizbar .btn{height:27px;font-size:12px;padding:0 10px;}
+  /* one stage, several embedded artefacts, the reader picks. Only the chosen one
+     is ever mounted, so eight reports on a stage still costs one iframe. */
+  .vizpick{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0;}
+  .vizpick .btn{height:30px;font-size:12.5px;padding:0 12px;}
+  .vizpick .btn.on{background:var(--accent);border-color:var(--accent);color:#11131a;
+    font-weight:600;}
+  .vizpick .btn.off{opacity:.45;cursor:default;}
+
+  table.tbl{width:100%;border-collapse:collapse;font-size:var(--small);margin:18px 0;
+    font-family:ui-sans-serif,sans-serif;}
+  table.tbl th,table.tbl td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);
+    vertical-align:top;}
+  table.tbl th{color:var(--ink-3);font-weight:600;font-size:12px;letter-spacing:.06em;
+    text-transform:uppercase;}
+  table.tbl td.mono{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--ink-2);
+    background:none;border:0;padding:8px 10px;}
+  .tblwrap{overflow-x:auto;}
+
+  .title-block{text-align:center;padding:6vh 0 0;}
+  .title-block .sub{font-size:calc(var(--lede) * 1.08);color:var(--ink-2);margin:0 0 34px;}
+  .title-block .by{font-family:ui-sans-serif,sans-serif;font-size:15px;color:var(--ink);margin:0;}
+  .title-block .aff{font-family:ui-sans-serif,sans-serif;font-size:13.5px;color:var(--ink-3);
+    margin:4px 0 0;}
+  .title-block .hint{margin-top:44px;font-family:ui-sans-serif,sans-serif;font-size:12.5px;
+    color:var(--ink-3);}
+  kbd{font-family:ui-sans-serif,sans-serif;font-size:11.5px;background:#1a1f2b;color:var(--ink-2);
+    border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:2px 7px;}
+  @media print{#topbar,#nav,#rail{display:none;} section.stage{display:block!important;
+    page-break-after:always;} }
+</style>
+</head>
+<body>
+
+<div id="rail"><div id="railfill"></div></div>
+
+<div id="topbar">
+  <span class="who">__WHO__</span>
+  <span class="spacer"></span>
+  <button id="pmode" class="btn" title="reading size / presenting size (p)"
+          aria-pressed="false">present</button>
+  <span id="dots"></span>
+  <span id="counter"></span>
+</div>
+
+<div id="stagewrap">
+__STAGES__
+</div><!-- /stagewrap -->
+
+<div id="nav">
+  <button class="btn" id="prev">&larr; back</button>
+  <span id="navlabel"></span>
+  <button class="btn" id="next">next &rarr;</button>
+</div>
+
+<script>
+/* ==================== payload injected by code/build_show.py ==================== */
+__PAYLOAD__
+/* =============================================================================== */
+
+(function(){
+'use strict';
+
+/* ---------------- prompts ----------------
+   The page holds EMPTY <pre id="pN">. The text arrives from PROMPTS, which the
+   builder parsed out of prompts.txt. The prompt therefore exists in exactly one
+   place and the page reads it; a prompt pasted into a stage by hand is the
+   failure this prevents. */
+for (var i=1;i<=PROMPTS.length;i++){ var el=document.getElementById('p'+i);
+  if (el) el.textContent = PROMPTS[i-1]; }
+
+/* ---------------- images ----------------
+   Same discipline: <img data-img="key"> is empty in the source and is filled from
+   IMG, which the builder base64-encoded from the PNG the day's code rendered. */
+Array.prototype.forEach.call(document.querySelectorAll('img[data-img]'),function(im){
+  var d = IMG[im.dataset.img]; if (d) im.src = d;
+});
+
+/* ---------------- reading size / presenting size ----------------
+   One attribute on the root element, which swaps the type-scale variables
+   defined at the top of the stylesheet. Remembered per page, because the
+   answer is a property of the screen a given page is opened on: the file
+   Matias puts on a projector and the file a student reads on a laptop are the
+   same file, and neither should have to remember to set it twice. */
+var PKEY = 'show-present:' + location.pathname;
+var pbtn = document.getElementById('pmode');
+function setPresent(on, remember){
+  document.documentElement.setAttribute('data-present', on ? '1' : '0');
+  if (pbtn){ pbtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+             pbtn.textContent = on ? 'reading' : 'present'; }
+  if (remember){ try { localStorage.setItem(PKEY, on ? '1' : '0'); } catch(e){} }
+}
+function present(){ return document.documentElement
+  .getAttribute('data-present') === '1'; }
+/* ---------------- stage machine ---------------- */
+var stages = Array.prototype.slice.call(document.querySelectorAll('section.stage'));
+var dots = document.getElementById('dots');
+var counter = document.getElementById('counter');
+var navlabel = document.getElementById('navlabel');
+var railfill = document.getElementById('railfill');
+var prevBtn = document.getElementById('prev'), nextBtn = document.getElementById('next');
+var cur = 0, maxSeen = 0;
+
+stages.forEach(function(s,i){
+  var b=document.createElement('button');
+  b.title=(i+1)+'. '+s.dataset.label;
+  b.setAttribute('aria-label','Go to stage '+(i+1)+': '+s.dataset.label);
+  b.onclick=function(){go(i);};
+  dots.appendChild(b);
+});
+
+function go(i){
+  i = Math.max(0, Math.min(stages.length-1, i));
+  stages[cur].classList.remove('active');
+  cur = i; maxSeen = Math.max(maxSeen, i);
+  stages[cur].classList.add('active');
+  window.scrollTo(0,0);
+  counter.textContent = (i+1)+' / '+stages.length;
+  navlabel.textContent = stages[i].dataset.label;
+  railfill.style.width = (100*(i)/(stages.length-1))+'%';
+  Array.prototype.forEach.call(dots.children,function(b,k){
+    b.className = k===i ? 'on' : (k<=maxSeen ? 'seen' : '');
+  });
+  prevBtn.disabled = i===0; nextBtn.disabled = i===stages.length-1;
+  if (location.hash !== '#'+(i+1)) history.replaceState(null,'','#'+(i+1));
+  mountViz(stages[i]);
+  autoplay(stages[i]);
+}
+prevBtn.onclick=function(){go(cur-1);};
+nextBtn.onclick=function(){go(cur+1);};
+if (pbtn) pbtn.onclick = function(){ setPresent(!present(), true); };
+document.addEventListener('keydown',function(e){
+  if (e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return;
+  if (e.key==='p'||e.key==='P'){ setPresent(!present(), true); e.preventDefault(); }
+  if (e.key==='ArrowRight'||e.key==='PageDown'){ go(cur+1); e.preventDefault(); }
+  if (e.key==='ArrowLeft' ||e.key==='PageUp')  { go(cur-1); e.preventDefault(); }
+  if (e.key==='Home'){ go(0); } if (e.key==='End'){ go(stages.length-1); }
+});
+
+/* ---------------- lazy-mounted embedded artefacts ---------------- */
+function decode(b64){
+  var bin = atob(b64), n = bin.length, bytes = new Uint8Array(n);
+  for (var i=0;i<n;i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+var blobUrls = {};
+
+/* A stage may carry several artefacts and let the reader choose between them:
+   any button in the stage carrying a data-pick attribute swaps what the single
+   .viz host shows. `mounted` records WHICH key is up rather than merely that something is,
+   so re-entering a stage does not rebuild an iframe that is already right. */
+function wirePicker(stage, host){
+  var btns = stage.querySelectorAll('[data-pick]');
+  if (!btns.length || stage.dataset.picked) return;
+  stage.dataset.picked = '1';
+  Array.prototype.forEach.call(btns, function(b){
+    b.onclick = function(){
+      host.dataset.viz = b.dataset.pick;
+      Array.prototype.forEach.call(btns, function(x){
+        x.classList.toggle('on', x === b);
+      });
+      var nm = stage.querySelector('.vizbar .nm');
+      if (nm) nm.textContent = b.dataset.label || b.textContent;
+      mountViz(stage);
+    };
+  });
+}
+
+function mountViz(stage){
+  var host = stage.querySelector('.viz[data-viz]');
+  if (!host) return;
+  wirePicker(stage, host);
+  var key = host.dataset.viz;
+  if (!key || host.dataset.mounted === key) return;
+  var b64 = VIZ[key];
+  if (!b64) return;
+  var old = host.querySelector('iframe'); if (old) old.remove();
+  host.dataset.mounted = key;
+  var html = decode(b64);
+  var f = document.createElement('iframe');
+  f.setAttribute('title', key);
+  f.srcdoc = html;
+  var ph = host.querySelector('.ph'); if (ph) ph.remove();
+  host.appendChild(f);
+  var ob = host.querySelector('.open');
+  if (ob) ob.onclick = function(){
+    if (!blobUrls[key]) blobUrls[key] =
+      URL.createObjectURL(new Blob([html], {type:'text/html'}));
+    window.open(blobUrls[key], '_blank');
+  };
+}
+
+/* ---------------- autoplay on entry ----------------
+   Landing on a stage always starts its animation, first visit or fifth. An
+   embedded page starts itself playing when it boots, but that happens once;
+   every later visit has to ask it again, and on the first visit the iframe is
+   still parsing, so poll until its controls exist. */
+var autoplayTimer = null;
+function autoplay(stage){
+  if (autoplayTimer){ clearTimeout(autoplayTimer); autoplayTimer = null; }
+  var f = stage.querySelector('.viz iframe');
+  if (!f) return;
+  var tries = 0;
+  (function attempt(){
+    autoplayTimer = null;
+    if (!stage.classList.contains('active')) return;      // already moved on
+    var w;
+    try { w = f.contentWindow; } catch(e){ return; }      // no access: leave it alone
+    var ready = w && typeof w.setPlaying === 'function' && w.document;
+    if (ready){
+      var overlay = w.document.getElementById('loading');
+      if (!overlay || overlay.classList.contains('hidden')){ w.setPlaying(true); return; }
+    }
+    if (++tries < 150) autoplayTimer = setTimeout(attempt, 100);
+  })();
+}
+
+/* ---------------- boot ---------------- */
+try { setPresent(localStorage.getItem(PKEY) === '1', false); }
+catch(e){ setPresent(false, false); }          // file:// with storage disabled
+var start = parseInt((location.hash||'#1').slice(1),10);
+go(isNaN(start)?0:start-1);
+})();
+</script>
+</body>
+</html>

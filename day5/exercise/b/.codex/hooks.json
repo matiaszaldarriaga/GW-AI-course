@@ -1,0 +1,25 @@
+{
+  "description": "The same gate as .claude/settings.json, wired for Codex. One script, two wirings: Codex reads this file, Claude Code reads .claude/settings.json, and both run .claude/hooks/provenance_gate.py at the same two events. Codex will not run a new or changed hook until you trust it in /hooks.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/provenance_gate.py --start"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/provenance_gate.py"
+          }
+        ]
+      }
+    ]
+  }
+}

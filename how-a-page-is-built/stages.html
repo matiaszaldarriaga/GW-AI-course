@@ -1,0 +1,761 @@
+<!-- ============================ 1. TITLE ============================ -->
+<section class="stage" data-label="Title">
+  <div class="title-block">
+    <h1>A paper <em>a machine can read</em></h1>
+    <p class="sub">Day 5 &mdash; the practical session</p>
+    <p class="by">Matias Zaldarriaga</p>
+    <p class="aff">Ondas Gravitacionales e Investigaci&oacute;n Asistida por IA</p>
+    <p class="hint">Use <kbd>&larr;</kbd> and <kbd>&rarr;</kbd>, or the dots at the top.
+      <kbd>p</kbd> switches between reading size and presenting size.</p>
+  </div>
+</section>
+
+<!-- ============================ 2. START IT NOW ============================ -->
+<section class="stage wide" data-label="Start it now">
+  <p class="kicker">Before I say anything</p>
+  <h2>Start it now: one task, three directories</h2>
+
+  <p class="lede">The same task, the same model, three times, and the only thing that
+    differs is what was sitting in the directory before the agent started. Copy
+    <span class="mono">day5/exercise/</span> somewhere of your own, make the empty
+    directory yourself, put the paper in all three, and launch:</p>
+
+  <div class="prompt">
+    <div class="head"><span class="dot"></span> what you type</div>
+    <pre>cp -r &lt;the course tree&gt;/day5/exercise ~/day5-exercise &amp;&amp; cd ~/day5-exercise
+mkdir a
+cp &lt;the course tree&gt;/day1/papers/PhysRev.136.B1224.pdf a/ b/ c/
+cd a &amp;&amp; claude          # then b, then c — from INSIDE each directory</pre>
+  </div>
+
+  <div class="prompt">
+    <div class="head"><span class="dot"></span> the first message, in all three &mdash; it is <span class="mono">PROMPT.txt</span></div>
+    <pre id="p1"></pre>
+  </div>
+
+  <div class="figrow c3">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">a/</p>
+      <p style="margin-bottom:0">Nothing. The paper and the prompt.</p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">b/</p>
+      <p style="margin-bottom:0">A skill and a hook, both about leaving a record of what
+        was computed. Neither mentions this task.</p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">c/</p>
+      <p style="margin-bottom:0">The hook only.</p>
+    </div>
+  </div>
+
+  <p>Each of ours took four to six minutes
+    <span class="src">[src:cell_a_wall_min, cell_b_wall_min, cell_c_wall_min]</span>, so
+    the three run while I talk. Use the same model in all three; ours was Sonnet, and
+    the reference stage at the end says exactly what. If you would rather come back to
+    it, <span class="mono">claude -p "$(cat ../PROMPT.txt)" --output-format json</span>
+    in each directory does the same thing with nobody watching, which is day 2's
+    headless mode.</p>
+
+  <p><strong>With Codex, one thing more.</strong> It is <span class="mono">codex</span> in
+    place of <span class="mono">claude</span>, and Codex will not run a hook it has not
+    seen before: in <span class="mono">b/</span> and <span class="mono">c/</span> type
+    <span class="mono">/hooks</span> first and trust the two it lists, or run
+    <span class="mono">codex exec --dangerously-bypass-hook-trust</span>. A cell whose
+    hook silently never fires is a different experiment from the one on this page, and
+    you would not know.</p>
+
+  <p class="small muted">Nothing in the three cells is broken on purpose. The difference
+    is presence or absence, and what the two things in <span class="mono">b/</span> and
+    <span class="mono">c/</span> are is the second half of the hour. The first half is
+    a paper.</p>
+</section>
+
+<!-- ============================ 3. THE PAPER, AS A REPOSITORY ============================ -->
+<section class="stage wide" data-label="A paper, published as a repository">
+  <p class="kicker">What I am going to show</p>
+  <h2>A paper, published as a repository</h2>
+
+  <p class="lede">The paper is Zaldarriaga &amp; Sato-Polito, <em>Anisotropies in the
+    PTA gravitational wave background</em>, and it was written by the agents. It is the
+    same paper day 4's six jobs were measured against: day 4 asked a team to
+    <em>derive</em> these results and scored it against the paper's registry of stamped
+    numbers. Today opens the same repository from the other end and shows what it took
+    to <em>publish</em> them.</p>
+
+  <p>A standard part of reading a paper is working out what the claims are and what the
+    evidence is. In this repository that is not left to the reader: it is written down,
+    once, in a form both a person and an agent can read, and a script checks that the
+    paper, the code and the data still agree with it. That is what is available now and
+    was not before, and it is the one idea of the hour. The files below are on screen
+    in this order, one at a time.</p>
+
+  __INCLUDE_release__
+
+  <p class="small muted">The repository is private as this page is built and will be
+    public by the course; until then every file here is a copy taken on the date in the
+    note, shown whole, and nothing on the page is a link.
+    <!-- RELEASE_URL: when matiaszaldarriaga/pta-gwb-anisotropy goes public, the link
+         goes in this sentence — and nowhere else on the page. --></p>
+</section>
+
+<!-- ============================ 4. CLAIMS.YAML ============================ -->
+<section class="stage wide" data-label="The argument skeleton">
+  <p class="kicker">Release &middot; 1 of 5</p>
+  <h2>The argument skeleton</h2>
+
+  <p class="lede"><span class="mono">structure/claims.yaml</span>: a
+    <span class="mono">thesis:</span>, then one record per load-bearing claim. Each has a
+    <span class="mono">statement</span>, the <span class="mono">section</span> and
+    <span class="mono">file</span> it lives in, the <span class="mono">numbers</span> it
+    quotes, its <span class="mono">evidence</span> &mdash; each piece naming the scripts
+    that ship &mdash; what it <span class="mono">depends_on</span>, and a
+    <span class="mono">status</span>. This is the file the hour turns on.</p>
+
+  <div class="vizpick">
+    <button class="btn on" data-pick="release-claims" data-label="structure/claims.yaml">claims.yaml</button>
+    <button class="btn" data-pick="release-numbers" data-label="data/paper_numbers.json">the number registry</button>
+  </div>
+  <div class="viz" data-viz="release-claims">
+    <div class="vizbar"><span class="nm">structure/claims.yaml</span><span class="spacer"></span>
+      <button class="btn open">open in a tab</button></div>
+    <div class="ph">pick a file above</div>
+  </div>
+
+  <div class="figrow c2">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">the top of the file</p>
+      <p style="margin-bottom:0">&ldquo;For the astrophysically expected PTA background,
+        the anisotropy is one bright binary.&rdquo; Then eleven claims, and nine of them
+        name keys in the number registry &mdash; a file of 106 numbers with one writer,
+        the script that computes them.
+        <span class="src">[src:q_thesis, rel_n_claims, rel_claims_with_numbers,
+        rel_n_numbers]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">the rule it is held to</p>
+      <p style="margin-bottom:0">&ldquo;Every <span class="mono">data_ref</span> must
+        point to code that ships in this release and reproduces the result, or to a bib
+        key in paper/references.bib. Nothing else is a valid data_ref.&rdquo;
+        <span class="src">[src:q_claims_rule]</span></p>
+    </div>
+  </div>
+
+  <p>Read the record for one claim and notice what a reader normally has to reconstruct
+    by guessing: which section carries it, which numbers it rests on, which script made
+    each of those numbers, and which other claims have to be true first. Written this
+    way, an agent handed the repository can answer &ldquo;what is the evidence for the
+    third result&rdquo; by reading rather than by inferring, and so can you.</p>
+
+  <p class="small muted">Both sentences in the cards are that file's own, re-read out of
+    the copy every time this page is built. The record your own agent is writing right
+    now in <span class="mono">b/</span> or <span class="mono">c/</span> is a file called
+    <span class="mono">claims.yaml</span> too, with a
+    <span class="mono">statement</span>, its <span class="mono">evidence</span> and its
+    <span class="mono">numbers</span>: the same object, at laptop scale.</p>
+</section>
+
+<!-- ============================ 5. CONVENTIONS.MD ============================ -->
+<section class="stage wide" data-label="Where it came from">
+  <p class="kicker">Release &middot; 2 of 5</p>
+  <h2>Where the skeleton came from</h2>
+
+  <p class="lede">The published file has a history, and it is a working wiki. This is
+    <span class="mono">conventions.md</span> from that wiki, 214 lines, and it opens with
+    three distinct objects sharing one symbol and the instruction never to conflate them.
+    <span class="src">[src:rel_conventions_lines]</span></p>
+
+  <div class="viz" data-viz="release-conventions">
+    <div class="vizbar"><span class="nm">conventions.md, from the project's working wiki</span><span class="spacer"></span>
+      <button class="btn open">open in a tab</button></div>
+    <div class="ph">the file</div>
+  </div>
+
+  <div class="figrow c2">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">how it opens</p>
+      <p style="margin-bottom:0">&ldquo;Three distinct objects with the same symbol are
+        in play in the literature.&rdquo; And then, after defining them: &ldquo;If you see
+        a formula like C<sub>1</sub>/C<sub>0</sub> = p<sup>2</sup>/4, it is the pulsar-map
+        version. The source-sky version is C<sub>1</sub>/C<sub>0</sub> = p<sup>2</sup>.
+        Never conflate.&rdquo; <span class="src">[src:q_conventions_three,
+        q_conventions_never]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">one of its rules</p>
+      <p style="margin-bottom:0">&ldquo;Source wins. If the wiki and a verified source
+        disagree, the wiki is wrong. Fix the wiki.&rdquo;
+        <span class="src">[src:q_conventions_source_wins]</span></p>
+    </div>
+  </div>
+
+  <p>You have met that first instruction before: day 4's objective says which
+    <span class="mono">C_l</span> is meant every time it uses the symbol, because the
+    morning lecture derives the other one. It says so because this file said so first.
+    The wiki is where the agents and I settled what a symbol means, what a name is
+    reserved for, and which scaling was &ldquo;the bug that lived in the paper until
+    2026-04-13&rdquo; <span class="src">[src:q_conventions_bug]</span>; the
+    published <span class="mono">claims.yaml</span> is what is left of it once the paper
+    is done, which is why it is on screen second.</p>
+</section>
+
+<!-- ============================ 6. PAPERCLAIMS.STY ============================ -->
+<section class="stage wide" data-label="The provenance layer in the prose">
+  <p class="kicker">Release &middot; 3 of 5</p>
+  <h2>The provenance layer, in the prose itself</h2>
+
+  <p class="lede"><span class="mono">paper/paperclaims.sty</span> defines three macros
+    and one package option. <span class="mono">\dataref{key}{value}</span> sits in the
+    running text beside every number the paper quotes; in one section alone,
+    <span class="mono">dipole_source.tex</span>, there are 25 of them and 7
+    <span class="mono">\genby</span> caption tails naming the script that drew the
+    figure. <span class="src">[src:rel_sty_macros, rel_sty_options,
+    rel_n_datarefs_dipole, rel_n_genby_dipole]</span></p>
+
+  <div class="vizpick">
+    <button class="btn on" data-pick="release-sty" data-label="paper/paperclaims.sty">paperclaims.sty</button>
+    <button class="btn" data-pick="release-tex" data-label="paper/sections/dipole_source.tex">dipole_source.tex</button>
+  </div>
+  <div class="viz" data-viz="release-sty">
+    <div class="vizbar"><span class="nm">paper/paperclaims.sty</span><span class="spacer"></span>
+      <button class="btn open">open in a tab</button></div>
+    <div class="ph">pick a file above</div>
+  </div>
+
+  <div class="figrow c2">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">the one option</p>
+      <p style="margin-bottom:0">&ldquo;a single package option switches the whole layer
+        on or off&rdquo; &mdash; <span class="mono">[draft]</span> renders every
+        annotation inline, in colour, beside the number it belongs to;
+        <span class="mono">[final]</span> makes all of it vanish.
+        <span class="src">[src:q_sty_option]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">and where the information goes</p>
+      <p style="margin-bottom:0">&ldquo;The running text never names a script or a
+        registry key outside these macros: in [final] mode the paper reads clean, and the
+        machine-readable form of the same information is in structure/ and
+        data/paper_numbers.json.&rdquo; <span class="src">[src:q_sty_final]</span></p>
+    </div>
+  </div>
+
+  <p>So the reviewed manuscript and the shipped PDF are the same file. &ldquo;Switching
+    that option to [draft] renders every annotation inline, which is how the manuscript
+    was reviewed.&rdquo; <span class="src">[src:q_readme_draft]</span> Open the
+    <span class="mono">.tex</span> and read a paragraph: the prose is ordinary physics
+    prose with a key after each number, and to trace one you look the key up in
+    <span class="mono">data/paper_numbers.json</span> and search for it in the one script
+    that writes that file. <span class="src">[src:q_readme_trace]</span></p>
+</section>
+
+<!-- ============================ 7. CHECK_PROVENANCE.PY ============================ -->
+<section class="stage wide" data-label="The gate">
+  <p class="kicker">Release &middot; 4 of 5</p>
+  <h2>The gate</h2>
+
+  <p class="lede"><span class="mono">scripts/check_provenance.py</span>: ten checks in
+    about a second, and the paper is not built until it prints
+    <span class="mono">all checks pass</span>. <span class="src">[src:rel_n_checks]</span></p>
+
+  <div class="viz" data-viz="release-check">
+    <div class="vizbar"><span class="nm">scripts/check_provenance.py</span><span class="spacer"></span>
+      <button class="btn open">open in a tab</button></div>
+    <div class="ph">the file</div>
+  </div>
+
+  <div class="figrow c2">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">check 7 of 10</p>
+      <p style="margin-bottom:0">Every displayed <span class="mono">\dataref</span>
+        &ldquo;literal agrees with its registry value at the literal's displayed
+        precision&rdquo;. Not that the key exists &mdash; that is check 6 &mdash; but
+        that the digits printed on the page are the digits in the registry, to the
+        precision the paper chose to print. <span class="src">[src:q_check_7]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">when a check has nothing to check</p>
+      <p style="margin-bottom:0">Three of the ten only make sense in the public layout,
+        and run against another tree &ldquo;each reports itself as skipped rather than
+        passing silently&rdquo;. &ldquo;It prints all checks pass (10 of 10 run) and exits
+        0 when the paper, the code and the data agree.&rdquo;
+        <span class="src">[src:q_check_skip, q_readme_pass]</span></p>
+    </div>
+  </div>
+
+  <p>The rest of the list, in the docstring at the top: every
+    <span class="mono">data_ref</span> in the skeleton resolves to a file or a bib key;
+    every number key the skeleton names is in the registry; every figure has a source
+    script and a PDF; every <span class="mono">\genby</span> names a file that exists;
+    every path-like token in every shipped text file resolves; the citation file parses;
+    and every deposited array names a producer that ships. None of it is a check on the
+    physics. All of it is a check that the paper still says what the code and the data
+    say, and it is the same kind of check as the one waiting in your directory
+    <span class="mono">c/</span>.</p>
+</section>
+
+<!-- ============================ 8. REPRODUCIBILITY ============================ -->
+<section class="stage wide" data-label="What is claimed, and what is not">
+  <p class="kicker">Release &middot; 5 of 5</p>
+  <h2>What is claimed, and what is not</h2>
+
+  <p class="lede">The reproducibility section of the README. It does not say the release
+    is reproducible. It says, in five named categories, what was measured and how, and
+    the last category is a thing it does not claim.
+    <span class="src">[src:rel_n_repro_bullets]</span></p>
+
+  <div class="viz" data-viz="release-readme">
+    <div class="vizbar"><span class="nm">README.md — scroll to Reproducibility</span><span class="spacer"></span>
+      <button class="btn open">open in a tab</button></div>
+    <div class="ph">the file</div>
+  </div>
+
+  <p>&ldquo;That is not the same as byte equality across machines&rdquo;, it says first,
+    and then draws the lines. <span class="src">[src:q_readme_not_bytes]</span></p>
+
+  <ol>
+    <li><strong>Bitwise, demonstrated.</strong> &ldquo;data/paper_numbers.json regenerates
+      byte-identically, and so do both table sidecars&rdquo;.
+      <span class="src">[src:q_readme_bitwise]</span></li>
+    <li><strong>Bitwise, with one caveat.</strong> &ldquo;the eleven figure PDFs regenerate
+      raster-identically &mdash; zero differing pixels at 200 dpi &mdash; but not
+      byte-identically, because matplotlib stamps the wall-clock time into /CreationDate
+      and its own version into /Producer&rdquo;. And the one-line fix: &ldquo;Set
+      SOURCE_DATE_EPOCH to any fixed value and, for a fixed matplotlib version, the PDFs
+      become byte-identical too&rdquo;. <span class="src">[src:q_readme_raster,
+      q_readme_raster_fix, rel_readme_raster_dpi]</span></li>
+    <li><strong>Within a stated tolerance, and measured.</strong> The tests compare at
+      1e-12 of each array's own scale, and that number was measured rather than chosen:
+      &ldquo;Running the suite under a second OpenBLAS build (0.3.25/OpenMP against the
+      reference platform's 0.3.21) with every Python package version held identical, the
+      worst disagreement over every reference array was 1.1e-14 of the array scale &mdash;
+      one hundred times inside the tolerance.&rdquo;
+      <span class="src">[src:q_readme_openblas, rel_readme_test_tol,
+      rel_readme_openblas_worst]</span></li>
+    <li><strong>Within tolerance, not bitwise.</strong> The Monte Carlo products:
+      &ldquo;distribution percentiles from independently drawn realizations agree only to
+      Monte Carlo error&rdquo;, and &ldquo;Every number quoted in the paper is rounded well
+      inside that.&rdquo; <span class="src">[src:q_readme_mc]</span></li>
+    <li><strong>Not claimed anywhere:</strong> &ldquo;that the deposited arrays can be
+      reproduced byte-for-byte on a different platform. The deposited arrays are what the
+      paper used; the pipeline is how they were made.&rdquo;
+      <span class="src">[src:q_readme_not_claimed]</span></li>
+  </ol>
+
+  <p>Nobody wrote a section like that by hand before, because nobody could afford to:
+    every sentence in it is a run in a fresh environment against the deposited arrays,
+    with the disagreement measured. That is the &ldquo;available now&rdquo; claim of the
+    hour, and it is checkable by opening the file rather than by taking my word for it.</p>
+</section>
+
+<!-- ============================ 9. THE LENSING RELEASE ============================ -->
+<section class="stage wide" data-label="The same discipline, by other people">
+  <p class="kicker">A second release, briefly</p>
+  <h2>The same discipline, arrived at independently</h2>
+
+  <p class="lede">The GW231123 diffraction-lensing release. I am an author, but Mark
+    Cheung led it and did it his way, and that is why it is here second: it is somebody
+    else's solution to the same problem, and the choices are different in the details and
+    the same in kind.</p>
+
+  <div class="viz" data-viz="lensing-readme">
+    <div class="vizbar"><span class="nm">the release's README, as deposited on Zenodo</span><span class="spacer"></span>
+      <button class="btn open">open in a tab</button></div>
+    <div class="ph">the file</div>
+  </div>
+
+  <div class="figrow c3">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">figures by label</p>
+      <p style="margin-bottom:0">&ldquo;figures are identified by their LaTeX
+        reference-label key (e.g. fig:opt_depth), not by figure number &mdash; numbers
+        shift as the paper is revised, but the label key is stable.&rdquo; Twelve labels,
+        each mapped to the PDF files it produces and the command that regenerates them.
+        <span class="src">[src:q_lens_label, rel_lensing_labels]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">one locked environment</p>
+      <p style="margin-bottom:0">&ldquo;pixi.toml + pixi.lock (Python 3.11
+        environment)&rdquo; &mdash; a lockfile rather than a list of package names, so
+        that the environment is a file and not a description of one.
+        <span class="src">[src:q_lens_pixi]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">a rerun pipeline, in stages</p>
+      <p style="margin-bottom:0">&ldquo;The full pipeline runs in seven stages; each
+        stage's producer scripts and SLURM templates are included.&rdquo; And the
+        intermediate products are bundled, &ldquo;so you can regenerate results without
+        rerunning the expensive parameter-estimation and Monte-Carlo stages&rdquo;.
+        <span class="src">[src:q_lens_stages, rel_lensing_stages, q_lens_bundled]</span></p>
+    </div>
+  </div>
+
+  <p class="small muted">The README is on this page whole, as deposited; the code and
+    data &mdash; a 1.7 GB tarball on the same Zenodo record
+    <span class="src">[src:rel_lensing_tarball_gb, rel_lensing_zenodo_id]</span> &mdash;
+    are not. Two releases, two
+    groups, and both ended up writing down what a reader would otherwise reconstruct:
+    which script made which figure, from which inputs, in which environment.</p>
+</section>
+
+<!-- ============================ 10. THE TOOL IN YOUR DIRECTORY ============================ -->
+<section class="stage wide" data-label="What was in your directory">
+  <p class="kicker">Back to the three cells</p>
+  <h2>What was sitting in <span class="mono">b/</span> and <span class="mono">c/</span></h2>
+
+  <p class="lede">The same idea at laptop scale. Two things, and the convention they
+    share, written once:</p>
+
+  <div class="card">
+    <p style="margin-bottom:0">&ldquo;the convention lives in .md files, once &middot;
+      the skill points at them, so a fresh session follows it from the start &middot; the
+      hook checks the result, and on failure serves the .md that applies&rdquo;
+      <span class="src">[src:q_hook_docstring]</span></p>
+  </div>
+
+  <div class="vizpick">
+    <button class="btn on" data-pick="scaffold-skill" data-label="the skill — SKILL.md">the skill</button>
+    <button class="btn" data-pick="scaffold-md" data-label="the convention — three .md files">the convention</button>
+    <button class="btn" data-pick="scaffold-hook" data-label="the hook — provenance_gate.py">the hook</button>
+    <button class="btn" data-pick="scaffold-wiring" data-label="the two wirings, and the prompt">the wirings</button>
+  </div>
+  <div class="viz" data-viz="scaffold-skill">
+    <div class="vizbar"><span class="nm">the skill — SKILL.md</span><span class="spacer"></span>
+      <button class="btn open">open in a tab</button></div>
+    <div class="ph">pick a file above</div>
+  </div>
+
+  <div class="figrow c3">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">the convention</p>
+      <p style="margin-bottom:0">Three short files under
+        <span class="mono">.claude/provenance/</span>, 62 lines between them, saying what a
+        recorded number, a recorded claim and a recorded figure look like. Nothing else
+        restates the format. <span class="src">[src:scaffold_convention_files,
+        scaffold_md_lines]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">the skill</p>
+      <p style="margin-bottom:0">Twenty-two lines. It points at the three files: &ldquo;Read
+        the format file before writing each one. They are short and they are the single
+        statement of the convention &mdash; this skill does not restate them, because a
+        convention written twice drifts.&rdquo; A fresh session that loads it follows the
+        convention from the start. <span class="src">[src:scaffold_skill_lines,
+        q_skill_points]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">the hook</p>
+      <p style="margin-bottom:0">Two hundred lines. It runs at <span class="mono">Stop</span>
+        &mdash; the moment the agent decides it is finished &mdash; checks what was left
+        on disk, and if a figure or a number has no record it exits non-zero, which puts
+        its message into the conversation as a new turn. It prints only the
+        <span class="mono">.md</span> for whichever checks failed.
+        <span class="src">[src:scaffold_hook_lines]</span></p>
+    </div>
+  </div>
+
+  <p>Why a hook at all, when the skill already says what to do: &ldquo;In a long run the
+    agent may never load the skill. The hook runs whether or not it did, and that is what
+    it is for.&rdquo; <span class="src">[src:q_hook_why]</span> Add a check, write its
+    <span class="mono">.md</span>, and both routes get it. Nothing in any of these files
+    mentions the paper, the physics or a library &mdash; the build of this page refuses if
+    one does &mdash; and the same three files would sit unchanged in a directory about
+    something else.</p>
+
+  <p>The lining-up with the release is not a metaphor. The skill is what
+    <span class="mono">paperclaims.sty</span> is: the convention a piece of writing is
+    held to, loaded where the writing happens. The hook is what
+    <span class="mono">check_provenance.py</span> is: the check that runs before the thing
+    is allowed to be finished. And the record your agent writes,
+    <span class="mono">provenance/claims.yaml</span> with its statements, evidence and
+    numbers, is the skeleton at the top of the release with one paper's worth of claims
+    taken out and one afternoon's put in.</p>
+
+  __INCLUDE_scaffold__
+
+  <p class="small muted">Both command-line tools have a <span class="mono">Stop</span>
+    event, and both hand it the same <span class="mono">stop_hook_active</span> field, so
+    one script serves both;
+    <span class="mono">.claude/settings.json</span> wires it for Claude Code and
+    <span class="mono">.codex/hooks.json</span> for Codex, at the same two events. The
+    first event is a timestamp: anything already in the directory when the session began
+    was handed to the agent, and the paper is a PDF that must not be mistaken for a
+    figure it drew.</p>
+</section>
+
+<!-- ============================ 11. WHAT THE THREE CELLS LEFT ============================ -->
+<section class="stage wide" data-label="What the three cells left">
+  <p class="kicker">What came back</p>
+  <h2>What the three cells left</h2>
+
+  <p class="lede">Ours, run on 2026-08-18 from a directory with nothing else in it, the
+    three at once. Every file each cell left is on this page whole, with the reply it
+    ended on.</p>
+
+  __INCLUDE_cells__
+
+  <div class="vizpick">
+    <button class="btn on" data-pick="cell-a" data-label="cell a — nothing in the directory">a</button>
+    <button class="btn" data-pick="cell-b" data-label="cell b — a skill and a hook">b</button>
+    <button class="btn" data-pick="cell-c" data-label="cell c — the hook only">c</button>
+  </div>
+  <div class="viz" data-viz="cell-a">
+    <div class="vizbar"><span class="nm">cell a — nothing in the directory</span><span class="spacer"></span>
+      <button class="btn open">open in a tab</button></div>
+    <div class="ph">pick a cell above</div>
+  </div>
+
+  <div class="figrow c3">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">a &middot; the number</p>
+      <p style="margin-bottom:0">&ldquo;T(a&#8320;, 0.9)/Tc(a&#8320;) = 3.41 &times;
+        10&#8315;&sup3;&rdquo; and &ldquo;Enhancement factor Tc/T &asymp; 294&rdquo;
+        &mdash; in the reply, and nowhere else. On disk: a script, a cross-check, a
+        figure and an array. <span class="src">[src:q_a_reply_ratio, q_a_reply_factor,
+        cell_c_num_merger_time_ratio_e0_9, scaffold_prompt_e, cell_a_files_left]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">b &middot; the record</p>
+      <p style="margin-bottom:0">Three claims, one figure, seven choices, and the number
+        under a key: 293.5112. Its <span class="mono">from_library</span> field:
+        &ldquo;scipy.integrate.quad for the Eq. (5.14) integral; scipy.integrate.solve_ivp
+        for the independent ODE cross-check.&rdquo;
+        <span class="src">[src:cell_b_n_claims, cell_b_n_figures_recorded,
+        cell_b_n_choices, cell_b_reported, q_b_choice_library]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">c &middot; the record</p>
+      <p style="margin-bottom:0">Two claims, one figure, seven choices, two numbers, and
+        the same 293.5112. One of its choices: &ldquo;Set epsabs=1e-14, epsrel=1e-12 in
+        quad to keep quadrature error well below the ~1e-4 precision needed to
+        distinguish this value from the closed-form asymptote Peters quotes for
+        e0-&gt;1.&rdquo; <span class="src">[src:cell_c_n_claims, cell_c_n_figures_recorded,
+        cell_c_n_choices, cell_c_n_numbers, cell_c_reported, q_c_choice_quad,
+        cell_reported_spread]</span></p>
+    </div>
+  </div>
+
+  <p>The three agree on the physics: the two records hold the same number to every digit
+    written, and the reply in <span class="mono">a/</span> rounds it. What differs is
+    where the number is. In <span class="mono">a/</span> it is in a chat message and dies
+    with the terminal; in <span class="mono">b/</span> and <span class="mono">c/</span>
+    it is in a file with the function that computed it, the library call it rests on and
+    the choices that had an alternative, each with its reason. Both records are good, and
+    about equally good &mdash; different claims, the same number of choices, the same two
+    library calls named. <span class="src">[src:cell_reported_spread,
+    cell_b_n_choices, cell_c_n_choices, q_b_choice_library, q_c_choice_library]</span></p>
+
+  <p class="small muted">One sample per cell, and the sample is small enough that the
+    turn counts are not a measurement of anything: our first three runs, made earlier the
+    same afternoon inside a directory that had other things in it, came out 13, 30 and
+    28 turns; these came out 28, 34 and 22, with the same files, the same records and
+    the same number. What is a measurement is the room: twenty of you, three
+    directories each, and the three columns are yours to compare.
+    <span class="src">[src:trial_a_turns, trial_b_turns, trial_c_turns, cell_a_turns,
+    cell_b_turns, cell_c_turns]</span></p>
+</section>
+
+<!-- ============================ 12. THE TURN WHERE THE GATE FIRED ============================ -->
+<section class="stage wide" data-label="The turn where the gate fired">
+  <p class="kicker">Cell c, and cell b beside it</p>
+  <h2>The turn where the gate fired</h2>
+
+  <p class="lede">This is the object the exercise exists to show. In
+    <span class="mono">c/</span> there was no skill to load, so the agent read the paper,
+    wrote the script, drew the figure, checked it, and finished: &ldquo;This matches the
+    shape of Peters' own Fig. 2 well, and the numbers check out against an
+    independent&hellip;&rdquo; &mdash; and the hook ran.
+    <span class="src">[src:q_c_before_gate]</span></p>
+
+  <div class="viz" data-viz="cell-c-hook">
+    <div class="vizbar"><span class="nm">cell c — from its last words to the end, out of the transcript</span><span class="spacer"></span>
+      <button class="btn open">open in a tab</button></div>
+    <div class="ph">the turn</div>
+  </div>
+
+  <div class="figrow c2">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">what arrived, as a new turn</p>
+      <p style="margin-bottom:0">&ldquo;This work produced results with no complete
+        provenance record, so it is not finished.&rdquo; Then four lines, the first
+        &ldquo;provenance/numbers.json is missing&rdquo;, and then the three
+        <span class="mono">.md</span> files, whole, because all three checks had
+        failed. <span class="src">[src:q_c_gate, q_c_gate_missing]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">what the agent did with it</p>
+      <p style="margin-bottom:0">Read the hook, read the three files, then: &ldquo;PyYAML
+        is available and no provenance directory exists yet. I'll create both
+        files.&rdquo; Two writes, one run of the gate by hand, and its reply begins
+        &ldquo;The provenance gate now passes.&rdquo;
+        <span class="src">[src:q_c_after_gate, q_c_reply_passes]</span></p>
+    </div>
+  </div>
+
+  <p>Beside it, <span class="mono">b/</span>. Its first sentence, before it had opened
+    the paper: &ldquo;I'll start by pulling in the skills that apply here &mdash; this
+    involves producing both a figure and a quantitative result, and I should read the
+    source paper's actual equations rather than work from memory.&rdquo; It loaded the
+    skill, read the three files, did the work, wrote the record, and finished; the hook
+    was armed the whole time and fired 0 times, because there was nothing for it to
+    say. Its last line: &ldquo;Code, figure, and full provenance records (numbers.json,
+    claims.yaml) are in analysis/ and provenance/.&rdquo;
+    <span class="src">[src:q_b_first_words, cell_b_hook_fires, q_b_reply_where]</span></p>
+
+  <p class="small muted">And <span class="mono">a/</span>'s first sentence, for the
+    record: &ldquo;I'll start by reading the Peters 1964 paper to extract the exact
+    equations for the gravitational-wave decay of an eccentric binary.&rdquo; Nothing was
+    there to say otherwise, and it did what it was asked, and it did it well.
+    <span class="src">[src:q_a_first_words]</span></p>
+</section>
+
+<!-- ============================ 13. WHAT WE MAKE OF IT ============================ -->
+<section class="stage wide" data-label="What we make of it">
+  <p class="kicker">Three cells</p>
+  <h2>What the three cells measure</h2>
+
+  <div class="figrow c2">
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">a against b and c</p>
+      <p style="margin-bottom:0">This is the real gap. With nothing written down for it,
+        the agent computes the right number, checks it a second way, says so, and the
+        number lives in a chat message. With either of the two things in the directory,
+        the same number is in a file with its function, its library call and its
+        choices. <span class="src">[src:cell_a_files_left, cell_b_n_numbers,
+        cell_c_n_numbers]</span></p>
+    </div>
+    <div class="card">
+      <p class="kicker" style="margin-bottom:8px">b against c</p>
+      <p style="margin-bottom:0">Not a quality difference. It is <em>when the instruction
+        arrives</em> &mdash; up front, or at the door &mdash; and both land: the two
+        records hold the same number, the same count of choices, the same two library
+        calls. In <span class="mono">b/</span> the hook never had to do anything; in
+        <span class="mono">c/</span> it was the only thing there and it fired exactly
+        once. <span class="src">[src:cell_reported_spread, cell_b_hook_fires,
+        cell_c_hook_fires]</span></p>
+    </div>
+  </div>
+
+  <p>So: the skill is the normal route, and the hook is the one that still works when the
+    skill does not get loaded. That is what the two cells demonstrate, in their own
+    transcripts, rather than what I am asserting. In a session of one task the skill gets
+    loaded at the start and the hook is idle; the case the hook exists for is the long
+    run where it does not, and <span class="mono">c/</span> is that case made to happen on
+    purpose.</p>
+
+  <p>What it cost: three cells, US$ 4.22 between them, four to six minutes each with the
+    three sharing one laptop. <span class="src">[src:cell_cost_all, cell_a_wall_min,
+    cell_b_wall_min, cell_c_wall_min]</span> The dearest was <span class="mono">b/</span>,
+    at US$ 1.62 against US$ 1.46 for <span class="mono">a/</span> and US$ 1.14 for
+    <span class="mono">c/</span> <span class="src">[src:cell_a_cost_usd, cell_b_cost_usd,
+    cell_c_cost_usd]</span>; at one run each that ordering is not a result, and the
+    price of a record is a few tens of cents whichever way it comes out.</p>
+
+  <p class="small muted">Read those two paragraphs with the sample size in front of you:
+    one run per cell, on one afternoon. The claim that survives a sample of one is the
+    shape &mdash; a record in two directories and not in the third, a hook that fired in
+    one directory and not in the other &mdash; and that shape held on both of the
+    afternoon's runs. Everything else is your three directories.</p>
+</section>
+
+<!-- ============================ 13b. BOTH HALVES ARE IN YOUR TREE ============================ -->
+<section class="stage wide" data-label="How everything here was built">
+  <p class="kicker">One more thing you were given</p>
+  <h2>Both halves of this course ship with their source.</h2>
+
+  <p class="lede">Everything you have been shown for five days was built rather than
+    maintained, and the machinery is in the tree you were given.</p>
+
+  <div class="figrow c2">
+    <div>
+      <p><b>The lectures.</b> Beside every <span class="mono">slides.pdf</span> is the
+        <span class="mono">slides.md</span> it was built from, the figures, the stylesheet
+        and the one-line build script. Change a line, run the script, get the deck.</p>
+    </div>
+    <div>
+      <p><b>These pages.</b> The five session pages are one HTML file each, and
+        <span class="mono">how-a-page-is-built/</span> holds what makes them:
+        <span class="mono">build_show.py</span>, the template it fills, and the
+        <span class="mono">page.py</span> and <span class="mono">stages.html</span> behind
+        the page you are reading now.</p>
+    </div>
+  </div>
+
+  <p class="small muted">The reason it is worth thirty seconds: a deck you maintain by hand
+    drifts from the numbers in it, and a page you maintain by hand drifts from the runs it
+    describes. Neither of these can &mdash; every number on this page is re-read out of a
+    file when it is built, and the build fails rather than printing a stale one. That is the
+    same discipline as the release you were shown this hour, at the scale of a course.</p>
+</section>
+
+<!-- ============================ 14. BACK TO YOUR THREE DIRECTORIES ============================ -->
+<section class="stage wide" data-label="Back to your three directories">
+  <p class="kicker">The rest of the hour</p>
+  <h2>Back to your three directories</h2>
+
+  <p class="lede">All three will have finished. Look before you read the replies.</p>
+
+  <div class="figrow c2">
+    <div class="card">
+      <p><strong>First, look at what each one left.</strong></p>
+      <ul style="margin-bottom:0">
+        <li><span class="mono">ls -R a b c</span>. Which of the three has a
+          <span class="mono">provenance/</span>? Where is the number in
+          <span class="mono">a/</span>?</li>
+        <li>Open <span class="mono">b/provenance/numbers.json</span> and
+          <span class="mono">c/provenance/numbers.json</span> side by side. Do they hold
+          the same value? Which library call does each name, and does either say why it
+          set a tolerance where it did?</li>
+        <li>Find the turn where the gate fired in <span class="mono">c/</span>. In an
+          interactive session it is in the conversation, as a message you did not type;
+          in a headless one, <span class="mono">grep "Stop hook feedback"</span> over the
+          transcript under <span class="mono">~/.claude/projects/</span>. Did it fire in
+          <span class="mono">b/</span> at all?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <p><strong>Then pick one.</strong> The rest, including the other two exercises and
+    what to compare in each, are on one page: <span class="mono">homework.html</span>.</p>
+      <ul style="margin-bottom:0">
+        <li>Add a check to the hook and write its <span class="mono">.md</span> &mdash; that
+          every <span class="mono">produced_by</span> names a file that exists is a good
+          first one &mdash; and run <span class="mono">c/</span> again.</li>
+        <li>Run the three cells in the other command-line tool. Trust the hooks first, and
+          watch whether the skill loads.</li>
+        <li>Copy <span class="mono">b/.claude/</span> into a project of your own and give
+          the agent a task from that project. Read what it records.</li>
+        <li>Take a paper you know well and write its <span class="mono">claims.yaml</span>
+          &mdash; the thesis, and one record per load-bearing claim with the evidence
+          named. Then hand the paper and the file to an agent and ask which claim the
+          named evidence does not support.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>The last item is the weekend, and it is the hour run backwards: instead of reading
+    a paper published with its skeleton, you write the skeleton for one that was
+    published without it, and find out what you had been guessing.</p>
+</section>
+
+<!-- ============================ 15. REFERENCE ============================ -->
+<section class="stage wide" data-label="What we ran, and what it cost">
+  <p class="kicker">Reference</p>
+  <h2>The three cells, and what they cost</h2>
+
+  <p class="lede">One prompt, three directories, one afternoon. Nothing here was run live
+    and nothing is being run now: the cells finished on the date in the table, and this
+    page reads their files.</p>
+
+  __RUNS_TABLE__
+
+  __INCLUDE_runtags__
+
+  <p class="small muted">Tokens are what <span class="mono">claude -p</span> reported when
+    each cell ended: the input column counts everything on the input side, cache
+    included, which is why it is large; the output column is what the model wrote. The
+    clock is launch to exit, with the three cells sharing one machine. The prices were
+    the prices on the day. <span class="src">[src:cell_a_tokens_in, cell_a_tokens_out,
+    cell_b_tokens_in, cell_b_tokens_out, cell_c_tokens_in, cell_c_tokens_out,
+    cell_a_wall_s, cell_b_wall_s, cell_c_wall_s, cell_a_cost_usd, cell_b_cost_usd,
+    cell_c_cost_usd]</span></p>
+</section>

@@ -1,0 +1,6 @@
+# Day 1 only. Pure Python, no compilers, no GW stack, no GPU.
+# Heavier per-exercise environments (gwpy, bilby, lal, ...) arrive on day 2.
+numpy
+scipy
+sympy
+matplotlib

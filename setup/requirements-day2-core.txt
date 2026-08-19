@@ -1,0 +1,12 @@
+# Day 2, tier 1 — everything that matters today runs on exactly this.
+#
+# Pure Python, no compilers, no gravitational-wave stack, no GPU. Identical to
+# day 1, which is the point: if doctor.py passed on Friday you are ready.
+#
+# The strain, the IMRPhenomD waveform and the reference PSDs are shipped as .npz
+# arrays inside each exercise, so nothing below needs a network connection
+# either.
+numpy
+scipy
+sympy
+matplotlib

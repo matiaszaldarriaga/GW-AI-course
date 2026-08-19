@@ -1,0 +1,5 @@
+A pulsar-timing-array gravitational-wave background is dominated by one bright
+binary, which carries a fraction p of the total power.
+
+How hard is that anisotropy to detect, and how does the difficulty change as p
+changes?

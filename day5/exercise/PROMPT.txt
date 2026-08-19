@@ -1,0 +1,5 @@
+PhysRev.136.B1224.pdf in this directory is Peters 1964.
+
+Using its result for the gravitational-wave decay of an eccentric binary, make a
+figure of the merger time against eccentricity, normalised to the circular case,
+for a binary of fixed semi-major axis. Report the enhancement factor at e = 0.9.

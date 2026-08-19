@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Exercises</title>
+<style>
+body { font: 15px/1.5 -apple-system, "Helvetica Neue", sans-serif;
+       max-width: 1150px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+h1 { font-size: 1.45rem; } h2 { font-size: 1.1rem; margin-top: 2rem;
+     border-bottom: 2px solid #e8a05c; padding-bottom: .2rem; }
+h3 { font-size: .95rem; margin-top: 1.2rem; }
+table { border-collapse: collapse; width: 100%; margin: .6rem 0; }
+th, td { border: 1px solid #ddd; padding: .35rem .5rem; text-align: left;
+         vertical-align: top; font-size: .88rem; }
+th { background: #f4f4f4; }
+code { background: #f4f4f4; padding: .05em .3em; font-size: .85em; }
+.match { color: #1a7a2a; } .dropped td { background: #fdeaea; }
+.inserted td { background: #fff7e0; }
+.hole { color: #b03030; font-weight: 600; }
+.note { color: #666; font-size: .85em; }
+.small { font-size: .82rem; color: #444; }
+ul { margin: .3rem 0 .3rem 1.2rem; padding: 0; }
+.mdblock { border-left: 3px solid #e8a05c; padding: .2rem 1rem;
+           background: #fafafa; margin: .5rem 0; }
+.mdblock table { width: auto; }
+</style>
+</head>
+<body>
+<h1>Exercises</h1>
+<p>Each exercise below runs one task more than once and changes a single thing about how the agent is run. What you are measuring is never the subject of the task. It is what changed when you changed the setup, and whether you could tell. Most of them ask you to use a piece of your own work, because an answer you can judge is worth more than one you cannot.
+One word used below. A TURN is one step of the loop: the agent acts, sees what came back, and decides what to do next. Counting turns is the cheapest measure of how much work a run actually did.
+</p>
+<h2>What you ask for changes what you get</h2>
+<p class="note">first turns up on day 1</p>
+<div class="mdblock"><p>The instruction you type is not just a description of the task. It also decides what the agent produces, what it checks, and what it hands back. A request can be bare - "do this" - or it can say, before any work starts, which files you want at the end, in what format, and what the result has to satisfy before the agent considers itself finished.
+The second kind takes a few minutes to write and is the single cheapest change available. In this exercise you ask for the same thing both ways and see what the difference is worth.</p></div>
+<table>
+<tr><th>what changes between runs</th><td>How much the request specifies before the work starts.</td></tr>
+<tr><th>what to do</th><td><div class="mdblock"><p>Pick a task from your own work. Ask for it once in a sentence. Then ask again, in a new directory, with a request that names the files you want, their format, and the checks the answer has to pass.</p></div></td></tr>
+<tr><th>what to compare</th><td><div class="mdblock"><p>What each one left behind. Whether the bare version checked anything you had not asked for. Then look at the list of things you had to spell out the second time, and decide which of them you would rather say once, in a file, than repeat every time you start.</p></div></td></tr>
+<tr><th>what you are given</th><td><div class="mdblock"><p>Nothing. Your own project.</p></div></td></tr>
+</table>
+<h2>The model, and how hard it thinks</h2>
+<p class="note">first turns up on day 1</p>
+<div class="mdblock"><p>These tools give you two dials. The first is which MODEL runs - the underlying system, of which each provider offers several, at different prices and speeds. The second is REASONING EFFORT: how much thinking the model spends before it answers. It is a setting, usually with names like low and high, and it is independent of which model you chose.
+Most people set neither and never learn what either is worth on their own work. In this exercise you turn both and watch what moves.</p></div>
+<table>
+<tr><th>what changes between runs</th><td>Which model runs, and how much thinking it is told to spend.</td></tr>
+<tr><th>what to do</th><td><div class="mdblock"><p>One task from your own work, run four times: two models, each at a low and a high effort setting. Same request every time, written down before you start so it does not drift between runs.</p></div></td></tr>
+<tr><th>what to compare</th><td><div class="mdblock"><p>Not only whether the answers agree. Whether the CHECKING agrees - what each run verified on its own initiative, and what it quietly stopped doing when the dial went down.</p></div></td></tr>
+<tr><th>what you are given</th><td><div class="mdblock"><p>Nothing. Your own project.</p></div></td></tr>
+<tr><th>what happened when we ran it</th><td><div class="mdblock"><p>On day 2's grid, turning the effort down did two different things to two models. One returned a different number and kept verifying it. The other returned the identical number to four figures and stopped verifying altogether, which is the more dangerous of the two failures because nothing about the output says so.</p></div></td></tr>
+</table>
+<h2>Getting an agent to use a project&#x27;s notes</h2>
+<p class="note">first turns up on day 1</p>
+<div class="mdblock"><p>A project can keep its own notes: what has been decided, what has been derived, what was got wrong and later corrected. Kept as ordinary files in the project - a set of them is usually called a wiki - they are the only record that survives a session ending.
+They are worth nothing if the agent does not read them, and it will not open a directory it has no reason to open. Two things can give it that reason. A <code>CLAUDE.md</code> is a file the tool reads at the start of every session in that directory: it always applies, and it costs some of the session's limited attention whether or not the question needed it. A SKILL is a set of instructions the agent loads only when it judges that what it is doing matches the skill's description: it costs nothing until it fires, and it can be installed once for every project you have - but it can also fail to fire.
+In this exercise you ask one question in four directories and find out whether the notes are opened at all, and whether the answer changes when they are.</p></div>
+<table>
+<tr><th>what changes between runs</th><td>How the agent comes to read a project&#x27;s notes, or whether it does at all.</td></tr>
+<tr><th>what to do</th><td><div class="mdblock"><p>One question, four directories. <code>a/</code> empty. <code>b/</code> the notes and nothing else. <code>c/</code> the notes and a <code>CLAUDE.md</code> that mentions them. <code>d/</code> the notes and a skill that says to read them. The same question in all four.</p></div></td></tr>
+<tr><th>what to compare</th><td><div class="mdblock"><p>Whether <code>b</code> opens the notes at all - that is the one to watch. Whether the answer changes. Whether a run can tell you which page it used.</p></div></td></tr>
+<tr><th>what you are given</th><td><div class="mdblock"><p><code>day5/exercise-notes/</code> - the question, the <code>CLAUDE.md</code>, the skill in both layouts, and a real project wiki: 105 pages behind a published paper, with an index, a notation contract, a formula list, fifteen concept pages, a page per source read and an append-only log.</p></div></td></tr>
+<tr><th>run it on</th><td><div class="mdblock"><p>The question that ships with it. Better, once you have done it once: build notes for a project of your own with the <code>build-project-wiki</code> skill in <code>day5/skills/</code>, and ask something whose answer you already know.</p></div></td></tr>
+<tr><th>what happened when we ran it</th><td><div class="mdblock"><p><code>a</code> and <code>b</code> gave the same wrong answer and neither opened anything. <code>b</code> began its reply by saying it would work the problem out directly rather than reach for a skill, with the notes sitting in the directory beside it. <code>c</code> and <code>d</code> read the notes and returned a result that is written down there and in no publication. The skill in <code>d</code> fired unprompted, on a description that names no subject matter and no filename.</p></div></td></tr>
+</table>
+<h2>The same task twice, changing nothing</h2>
+<p class="note">first turns up on day 2</p>
+<div class="mdblock"><p>Ask the identical question twice - same model, same settings, same words - and the two answers will not be identical. How far apart they are is your noise floor.
+This matters for every other comparison you will make. If you change a setting and the answer moves by less than the noise floor, you have learned nothing, and you cannot know that until you have measured it. Nothing else in this course runs the same thing twice unchanged, so nobody yet knows what this number is.</p></div>
+<table>
+<tr><th>what changes between runs</th><td>Nothing. That is the point.</td></tr>
+<tr><th>what to do</th><td><div class="mdblock"><p>Take a task from your own work and run it twice, in two directories, with the same model, the same settings and the same words. Then a third time if the first two disagree in a way you did not expect.</p></div></td></tr>
+<tr><th>what to compare</th><td><div class="mdblock"><p>The two answers. Then the harder question: if somebody had told you these two runs differed in their setup, which difference would you have believed was responsible?</p></div></td></tr>
+<tr><th>what you are given</th><td><div class="mdblock"><p>Nothing. Your own project.</p></div></td></tr>
+<tr><th>what happened when we ran it</th><td><div class="mdblock"><p>While testing another exercise on this page we ran two directories whose only difference was a folder that neither agent opened. They gave different answers - one right and one wrong. That is what an unmeasured noise floor looks like when it is mistaken for a result.</p></div></td></tr>
+</table>
+<h2>Leaving it to run without you</h2>
+<p class="note">first turns up on day 2</p>
+<div class="mdblock"><p>You can use these tools as a conversation, answering questions as they come. You can also start one with a single command that runs to completion with nobody watching and hands back whatever files it produced. That second mode is called running HEADLESS, and it is how you use an agent for anything that takes longer than you are willing to sit for.
+It also removes the thing you were relying on without noticing: you. In this exercise you run one task both ways and compare what came back.</p></div>
+<table>
+<tr><th>what changes between runs</th><td>Whether you are there while it works.</td></tr>
+<tr><th>what to do</th><td><div class="mdblock"><p>A task from your own work, run once as a conversation and once as a single command with no interaction. Give both the same request.</p></div></td></tr>
+<tr><th>what to compare</th><td><div class="mdblock"><p>The files each one left. Not the summary it wrote about itself - the files. A run that describes what it did is not evidence that it did it.</p></div></td></tr>
+<tr><th>what you are given</th><td><div class="mdblock"><p>Nothing. Your own project.</p></div></td></tr>
+<tr><th>what happened when we ran it</th><td><div class="mdblock"><p>One run in day 2's grid reported success, exited cleanly, took 109 turns, and produced no output file at all. Nothing in its own summary said so.</p></div></td></tr>
+</table>
+<h2>A second opinion from a session that knows nothing</h2>
+<p class="note">first turns up on day 3</p>
+<div class="mdblock"><p>An agent that has been working on a problem with you has your context and your assumptions, and has spent the whole session building the thing you are now asking it to criticise. A session started fresh, given only the output, has none of that.
+In this exercise you get both opinions and compare them.</p></div>
+<table>
+<tr><th>what changes between runs</th><td>Whether the reviewer has any of the history.</td></tr>
+<tr><th>what to do</th><td><div class="mdblock"><p>Take something your agent produced. First write down yourself what you think is wrong or weak in it. Then open a new session, give it the output and nothing else - no transcript, no reasoning, no context - and ask what is wrong with it.</p></div></td></tr>
+<tr><th>what to compare</th><td><div class="mdblock"><p>Your list against its list. What it found that you had not. What it objected to that turns out to be fine, and whether you can tell which is which without going and checking.</p></div></td></tr>
+<tr><th>what you are given</th><td><div class="mdblock"><p>Nothing. Your own project.</p></div></td></tr>
+</table>
+<h2>Skills and hooks</h2>
+<p class="note">first turns up on day 5</p>
+<div class="mdblock"><p>A skill, defined above, is loaded by the agent when it judges that the task matches - which means it can also go unloaded, and nothing announces that it did. A HOOK does not depend on that judgement. It is a command the tool runs at a fixed moment whether or not the agent thinks of it; the one used here runs at the moment the agent decides it has finished, and if that command reports a problem the agent is not finished after all - the message comes back as a new turn and it keeps working.
+Both are ways of getting the same rule obeyed, and they fail differently. A skill can go unloaded; a hook cannot make an agent do something it does not already know how to do. In this exercise you run one task in three directories that differ only in which of the two is present.</p></div>
+<table>
+<tr><th>what changes between runs</th><td>Whether the rule is written down, and whether anything enforces it.</td></tr>
+<tr><th>what to do</th><td><div class="mdblock"><p>One task, three directories, the same request and the same model in each. <code>a/</code> is empty. <code>b/</code> has a skill stating the rule and a hook that checks it. <code>c/</code> has the hook and no skill. Then read the three directories side by side - the directories, not the replies.</p></div></td></tr>
+<tr><th>what to compare</th><td><div class="mdblock"><p>Where the result ends up: in a file, or only in a message on screen that disappears when you close the terminal. Whether the hook ever has to fire. What the difference cost in turns.</p></div></td></tr>
+<tr><th>what you are given</th><td><div class="mdblock"><p><code>day5/exercise/</code> - the request, the skill, the hook, the rule it enforces, and the wiring for both command-line tools.</p></div></td></tr>
+<tr><th>run it on</th><td><div class="mdblock"><p>A short calculation ships with it, which needs no data and takes seconds. Any task that produces a figure and a number will do, including one of your own.</p></div></td></tr>
+<tr><th>what happened when we ran it</th><td><div class="mdblock"><p><code>a</code> left its result in the reply and nowhere else. <code>b</code> wrote the record without being asked, and the hook never had to fire. <code>c</code> decided it had finished, was stopped by the hook, and complied. All three got the same answer, and the record cost nothing in turns.</p></div></td></tr>
+</table>
+<h2>The same content in two output formats</h2>
+<p class="note">first turns up on day 5</p>
+<div class="mdblock"><p>This course is delivered in two formats. The lectures are SLIDEV decks: a file of markdown, built into a PDF by a script. The sessions are single self-contained HTML pages, generated by a different script from a file of prose plus whatever the runs produced. Both ship here with the source they were built from, so you can see how each is made.
+An agent will produce either on request, and does different things for each without being told to. In this exercise you have it build the same content both ways and decide which one you would keep up to date.</p></div>
+<table>
+<tr><th>what changes between runs</th><td>The output format, for something you would have to maintain yourself.</td></tr>
+<tr><th>what to do</th><td><div class="mdblock"><p>Take something of your own - a result, a paper, a talk you owe somebody - and have an agent build it as a slidev deck, and then as a self-contained page. Same content, twice.</p></div></td></tr>
+<tr><th>what to compare</th><td><div class="mdblock"><p>Which one you would be willing to maintain, and why. What each format makes easy and what it makes impossible. What the agent did differently for each without being asked.</p></div></td></tr>
+<tr><th>what you are given</th><td><div class="mdblock"><p>Both sources ship. Every <code>lecture-*/</code> carries the <code>slides.md</code> it was built from, its figures and its build script; <code>how-a-page-is-built/</code> carries the page builder, its template, and one session page's source.</p></div></td></tr>
+<tr><th>run it on</th><td><div class="mdblock"><p>Yours. This is the one where using somebody else's subject defeats the point.</p></div></td></tr>
+</table>
+</body>
+</html>

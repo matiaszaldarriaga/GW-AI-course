@@ -1,0 +1,42 @@
+WHAT THIS FILE IS, AND WHAT IT IS NOT
+=====================================
+
+ONE prompt, run eight times. That is the whole design of day 2's grid: the same
+string through eight combinations of model and reasoning effort, so that the only
+thing varying between cells is the thing named in the column heading. A prompt
+reworded for one cell would have made the comparison meaningless, so it was frozen
+before the first cell ran and no cell has ever seen a different one.
+
+The block below is the file every cell was given, byte for byte. It lives beside
+this one as `prompt-1-verbatim.txt`, and the runner reads it from there and passes
+it as a single argument. What you are reading is therefore the record, not a
+reconstruction of it.
+
+Four things in it were decided deliberately and are worth noticing, because each
+one is a column further down the page:
+
+  - the waveform generator is off the shelf and the filter is not. That boundary
+    is what makes the task discriminating: every cell has the same easy half.
+  - it asks for the histogram of rho^2 and its mean, and it does not say the mean
+    should be 2. Whether a run knows the expected value is one of the things being
+    measured, so putting the answer in the prompt would have destroyed it.
+  - it asks for a self-contained HTML page and a `results.json`. The format is one
+    of the things the prompts vary across the week.
+  - the last clause asks for the choices that could reasonably have gone another
+    way. That is this repository's own first rule, turned into a prompt.
+
+The format is Mark Cheung's, and deliberately: a header, then a double-quoted
+block, so that one parser reads his record and ours.
+
+
+Prompt:
+
+"In `data/` there is real LIGO strain around GW150914 — 2048 s of H1 and 512 s of L1 at 4096 Hz, float32, each with the GPS time of its first sample and nothing else.
+
+Find the event and measure it. Use `pycbc` to generate IMRPhenomD waveforms — equal masses, zero spin, so chirp mass is the only parameter you vary — but write the matched filter yourself, in numpy. I want to be able to read the ten lines that carry the physics; the waveform generator is the only thing you take off the shelf.
+
+Scan chirp mass. Report the peak signal-to-noise ratio, the chirp mass at which it peaks, and the GPS time of the peak.
+
+Then convince me the numbers mean something. At minimum, run the same filter over stretches with no signal in them and show me the histogram of rho^2 and its mean. Beyond that, what would convince you is your call — I am more interested in the checks you chose than in the SNR.
+
+Leave me one self-contained HTML page I can open in a browser, figures inline, and a `results.json` carrying every number the page quotes. Nothing that needs a server or a kernel. The page must include at least the noise curve you estimated, the whitened strain around the event in H1 and L1, and your SNR time series — and a short list of the choices you made that could reasonably have gone another way."

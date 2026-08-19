@@ -1,0 +1,29 @@
+Get somebody else's parameter-estimation exercise working, and turn it into a tool.
+
+Start from https://github.com/jroulet/pitp-pe-exercises, folder
+`2-parameter_estimation`.
+
+What I want back, in this order, so that the hour always produces something:
+
+1. `report.html` — did the clone work, did the environment build, did the notebook
+   run, and what does it do, section by section, with its figures. A report that
+   says the download failed and shows the traceback is a good report. One that
+   implies things ran when they did not is the failure.
+
+2. The same analysis out of the notebook — a module plus a command-line entry
+   point. Same numbers, and shown to match.
+
+3. `pe.html` — pick an event and it runs. Start with the simulated events; the
+   notebook's own last cell points at real catalogue events through
+   `cogwheel.data.download_timeseries`.
+
+Constraints:
+
+- ALIGNED SPIN ONLY: `IntrinsicAlignedSpinIASPrior` with `IMRPhenomXAS`.
+- Do not run the precessing "Extra" — it is a much larger calculation than the
+  aligned-spin one. Offer it in the tool as an option, off by default, with what
+  it will cost stated next to the switch.
+- Both HTML files must open from a `file://` URL with no network and no server.
+- Work only inside this directory. Build your own conda environment; do not
+  modify one that already exists.
+- At the end, say the wall clock.

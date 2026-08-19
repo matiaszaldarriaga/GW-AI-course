@@ -1,0 +1,33 @@
+Prompt:
+
+"I want you to make a gravitational wave visualizer in html. Use the uv package manager.
+
+Choose an equal mass, nonspinning, quasicircular merger from the SXS simulation catalog using the sxs python package, viewed face on, including all available lm harmonics. I want the visualizer to have multiple panels. All panels should be animations synced in time. There should be a progress bar on the bottom where I can play, pause, drag, and choose the playback speed. Only include the final 6 periods along with the ringdown, cutting the waveform after it dies down.
+
+Include the following three panels. 
+
+A big panel on the left: A ring of test particles under the influence of the gravitational waves. The "+" polarization is h_+ from the waveform and "x" should be h_x.
+A panel on the top right: showing h_+ and h_x versus time. Use a color map in time.
+A panel on the bottom right: showing h_x vs h_+ in the 2D plane. Show the trajectory of the waveform in this plane up to the current time. Use the same color map in time."
+
+Prompt: 
+
+"The ring-of-particles visualization is nice, but it is only for a face on merger. I want to go one step further and visualize the waves in 3D, for all viewing angles at once. A way to do this is to imagine a sphere enclosing our BBH source, discretize the sphere and compute the gravitational waves at each grid point. Then we can have a 3D visualization of the waves at all possible viewing angles.
+
+However, it seems too crowded if we put a ring of particle at each grid point and visualize their influence under the waves. We need a more economical way of visualizing the waves that shows the orientation and the magnitude of the stretching and squeezing at each grid point. Think of different ways to visualize the waves on each grid point. Make a new html, in which you show each visualization option for a face on merger like what we have already done, including the original ring of particles, so I can pick which one I like the most before we move on to the full 3D visualizer for all viewing angles."
+
+Prompt:
+
+"I like option 4, the stretch whisker option. Now let's build the 3D visualizer in a new html file.
+
+The main panel should be a draggable, interactive sphere display. It should be discretized and covered by at least 300 grid points. On each grid point lives the stretch whisker visualization. Don't make the sphere transparent, so we won't see the whiskers on the other side
+
+The whole visualization should still be an animation with the same progress bar and playback options. When I click on a grid point, there should be minor panels on the right showing the same h_+ and h_x vs time, as well as the same h_x vs h_+ 2D plane, which should change according to which grid point I click on. Circle the grid point when it is picked, make sure the circle is big enough to enclose the whole whisker." 
+
+Prompt:
+
+"I want to make the exact same visualization but for two more simulations. All panels should be done the same way. Make a new html file for each of these.
+
+1. Pick a head-on, equal mass, non-spinning simulation from the sxs catalog. The memory effect might be strong so we don't have to wait for the waveform to go to zero before cutting it.
+2. Pick an extremely precessing, equal mass simulation, also from the sxs catalog."
+

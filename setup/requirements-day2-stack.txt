@@ -1,0 +1,43 @@
+# Day 2, tiers 2 and 3 — OPTIONAL. Nothing today is blocked on any of it.
+#
+# Read this file before installing from it. The two tiers have very different
+# risk profiles and it is worth knowing which one you are fighting.
+#
+# ---------------------------------------------------------------------------
+# TIER 2 — cheap. Pure-python wheels, installs in about a minute, no compiler.
+# ---------------------------------------------------------------------------
+gwpy
+#   What it buys: fetching your own strain from GWOSC instead of using the
+#   shipped arrays, and a library PSD, whitening and spectrogram to check your
+#   own against. That check is the reason to want it — a home-made Welch
+#   estimate overlaid on gwpy's is how you find out whether yours is right.
+#
+#   Measured: 57 s to install into a clean venv, and the same notebook ran
+#   unchanged on gwpy 3.0.13 and 4.0.1.
+
+# ---------------------------------------------------------------------------
+# TIER 3 — real install risk. Compiled, and the usual source of a lost morning.
+# ---------------------------------------------------------------------------
+# lal
+# lalsimulation
+# pycbc
+#
+#   Left COMMENTED OUT deliberately. `pip install` is not the recommended route
+#   on most machines; conda-forge usually is:
+#
+#       conda create -n gw-day2 -c conda-forge python=3.11 lalsuite pycbc gwpy
+#       conda activate gw-day2
+#
+#   What it buys: regenerating the waveform models yourself, and therefore
+#   varying their parameters. That is rung 8 of the ladder, and it is the only
+#   thing in the whole day that needs it.
+#
+#   What it does NOT buy: any part of the search. The IMRPhenomD waveform is
+#   shipped as day2/data/imr_gw150914.npz, and the whole of day 2's task runs
+#   with no compiled gravitational-wave code installed anywhere.
+#
+#   You are still asked to attempt this install in the first fifteen minutes of
+#   the session, with your agent, and to write down what it took: what it tried
+#   first, what actually worked, how many turns, and whether it noticed when it
+#   had failed. That is a logged task, not a prerequisite. Nobody is blocked
+#   while it runs, because tier 1 never needed it.

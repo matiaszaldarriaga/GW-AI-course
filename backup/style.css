@@ -1,0 +1,25 @@
+/* Hide the Goto dialog and its autocomplete list — the floating slide-list
+   panel that shows up at top-right in the dev server. We never use the goto
+   shortcut for this deck. */
+#slidev-goto-dialog,
+#slidev-goto-dialog .autocomplete-list {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Shared deck classes — the canonical block of course/deck-spec.md §6.
+   Consolidated 2026-08-05 from the inline <style> blocks that had been
+   copy-pasted into all eight decks and had diverged (ledger A3). This file is
+   byte-identical across the eight decks; check_course.py --only style enforces
+   that, and that no deck grows a private inline <style> again.
+--------------------------------------------------------------------------- */
+.fig-cap { font-size: 0.7rem; opacity: 0.55; font-style: italic; margin-top: 0.4rem; text-align: center; }
+.tag { font-family: 'PT Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; color: #e8a05c; text-transform: uppercase; }
+.slim-table table { font-size: 0.78rem; border-collapse: collapse; }
+.slim-table th, .slim-table td { padding: 0.18rem 0.7rem !important; line-height: 1.25; vertical-align: top; }
+.slim-table th { font-weight: 600; border-bottom: 1px solid #d0d0d0; }
+.slim-table tr:nth-child(even) td { background: rgba(0,0,0,0.025); }
+.cli { font-family: 'PT Mono', monospace; font-size: 0.72rem; background: rgba(0,0,0,0.04); border-left: 2px solid #e8a05c; padding: 0.6rem 0.8rem; line-height: 1.55; white-space: pre; overflow-x: auto; }
+.daytag { font-family: 'PT Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; color: #fff; background: #e8a05c; padding: 0.1rem 0.5rem; border-radius: 3px; }
+.slot { border: 1px dashed #c9a06a; background: rgba(232,160,92,0.07); padding: 0.8rem 1rem; font-size: 0.8rem; opacity: 0.85; }
+pre.card { font-family: 'PT Mono', monospace; font-size: 0.72rem; line-height: 1.45; background: rgba(0,0,0,0.035); padding: 0.8rem 1rem; border-left: 2px solid #e8a05c; overflow-x: auto; }
