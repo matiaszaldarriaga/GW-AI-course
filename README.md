@@ -13,23 +13,40 @@ research with AI agents. Each day carries one of each.
 | **4** | Pulsar timing arrays — the nanohertz sky | more than one of them: roles, and an independent check |
 | **5** | Open problems | turning a result into an output |
 
-Days 2–5 are built around papers: the lecture introduces them, the session reproduces or
-attacks them.
+There is also a **final project**, presented online after the week. Details to be
+announced.
 
 ---
 
 ## Start here
 
-1. **`setup/`** — do this **before** the first class. Install an agent, install Python, run
-   `doctor.py`, send us the report. It is the only thing that must happen in advance.
-2. **`day1/`** — everything for the first day.
+**1. Install an agent, and check that it runs.** Claude Code, Codex, or both — both is
+better, because the course compares them and the differences are part of the point.
+Install it, log in, and get it to answer something. Nothing else in the course works
+until this does.
 
-Something broken? Do not fix it by hand — you have an agent:
+| | Claude Code | Codex CLI |
+|---|---|---|
+| Install | https://docs.claude.com/en/docs/claude-code/setup | https://developers.openai.com/codex/cli |
+| Log in | `claude`, then `/login` | `codex`, then `/login` |
+| Check | `claude --version` | `codex --version` |
+
+**2. Work through `setup/`**, before the first class. Python and four packages, and then
+`python3 setup/doctor.py`, which changes nothing and prints a report of what is missing.
+
+**3. Fix whatever it reports — with the agent, not by hand.** This is the first real
+exercise of the course, and it starts before the course does:
 
 ```
 claude "read setup/SETUP.md and fix my environment"
 codex  "read setup/SETUP.md and fix my environment"
 ```
+
+`setup/SETUP.md` is written for the agent rather than for you. Watch what it does. If you
+are still stuck after a reasonable effort, bring it to the first session and say what you
+tried — that is worth more to us than a clean report.
+
+**4. `day1/`** — everything for the first day.
 
 ---
 

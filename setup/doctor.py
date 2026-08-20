@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Pre-course environment check for *Gravitational Waves and AI-Assisted Research*.
 
-Run this BEFORE the first class and send us the report it prints.
+Run this BEFORE the first class. It prints what is missing; fix that with your agent.
 
     python3 doctor.py
 
@@ -213,9 +213,9 @@ def main():
         print("If you have no working agent CLI yet, that is the one thing you must")
         print("install by hand first. See setup/README.md.")
     elif warns:
-        print(f"\nNo blocking problems. {len(warns)} warning(s) above -- read them, then send the report.")
+        print(f"\nNo blocking problems. {len(warns)} warning(s) above -- read them.")
     else:
-        print("\nAll checks passed. Send the report anyway so we know you are ready.")
+        print("\nAll checks passed. You are ready for the first class.")
 
     return 1 if fails else 0
 

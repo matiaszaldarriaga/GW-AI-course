@@ -69,7 +69,7 @@ resolver drag them in.
    without a clean run: paste the actual output.
 
 8. **If two or three approaches have failed, stop.** Tell the student to fall back to
-   GitHub Codespaces (see `setup/README.md`) and to send us the doctor report and a
+   GitHub Codespaces (see `setup/README.md`) and to bring to the first session a
    transcript of what you tried. A student who arrives on Codespaces is fine. A student
    who arrives having spent the night fighting a Python install is not.
 

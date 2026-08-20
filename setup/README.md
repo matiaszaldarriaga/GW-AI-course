@@ -4,8 +4,7 @@
 
 The course is hands-on from the first minute. In the first session you will point an AI agent
 at a physics paper and watch what it does, on your own machine. That only works if your machine
-is ready **before** you arrive, so please work through this page and send us the report at the
-bottom.
+is ready **before** you arrive, so please work through this page.
 
 It should not take long. If it drags, stop and tell us — see *If you get stuck*.
 
@@ -52,8 +51,9 @@ per exercise.
 python3 setup/doctor.py
 ```
 
-This changes nothing on your machine. It prints a report. **Send us that report**, even
-if everything passes, so we know who is ready.
+This changes nothing on your machine. It prints a report of what is missing. **Fix what it
+reports with your agent rather than by hand** — see *If something is broken* below. Getting
+this working is the first real exercise of the course.
 
 ---
 
@@ -74,9 +74,9 @@ already doing the thing the course is about.
 
 ## If you get stuck
 
-Send us the doctor report and stop. Do not spend a whole evening on this. There is a
-fallback that works from any machine, including a Chromebook or a locked-down work
-laptop:
+Stop, and bring it to the first session — say what you tried and what it did. Do not spend
+a whole evening on this. There is a fallback that works from any machine, including a
+Chromebook or a locked-down work laptop:
 
 **GitHub Codespaces** gives you a Linux machine in your browser with everything
 preinstalled, and the free tier is enough for the course. You will be slightly slower than
