@@ -32,8 +32,8 @@ One word used below. A TURN is one step of the loop: the agent acts, sees what c
 </p>
 <h2>What you ask for changes what you get</h2>
 <p class="note">first turns up on day 1</p>
-<div class="mdblock"><p>The instruction you type is not just a description of the task. It also decides what the agent produces, what it checks, and what it hands back. A request can be bare - "do this" - or it can say, before any work starts, which files you want at the end, in what format, and what the result has to satisfy before the agent considers itself finished.
-The second kind takes a few minutes to write and is the single cheapest change available. In this exercise you ask for the same thing both ways and see what the difference is worth.</p></div>
+<div class="mdblock"><p>The instruction you type is not just a description of the task. It also decides what the agent produces, what it checks, and what it hands back. A request can be bare - "do this" - or it can say, before any work starts, which files you want at the end, in what format, and what the result has to satisfy before the agent considers itself finished.</p>
+<p>The second kind takes a few minutes to write and is the single cheapest change available. In this exercise you ask for the same thing both ways and see what the difference is worth.</p></div>
 <table>
 <tr><th>what changes between runs</th><td>How much the request specifies before the work starts.</td></tr>
 <tr><th>what to do</th><td><div class="mdblock"><p>Pick a task from your own work. Ask for it once in a sentence. Then ask again, in a new directory, with a request that names the files you want, their format, and the checks the answer has to pass.</p></div></td></tr>
@@ -42,8 +42,8 @@ The second kind takes a few minutes to write and is the single cheapest change a
 </table>
 <h2>The model, and how hard it thinks</h2>
 <p class="note">first turns up on day 1</p>
-<div class="mdblock"><p>These tools give you two dials. The first is which MODEL runs - the underlying system, of which each provider offers several, at different prices and speeds. The second is REASONING EFFORT: how much thinking the model spends before it answers. It is a setting, usually with names like low and high, and it is independent of which model you chose.
-Most people set neither and never learn what either is worth on their own work. In this exercise you turn both and watch what moves.</p></div>
+<div class="mdblock"><p>These tools give you two dials. The first is which MODEL runs - the underlying system, of which each provider offers several, at different prices and speeds. The second is REASONING EFFORT: how much thinking the model spends before it answers. It is a setting, usually with names like low and high, and it is independent of which model you chose.</p>
+<p>Most people set neither and never learn what either is worth on their own work. In this exercise you turn both and watch what moves.</p></div>
 <table>
 <tr><th>what changes between runs</th><td>Which model runs, and how much thinking it is told to spend.</td></tr>
 <tr><th>what to do</th><td><div class="mdblock"><p>One task from your own work, run four times: two models, each at a low and a high effort setting. Same request every time, written down before you start so it does not drift between runs.</p></div></td></tr>
@@ -53,9 +53,9 @@ Most people set neither and never learn what either is worth on their own work. 
 </table>
 <h2>Getting an agent to use a project&#x27;s notes</h2>
 <p class="note">first turns up on day 1</p>
-<div class="mdblock"><p>A project can keep its own notes: what has been decided, what has been derived, what was got wrong and later corrected. Kept as ordinary files in the project - a set of them is usually called a wiki - they are the only record that survives a session ending.
-They are worth nothing if the agent does not read them, and it will not open a directory it has no reason to open. Two things can give it that reason. A <code>CLAUDE.md</code> is a file the tool reads at the start of every session in that directory: it always applies, and it costs some of the session's limited attention whether or not the question needed it. A SKILL is a set of instructions the agent loads only when it judges that what it is doing matches the skill's description: it costs nothing until it fires, and it can be installed once for every project you have - but it can also fail to fire.
-In this exercise you ask one question in four directories and find out whether the notes are opened at all, and whether the answer changes when they are.</p></div>
+<div class="mdblock"><p>A project can keep its own notes: what has been decided, what has been derived, what was got wrong and later corrected. Kept as ordinary files in the project - a set of them is usually called a wiki - they are the only record that survives a session ending.</p>
+<p>They are worth nothing if the agent does not read them, and it will not open a directory it has no reason to open. Two things can give it that reason. A <code>CLAUDE.md</code> is a file the tool reads at the start of every session in that directory: it always applies, and it costs some of the session's limited attention whether or not the question needed it. A SKILL is a set of instructions the agent loads only when it judges that what it is doing matches the skill's description: it costs nothing until it fires, and it can be installed once for every project you have - but it can also fail to fire.</p>
+<p>In this exercise you ask one question in four directories and find out whether the notes are opened at all, and whether the answer changes when they are.</p></div>
 <table>
 <tr><th>what changes between runs</th><td>How the agent comes to read a project&#x27;s notes, or whether it does at all.</td></tr>
 <tr><th>what to do</th><td><div class="mdblock"><p>One question, four directories. <code>a/</code> empty. <code>b/</code> the notes and nothing else. <code>c/</code> the notes and a <code>CLAUDE.md</code> that mentions them. <code>d/</code> the notes and a skill that says to read them. The same question in all four.</p></div></td></tr>
@@ -66,8 +66,8 @@ In this exercise you ask one question in four directories and find out whether t
 </table>
 <h2>The same task twice, changing nothing</h2>
 <p class="note">first turns up on day 2</p>
-<div class="mdblock"><p>Ask the identical question twice - same model, same settings, same words - and the two answers will not be identical. How far apart they are is your noise floor.
-This matters for every other comparison you will make. If you change a setting and the answer moves by less than the noise floor, you have learned nothing, and you cannot know that until you have measured it. Nothing else in this course runs the same thing twice unchanged, so nobody yet knows what this number is.</p></div>
+<div class="mdblock"><p>Ask the identical question twice - same model, same settings, same words - and the two answers will not be identical. How far apart they are is your noise floor.</p>
+<p>This matters for every other comparison you will make. If you change a setting and the answer moves by less than the noise floor, you have learned nothing, and you cannot know that until you have measured it. Nothing else in this course runs the same thing twice unchanged, so nobody yet knows what this number is.</p></div>
 <table>
 <tr><th>what changes between runs</th><td>Nothing. That is the point.</td></tr>
 <tr><th>what to do</th><td><div class="mdblock"><p>Take a task from your own work and run it twice, in two directories, with the same model, the same settings and the same words. Then a third time if the first two disagree in a way you did not expect.</p></div></td></tr>
@@ -77,8 +77,8 @@ This matters for every other comparison you will make. If you change a setting a
 </table>
 <h2>Leaving it to run without you</h2>
 <p class="note">first turns up on day 2</p>
-<div class="mdblock"><p>You can use these tools as a conversation, answering questions as they come. You can also start one with a single command that runs to completion with nobody watching and hands back whatever files it produced. That second mode is called running HEADLESS, and it is how you use an agent for anything that takes longer than you are willing to sit for.
-It also removes the thing you were relying on without noticing: you. In this exercise you run one task both ways and compare what came back.</p></div>
+<div class="mdblock"><p>You can use these tools as a conversation, answering questions as they come. You can also start one with a single command that runs to completion with nobody watching and hands back whatever files it produced. That second mode is called running HEADLESS, and it is how you use an agent for anything that takes longer than you are willing to sit for.</p>
+<p>It also removes the thing you were relying on without noticing: you. In this exercise you run one task both ways and compare what came back.</p></div>
 <table>
 <tr><th>what changes between runs</th><td>Whether you are there while it works.</td></tr>
 <tr><th>what to do</th><td><div class="mdblock"><p>A task from your own work, run once as a conversation and once as a single command with no interaction. Give both the same request.</p></div></td></tr>
@@ -88,8 +88,8 @@ It also removes the thing you were relying on without noticing: you. In this exe
 </table>
 <h2>A second opinion from a session that knows nothing</h2>
 <p class="note">first turns up on day 3</p>
-<div class="mdblock"><p>An agent that has been working on a problem with you has your context and your assumptions, and has spent the whole session building the thing you are now asking it to criticise. A session started fresh, given only the output, has none of that.
-In this exercise you get both opinions and compare them.</p></div>
+<div class="mdblock"><p>An agent that has been working on a problem with you has your context and your assumptions, and has spent the whole session building the thing you are now asking it to criticise. A session started fresh, given only the output, has none of that.</p>
+<p>In this exercise you get both opinions and compare them.</p></div>
 <table>
 <tr><th>what changes between runs</th><td>Whether the reviewer has any of the history.</td></tr>
 <tr><th>what to do</th><td><div class="mdblock"><p>Take something your agent produced. First write down yourself what you think is wrong or weak in it. Then open a new session, give it the output and nothing else - no transcript, no reasoning, no context - and ask what is wrong with it.</p></div></td></tr>
@@ -98,8 +98,8 @@ In this exercise you get both opinions and compare them.</p></div>
 </table>
 <h2>Skills and hooks</h2>
 <p class="note">first turns up on day 5</p>
-<div class="mdblock"><p>A skill, defined above, is loaded by the agent when it judges that the task matches - which means it can also go unloaded, and nothing announces that it did. A HOOK does not depend on that judgement. It is a command the tool runs at a fixed moment whether or not the agent thinks of it; the one used here runs at the moment the agent decides it has finished, and if that command reports a problem the agent is not finished after all - the message comes back as a new turn and it keeps working.
-Both are ways of getting the same rule obeyed, and they fail differently. A skill can go unloaded; a hook cannot make an agent do something it does not already know how to do. In this exercise you run one task in three directories that differ only in which of the two is present.</p></div>
+<div class="mdblock"><p>A skill, defined above, is loaded by the agent when it judges that the task matches - which means it can also go unloaded, and nothing announces that it did. A HOOK does not depend on that judgement. It is a command the tool runs at a fixed moment whether or not the agent thinks of it; the one used here runs at the moment the agent decides it has finished, and if that command reports a problem the agent is not finished after all - the message comes back as a new turn and it keeps working.</p>
+<p>Both are ways of getting the same rule obeyed, and they fail differently. A skill can go unloaded; a hook cannot make an agent do something it does not already know how to do. In this exercise you run one task in three directories that differ only in which of the two is present.</p></div>
 <table>
 <tr><th>what changes between runs</th><td>Whether the rule is written down, and whether anything enforces it.</td></tr>
 <tr><th>what to do</th><td><div class="mdblock"><p>One task, three directories, the same request and the same model in each. <code>a/</code> is empty. <code>b/</code> has a skill stating the rule and a hook that checks it. <code>c/</code> has the hook and no skill. Then read the three directories side by side - the directories, not the replies.</p></div></td></tr>
@@ -110,14 +110,36 @@ Both are ways of getting the same rule obeyed, and they fail differently. A skil
 </table>
 <h2>The same content in two output formats</h2>
 <p class="note">first turns up on day 5</p>
-<div class="mdblock"><p>This course is delivered in two formats. The lectures are SLIDEV decks: a file of markdown, built into a PDF by a script. The sessions are single self-contained HTML pages, generated by a different script from a file of prose plus whatever the runs produced. Both ship here with the source they were built from, so you can see how each is made.
-An agent will produce either on request, and does different things for each without being told to. In this exercise you have it build the same content both ways and decide which one you would keep up to date.</p></div>
+<div class="mdblock"><p>This course is delivered in two formats. The lectures are SLIDEV decks: a file of markdown, built into a PDF by a script. The sessions are single self-contained HTML pages, generated by a different script from a file of prose plus whatever the runs produced. Both ship here with the source they were built from, so you can see how each is made.</p>
+<p>An agent will produce either on request, and does different things for each without being told to. In this exercise you have it build the same content both ways and decide which one you would keep up to date.</p></div>
 <table>
 <tr><th>what changes between runs</th><td>The output format, for something you would have to maintain yourself.</td></tr>
 <tr><th>what to do</th><td><div class="mdblock"><p>Take something of your own - a result, a paper, a talk you owe somebody - and have an agent build it as a slidev deck, and then as a self-contained page. Same content, twice.</p></div></td></tr>
 <tr><th>what to compare</th><td><div class="mdblock"><p>Which one you would be willing to maintain, and why. What each format makes easy and what it makes impossible. What the agent did differently for each without being asked.</p></div></td></tr>
 <tr><th>what you are given</th><td><div class="mdblock"><p>Both sources ship. Every <code>lecture-*/</code> carries the <code>slides.md</code> it was built from, its figures and its build script; <code>how-a-page-is-built/</code> carries the page builder, its template, and one session page's source.</p></div></td></tr>
 <tr><th>run it on</th><td><div class="mdblock"><p>Yours. This is the one where using somebody else's subject defeats the point.</p></div></td></tr>
+</table>
+<h2>Auditing your own setup for wasted tokens</h2>
+<p class="note">first turns up on day 5</p>
+<div class="mdblock"><p>Some questions cannot be answered by being told, and each of these has a number behind it sitting in a directory you already have. Could I be spending less than I am, without working any differently? Why did that session cost several times what this one did, when the two felt the same? What did I pay for and never use? Am I paying to re-read the same thing hundreds of times, and how much of the bill is that? Does starting a fresh conversation actually save anything, or does it just cost me the setup again? Is anything switched on that I could switch off? Where does the money go - into what the agent writes, or into what it re-reads?</p>
+<p>Six terms first, before any of them is used. A TOKEN is the unit these tools are billed in, roughly a short word. The CONTEXT is everything the model can see on a given turn - your instructions, the files it has read, the commands it has run and what they printed - and every turn sends all of it again from the beginning, so a long session pays for its own history over and over. A CACHE READ is that same history charged at a fraction of the price because it has not changed since the last turn: cheaper, not free, and not any smaller. A <code>CLAUDE.md</code>, defined above, is read at the start of every session in its directory, so it is in the context from the first turn whether or not the question needed it. An MCP SERVER is a process that adds tools to your agent; each tool it adds carries a description which is also in the context from the first turn, unless TOOL DEFERRAL is on, in which case the descriptions are loaded only when a tool is actually wanted. A SESSION LOG is the file the tool writes as it works, one entry per request, each recording what that request cost.</p>
+<p>In this exercise you point an agent at your own machine and your own logs, ask for seven measurements, and read what comes back. Nothing is changed and nothing is re-run.</p></div>
+<table>
+<tr><th>what changes between runs</th><td>Nothing is run twice. What varies is across the sessions you have already had, one row each - so what you are comparing is the way you were working when each of them ran.
+</td></tr>
+<tr><th>what to do</th><td><div class="mdblock"><p>Write one audit prompt and tell it, in the prompt, to change nothing. Seven measurements:</p>
+<p>(1) every <code>CLAUDE.md</code> or <code>AGENTS.md</code> in scope, and the size of each;</p>
+<p>(2) every MCP server, how many tools each contributes, whether tool deferral is on, and whether a proxy or gateway is configured - routing through one can turn deferral off without saying so;</p>
+<p>(3) which model is set and at what effort, and the file each is set in;</p>
+<p>(4) any hook that runs before a tool and trims the output of commands that print thousands of lines;</p>
+<p>(5) every agent definition you have, and whether each pins a model or inherits one;</p>
+<p>(6) every scheduled or recurring job, with its interval beside how long a cached prefix survives - one that fires after the cache has expired pays full price every time;</p>
+<p>(7) a parse of the logs. Not the newest session: EVERY session in the log directory, one row each - requests, the context on its first turn, the context on its last, tokens written, total - and then the totals across all of them.</p>
+<p>Ask for one table, sorted by cost, with five columns: the finding, its severity as RED, AMBER or GREEN, the evidence, what it is costing you, and what to do about it. Evidence has to be a number or a path and never an adjective; UNKNOWN is a legal answer where a guess is not. Then one line naming the single change with the most behind it.</p></div></td></tr>
+<tr><th>what to compare</th><td><div class="mdblock"><p>The sessions against each other. Which of them cost several times what the others did, and what was different about how you were working. How much of each total was a cache read rather than something new. Whether the ones where you started fresh came out cheaper than the ones where you carried on. And, separately from the logs: how much of what is loaded before you type anything was used by the work you actually did.</p>
+<p>One session tells you almost nothing. Twenty side by side tell you which way of working costs what, which is the whole point of doing it directory-wide.</p></div></td></tr>
+<tr><th>what you are given</th><td><div class="mdblock"><p>Nothing. Your own machine, and your own logs.</p></div></td></tr>
+<tr><th>run it on</th><td><div class="mdblock"><p>Yours, and it has to be - the input is the week you have just had. By now you have run something headless, left a run alone against a written objective, and put a team of agents on a job, so your own logs carry real differences rather than ours.</p></div></td></tr>
 </table>
 </body>
 </html>

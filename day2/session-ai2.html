@@ -217,6 +217,18 @@
     font-weight:600;}
   .vizpick .btn.off{opacity:.45;cursor:default;}
 
+  /* ---------- a PDF, shown whole ----------
+     Same shape as an embedded artefact and the same lazy mounting, with one
+     difference forced by the browser: the frame is pointed at a BLOB URL
+     rather than handed srcdoc, because Chrome refuses to navigate a frame to
+     a data: URL holding a PDF. Day 1 shows the Peters reproduction this way. */
+  .pdf{position:relative;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;overflow:hidden;margin:18px 0;}
+  .pdf iframe,.pdf .ph{height:clamp(500px, calc(100vh - 330px), 900px);}
+  .pdf iframe{display:block;width:100%;border:0;background:var(--surface);}
+  .pdf .ph{display:grid;place-items:center;color:var(--ink-3);
+    font-family:ui-sans-serif,sans-serif;font-size:13px;}
+
   table.tbl{width:100%;border-collapse:collapse;font-size:var(--small);margin:18px 0;
     font-family:ui-sans-serif,sans-serif;}
   table.tbl th,table.tbl td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);
@@ -889,6 +901,7 @@ function go(i){
   prevBtn.disabled = i===0; nextBtn.disabled = i===stages.length-1;
   if (location.hash !== '#'+(i+1)) history.replaceState(null,'','#'+(i+1));
   mountViz(stages[i]);
+  mountPdf(stages[i]);
   autoplay(stages[i]);
 }
 prevBtn.onclick=function(){go(cur-1);};
@@ -903,12 +916,15 @@ document.addEventListener('keydown',function(e){
 });
 
 /* ---------------- lazy-mounted embedded artefacts ---------------- */
-function decode(b64){
-  var bin = atob(b64), n = bin.length, bytes = new Uint8Array(n);
-  for (var i=0;i<n;i++) bytes[i] = bin.charCodeAt(i);
-  return new TextDecoder('utf-8').decode(bytes);
+function unb64(b64){
+  var bin = atob(b64), n = bin.length, out = new Uint8Array(n);
+  for (var i=0;i<n;i++) out[i] = bin.charCodeAt(i);
+  return out;
 }
-var blobUrls = {};
+function decode(b64){
+  return new TextDecoder('utf-8').decode(unb64(b64));
+}
+var blobUrls = {}, pdfUrls = {};
 
 /* A stage may carry several artefacts and let the reader choose between them:
    any button in the stage carrying a data-pick attribute swaps what the single
@@ -953,6 +969,30 @@ function mountViz(stage){
       URL.createObjectURL(new Blob([html], {type:'text/html'}));
     window.open(blobUrls[key], '_blank');
   };
+}
+
+/* ---------------- a PDF, mounted whole ----------------
+   The document is base64 in the payload like an embedded artefact, and it is
+   decoded on arrival at its stage rather than at load, because it is several
+   hundred kB. A blob URL, not a data: URL: Chrome will not navigate a frame to
+   the second. The URL is built once per key and kept, so leaving the stage and
+   coming back does not decode the file again. PDF is read through a typeof
+   guard because a page that declares no PDF does not carry the array at all —
+   which is what keeps the other four days' pages what they were. */
+function mountPdf(stage){
+  var host = stage.querySelector('.pdf[data-pdf]');
+  if (!host) return;
+  var all = (typeof PDF === 'undefined') ? {} : PDF;
+  var key = host.dataset.pdf;
+  if (!key || host.dataset.mounted === key || !all[key]) return;
+  host.dataset.mounted = key;
+  if (!pdfUrls[key]) pdfUrls[key] =
+    URL.createObjectURL(new Blob([unb64(all[key])], {type:'application/pdf'}));
+  var f = document.createElement('iframe');
+  f.setAttribute('title', key);
+  f.src = pdfUrls[key];
+  var ph = host.querySelector('.ph'); if (ph) ph.remove();
+  host.appendChild(f);
 }
 
 /* ---------------- autoplay on entry ----------------

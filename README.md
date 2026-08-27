@@ -65,6 +65,7 @@ And three pages that belong to no day:
 | | |
 |---|---|
 | `homework.html` | every exercise the course sets |
+| `final-project.html` | the final project: pick a problem of your own and do the whole of it this way |
 | `using-the-tools.html` | what each day introduces, in one place, as a reference to keep |
 
 `backup/` holds a single deck holding the slides cut from the five lectures for

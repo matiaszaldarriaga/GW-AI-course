@@ -1302,9 +1302,29 @@ The single most informative plot in the field. Blue: black holes from X-ray bina
 
 # GW170817 &mdash; a *multi-messenger* event.
 
+<script setup>
+import { ref } from 'vue'
+import { onSlideEnter, onSlideLeave } from '@slidev/client'
+
+const gw170817Video = ref(null)
+onSlideEnter(() => {
+  const v = gw170817Video.value
+  if (!v) return
+  v.currentTime = 0
+  v.muted = false
+  v.play().catch(() => {})
+})
+onSlideLeave(() => {
+  const v = gw170817Video.value
+  if (!v) return
+  v.pause()
+  v.currentTime = 0
+})
+</script>
+
 <div class="grid grid-cols-[3fr_2fr] gap-6 mt-2 items-center">
   <div class="flex flex-col items-center">
-    <img src="./figures/gw170817-fermi.png" class="max-h-[290px] rounded shadow-md" />
+    <video ref="gw170817Video" src="./figures/gw170817-fermi.mp4" poster="./figures/gw170817-fermi.png" loop controls playsinline preload="auto" class="max-h-[290px] rounded shadow-md"></video>
     <div class="fig-cap">Fermi gamma-rays &amp; LIGO strain, GW170817 / GRB 170817A.</div>
   </div>
 

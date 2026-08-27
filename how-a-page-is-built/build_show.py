@@ -58,6 +58,19 @@ THE PAGE DIRECTORY — this is what days 2-5 copy
                              mounted into an iframe via srcdoc only when the reader
                              reaches that stage. A stage hosts one with
                              <div class="viz" data-viz="key">.
+    PDFS       {key: path}   a PDF, base64'd into PDF[key] and mounted into an
+                             iframe from a BLOB URL when the reader reaches that
+                             stage. A stage hosts one with
+                             <div class="pdf" data-pdf="key">. Blob rather than
+                             `data:` because Chrome refuses to navigate a frame to
+                             a data: URL holding a PDF. Same rules as EMBED — the
+                             path is relative to the repo root and its existence is
+                             enforced — plus IMAGES' second direction: a declared
+                             PDF that no stage hosts is a few hundred kB of base64
+                             nobody ever sees, so it fails the build.
+                             Day 1 shows the whole Peters reproduction this way;
+                             see wiki/rules.md rule 0, which records the one
+                             narrow exception that makes it legal.
     INCLUDES   {key: path}   GENERATED HTML fragments, spliced where a stage writes
                              __INCLUDE_key__. Paths are relative to page.py. This is
                              for a table a script computes: the alternative is
@@ -377,6 +390,21 @@ def render(page_dir):
             raise ShowError(f"{page.OUT}: a stage offers embed {key!r}, which "
                             f"EMBED does not declare")
 
+    pdfs = {}
+    for key, rel in (getattr(page, "PDFS", {}) or {}).items():
+        p = os.path.join(ROOT, rel)
+        if not os.path.exists(p):
+            raise ShowError(f"{page.OUT}: pdf {rel} does not exist")
+        if f'data-pdf="{key}"' not in stages:
+            raise ShowError(f"{page.OUT}: PDFS declares {key!r} but no stage "
+                            f"hosts it — that is a document base64'd into the "
+                            f"page and never shown")
+        pdfs[key] = b64(p)
+    for key in re.findall(r'data-pdf="([^"]+)"', stages):
+        if key not in pdfs:
+            raise ShowError(f"{page.OUT}: a stage hosts pdf {key!r}, which "
+                            f"PDFS does not declare")
+
     # rule 1c: every claim tagged on a stage resolves in a generated registry
     reg = {}
     for rel in getattr(page, "REGISTRIES", []) or []:
@@ -411,11 +439,16 @@ def render(page_dir):
             raise ShowError(f"{os.path.relpath(TEMPLATE, ROOT)}: "
                             f"{shell.count(mark)} {mark} markers, expected 1")
 
-    payload = "\n".join([
-        "const PROMPTS = " + js(prompts) + ";",
-        "const IMG = " + js(imgs) + ";",
-        "const VIZ = " + js(viz) + ";",
-    ])
+    # PDF is emitted only by a page that declares one. A page that does not is
+    # then byte-for-byte what it was before PDFS existed, which is the property
+    # that lets a shared builder grow: the template reads PDF through a
+    # `typeof` guard for exactly this reason.
+    lines = ["const PROMPTS = " + js(prompts) + ";",
+             "const IMG = " + js(imgs) + ";",
+             "const VIZ = " + js(viz) + ";"]
+    if pdfs:
+        lines.append("const PDF = " + js(pdfs) + ";")
+    payload = "\n".join(lines)
     out = (shell.replace("__TITLE__", html.escape(page.TITLE))
                 .replace("__WHO__", page.WHO)
                 .replace("__STAGES__", stages)
