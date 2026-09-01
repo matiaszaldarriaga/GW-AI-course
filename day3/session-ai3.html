@@ -792,6 +792,76 @@
     signal drawn from the continuum, which is what a real one is.</p>
 </section>
 
+<!-- ======================= 13b. THE RANKING, CHECKED ======================= -->
+<section class="stage wide" data-label="What the ranking rested on">
+  <p class="kicker">Link 2 &middot; after the fact</p>
+  <h2>What the ranking rested on, once we went and looked</h2>
+
+  <p class="lede">Two reviewers, two backends, neither able to see the other, the same
+    winner and the same two reasons for it. That is the shape of a result. Both reasons
+    were checked afterwards against the archive. The first one was ours.</p>
+
+  <div class="figrow c2">
+    <div class="card">
+      <p><strong>&ldquo;Only B's folder rebuilds itself.&rdquo;</strong></p>
+      <p>The five folders were assembled by <span class="mono">assemble_review.py</span>,
+        which copies four files per program
+        <span class="src">[src:chain_review_artifacts]</span> &mdash; the program, and the
+        three things the brief asks it to produce.</p>
+      <p>A's own run directory holds two Python files of its own
+        <span class="src">[src:chain_A_py_files]</span>:
+        <span class="mono">search.py</span>, and the
+        <span class="mono">report_builder</span> whose absence both reviewers scored it
+        on. D's holds three <span class="src">[src:chain_D_py_files]</span> &mdash; its
+        search, the <span class="mono">make_report.py</span> that assembles its report,
+        and a verifier. B, C and E wrote one each
+        <span class="src">[src:chain_B_py_files, chain_C_py_files, chain_E_py_files]</span>,
+        so nothing of theirs was lost.</p>
+      <p style="margin-bottom:0">Three files did not travel
+        <span class="src">[src:chain_n_py_dropped]</span>, and all three belong to the two
+        programs that were marked down for not regenerating their own reports. A's folder,
+        as A left it, runs end to end; D's takes two commands rather than one, and the
+        second command was in D's directory.</p>
+    </div>
+
+    <div class="card">
+      <p><strong>&ldquo;Only B measured its own bank.&rdquo;</strong></p>
+      <p>This one holds. It is the slip on the stage before: four of the programs
+        justified their spacing with a guarantee about the candidates they drew, and B is
+        the one that went and measured the thing the guarantee does not cover.</p>
+      <p>It separated nobody. Every bank at the notebook's 0.1
+        <span class="src">[src:chain_problem_set_min_distance]</span> comes out between
+        1.87&nbsp;% and 2.30&nbsp;%
+        <span class="src">[src:chain_B_loss_measured_pct, chain_D_loss_measured_pct]</span>,
+        inside the 5&nbsp;% the problem set allows
+        <span class="src">[src:chain_problem_set_error_budget_pct]</span>, measured or
+        not.</p>
+      <p style="margin-bottom:0">And B did not read its own number. The sentence it was
+        praised for says the placement rule guarantees the loss, and then that the measured
+        worst case is 2.24&nbsp;%
+        <span class="src">[src:chain_B_loss_claimed_pct]</span>, and carries on. The
+        measurement was made and the conclusion was not drawn.</p>
+    </div>
+  </div>
+
+  <p>The bottom of the ranking survives, and for reasons that are in the code. C is the
+    only one of the five whose coalescence time disagrees with the other four, because it
+    recomputes the offset on the full-resolution frequency grid when the bank's convention
+    was fixed on the sparse one. E set its spacing to 0.2
+    <span class="src">[src:chain_E_distance_scale]</span>, said that would cost 4&nbsp;%
+    <span class="src">[src:chain_E_loss_claimed_pct]</span>, and it costs 6.07&nbsp;%
+    <span class="src">[src:chain_E_loss_measured_pct]</span> &mdash; the one program that
+    departed from the notebook, over the budget it invoked to justify the departure.
+    Between A, B and D there is nothing.</p>
+
+  <p class="small muted">Both reviewers read the same five folders, and two of those
+    folders were missing a file we did not copy. Their agreement says they were given the
+    same exhibit; it does not say the exhibit was right. The next two links are still
+    built on B, because B is a fine program to build on and the archive is what it is
+    &mdash; but the ranking that chose it was separating its top three on one artefact of
+    ours and one measurement that changed no order.</p>
+</section>
+
 <!-- ============================ 14. LINK 3 — THE ASK ============================ -->
 <section class="stage wide" data-label="Faster, bit for bit">
   <p class="kicker">Link 3 &middot; the ask</p>
