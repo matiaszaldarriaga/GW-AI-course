@@ -13,8 +13,33 @@ research with AI agents. Each day carries one of each.
 | **4** | Pulsar timing arrays — the nanohertz sky | more than one of them: roles, and an independent check |
 | **5** | Open problems | turning a result into an output |
 
-There is also a **final project**, presented online after the week. Details to be
-announced.
+There is also a **[final project](https://matiaszaldarriaga.github.io/GW-AI-course/final-project.html)**,
+presented online after the week.
+
+---
+
+## Everything, rendered
+
+The files in this repository are HTML, and GitHub shows you their source. Every one of
+them opens as a page here:
+
+**https://matiaszaldarriaga.github.io/GW-AI-course/**
+
+| | The science hour | The AI hour |
+|---|---|---|
+| **1** | [GW fundamentals](https://matiaszaldarriaga.github.io/GW-AI-course/day1/lecture-gw/slides.pdf) | [what an agent is](https://matiaszaldarriaga.github.io/GW-AI-course/day1/session-ai.html) |
+| **2** | [Ground-based detection](https://matiaszaldarriaga.github.io/GW-AI-course/day2/lecture-gw2/slides.pdf) | [navigating unfamiliar code](https://matiaszaldarriaga.github.io/GW-AI-course/day2/session-ai2.html) |
+| **3** | [Astrophysical modelling](https://matiaszaldarriaga.github.io/GW-AI-course/day3/lecture-gw3/slides.pdf) | [scaling out](https://matiaszaldarriaga.github.io/GW-AI-course/day3/session-ai3.html) |
+| **4** | [Pulsar timing arrays](https://matiaszaldarriaga.github.io/GW-AI-course/day4/lecture-gw4/slides.pdf) | [a team, and what its members do to each other](https://matiaszaldarriaga.github.io/GW-AI-course/day4/session-ai4.html) |
+| **5** | [Open problems](https://matiaszaldarriaga.github.io/GW-AI-course/day5/lecture-gw5/slides.pdf) | [content written down for a machine to read](https://matiaszaldarriaga.github.io/GW-AI-course/day5/session-ai5.html) |
+
+And the three that belong to no day:
+[the exercises](https://matiaszaldarriaga.github.io/GW-AI-course/homework.html),
+[the final project](https://matiaszaldarriaga.github.io/GW-AI-course/final-project.html),
+[using the tools](https://matiaszaldarriaga.github.io/GW-AI-course/using-the-tools.html).
+
+You still want the repository itself — the papers, the data, the day-5 scaffold and
+`setup/` are files you clone and run, not pages you read.
 
 ---
 
