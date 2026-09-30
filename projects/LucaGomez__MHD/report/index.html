@@ -1,0 +1,466 @@
+<title>Dust from MHD Turbulence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --bg:#f5f7f9; --surface:#ffffff; --sunken:#eef1f5;
+  --ink:#16181d; --ink-2:#3b424c; --muted:#5f6772; --line:#dfe4ea;
+  --accent:#2a78d6; --warm:#eb6834; --green:#1baf7a; --amber:#c98500;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#111418; --surface:#181c21; --sunken:#1e232a;
+    --ink:#e9edf2; --ink-2:#c3cad3; --muted:#98a2ae; --line:#2a3039;
+    --accent:#5a9df0; --warm:#f08154; --green:#35c08c; --amber:#e0a63a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#111418; --surface:#181c21; --sunken:#1e232a;
+  --ink:#e9edf2; --ink-2:#c3cad3; --muted:#98a2ae; --line:#2a3039;
+  --accent:#5a9df0; --warm:#f08154; --green:#35c08c; --amber:#e0a63a;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:900px;margin:0 auto;padding-inline:20px;padding-block:0 72px;}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+header.top .inner{max-width:900px;margin:0 auto;padding:10px 20px;display:flex;
+  gap:18px;align-items:baseline;flex-wrap:wrap;}
+header.top strong{font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:.01em;}
+header.top nav{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;}
+header.top nav a{color:var(--muted);text-decoration:none;}
+header.top nav a:hover,header.top nav a:focus-visible{color:var(--accent);}
+h1{font-family:var(--sans);font-weight:700;font-size:clamp(28px,5vw,40px);
+  line-height:1.15;letter-spacing:-.02em;margin:40px 0 12px;text-wrap:balance;}
+h2{font-family:var(--sans);font-weight:600;font-size:clamp(20px,3vw,25px);
+  line-height:1.25;margin:52px 0 6px;text-wrap:balance;}
+h3{font-family:var(--sans);font-weight:600;font-size:17px;margin:30px 0 4px;}
+p,li{max-width:68ch;}
+p{margin:0 0 14px;}
+ul,ol{margin:0 0 16px;padding-left:22px;}
+li{margin:0 0 7px;}
+a{color:var(--accent);}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 2px;}
+.lede{font-size:19.5px;color:var(--ink-2);max-width:66ch;}
+.byline{font-family:var(--mono);font-size:12.5px;color:var(--muted);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:10px 0;margin:26px 0 8px;display:flex;gap:10px 26px;flex-wrap:wrap;}
+.status{background:var(--sunken);border-left:3px solid var(--amber);
+  padding:14px 16px;margin:26px 0;border-radius:0 6px 6px 0;}
+.status p{margin:0;max-width:64ch;}
+.status b{font-family:var(--sans);}
+.chain{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin:22px 0 28px;}
+.chain .step{flex:1 1 160px;background:var(--surface);border:1px solid var(--line);
+  border-radius:7px;padding:11px 13px;}
+.chain .step span{display:block;font-family:var(--mono);font-size:11px;
+  color:var(--muted);margin-bottom:3px;}
+.chain .step b{font-family:var(--sans);font-weight:600;font-size:14.5px;line-height:1.3;
+  display:block;}
+.chain .step.pending{border-style:dashed;color:var(--muted);}
+.figure{margin:26px 0 30px;}
+.figure img{display:block;width:100%;max-width:100%;border:1px solid var(--line);
+  border-radius:8px;background:var(--surface);}
+.figure figcaption{font-family:var(--mono);font-size:12.5px;color:var(--muted);
+  margin-top:9px;max-width:72ch;line-height:1.55;}
+.scroll{overflow-x:auto;margin:20px 0 24px;}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14px;
+  font-variant-numeric:tabular-nums;}
+caption{caption-side:top;text-align:left;font-family:var(--mono);font-size:12.5px;
+  color:var(--muted);padding-bottom:8px;}
+th,td{text-align:right;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
+th:first-child,td:first-child{text-align:left;}
+thead th{font-weight:600;font-size:12.5px;color:var(--muted);
+  border-bottom:1px solid var(--ink-2);}
+tbody tr.mark td{background:var(--sunken);font-weight:600;}
+tbody tr.ref td{color:var(--muted);}
+td.num-bad{color:var(--warm);}
+td.num-good{color:var(--green);}
+.key{border-left:3px solid var(--accent);background:var(--surface);
+  padding:14px 16px;margin:24px 0;border-radius:0 6px 6px 0;}
+.key p{margin:0;max-width:64ch;}
+.key .eyebrow{color:var(--accent);}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin:20px 0 6px;}
+.cols .c{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 15px;}
+.cols .c h3{margin:0 0 4px;font-size:15px;}
+.cols .c p{margin:0;font-size:15px;color:var(--ink-2);}
+code,.mono{font-family:var(--mono);font-size:13.5px;}
+pre{background:var(--sunken);border:1px solid var(--line);border-radius:7px;
+  padding:13px 15px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.5;}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:18px;
+  font-family:var(--mono);font-size:12.5px;color:var(--muted);}
+footer a{color:var(--muted);}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+
+<header class="top">
+  <div class="inner">
+    <strong>Dust from MHD turbulence</strong>
+    <nav>
+      <a href="#table1">Table 1</a>
+      <a href="#dust">Which turbulence looks like dust</a>
+      <a href="#cost">The 512³ stall</a>
+      <a href="#res">Is 256³ enough</a>
+      <a href="#review">What the review changed</a>
+      <a href="#next">Next</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h1>Can MHD turbulence make dust maps good enough to train a CNN?</h1>
+
+<p class="lede">The goal is a CNN that removes Galactic dust from CMB polarization
+maps, trained on simulations instead of on the sky itself. This report covers the
+upstream half: which simulations reproduce the published dust statistics, which
+ones actually resemble real dust, and what resolution the training maps need.</p>
+
+<div class="byline">
+  <span>Reference: Stalpes, Collins &amp; Huffenberger 2024, arXiv:2404.02874</span>
+  <span>Codes: own isothermal MHD solver · Enzo · Cho–Lazarian (via The Well)</span>
+  <span>Cluster: FASRC Cannon</span>
+</div>
+
+<div class="status">
+  <p><b>Status.</b> The simulation and analysis chain is complete; the CNN is not
+  trained yet, because the training set needs simulations that did not fit in the
+  compute available. A second agent (Codex) reviewed this work and found two
+  blocking defects in the analysis. Both are fixed, the affected results were
+  regenerated, and <b>one headline claim did not survive</b> — it is marked where
+  it appeared, and the last section says what the review changed.</p>
+</div>
+
+<div class="chain">
+  <div class="step"><span>step 1</span><b>MHD turbulence</b></div>
+  <div class="step"><span>step 2</span><b>Project to Stokes T, Q, U</b></div>
+  <div class="step"><span>step 3</span><b>E/B spectra, compare with Planck &amp; PySM3</b></div>
+  <div class="step pending"><span>step 4 — not reached</span><b>128×128 maps → CNN</b></div>
+</div>
+
+<h2 id="table1">The paper's Table 1, reproduced with an independent code</h2>
+<p class="eyebrow">finding 1</p>
+
+<p>The paper fits every spectral slope as α = a + b·M<sub>S</sub> + c·M<sub>A</sub>.
+We repeated that fit on 100 snapshots streamed from
+<a href="https://polymathic-ai.org/the_well/datasets/MHD_256/">The Well</a>'s 256³
+boxes, which use the Cho–Lazarian ENO code — unrelated to the paper's Enzo — over
+its sub-Alfvénic family (M<sub>A</sub> ≈ 0.8, M<sub>S</sub> from 0.5 to 8.4).</p>
+
+<div class="scroll">
+<table>
+  <caption>Fitted coefficients, this work against the published values</caption>
+  <thead><tr><th>slope</th><th>a (this work)</th><th>a (paper)</th><th>b (this work)</th><th>b (paper)</th></tr></thead>
+  <tbody>
+    <tr><td>α<sub>ρ</sub></td><td>−3.47</td><td>−3.61</td><td>0.152</td><td>0.160</td></tr>
+    <tr><td>α<sub>v</sub></td><td>−3.85</td><td>−3.75</td><td>0.010</td><td>0.020</td></tr>
+    <tr><td>α<sub>H</sub></td><td>−3.57</td><td>−3.53</td><td>0.031</td><td>0.020</td></tr>
+    <tr><td>α<sub>TT</sub></td><td>−3.64</td><td>−3.59</td><td>0.174</td><td>0.150</td></tr>
+    <tr><td>α<sub>EE</sub></td><td>−3.38</td><td>−3.41</td><td>0.164</td><td>0.170</td></tr>
+    <tr class="mark"><td>α<sub>BB</sub></td><td class="num-bad">−3.93</td><td>−4.31</td><td class="num-bad">0.216</td><td>0.280</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="key">
+  <p class="eyebrow">what this buys us</p>
+  <p>Everything matches except B-modes, and <b>our own from-scratch solver misses in
+  the same direction</b>. Two independent codes disagreeing with the published B-mode
+  fit the same way points at the B-mode measurement rather than at either code. The
+  velocity spectrum goes the other way: The Well gives α<sub>v</sub> = −3.85 to
+  −4.03 against the paper's −3.86, while our solver gives −3.41 — that slope is our
+  solver's own numerical dissipation.</p>
+</div>
+
+<h2 id="dust">Do simulated maps look like real dust?</h2>
+<p class="eyebrow">finding 2 — revised after review</p>
+
+<p>One estimator, applied identically to simulated maps and to PySM3 dust models
+at 353 GHz (128×128 patches of 20°, Galactic latitudes 35°–75°, E/B decomposed on
+the full sphere so nothing leaks at the patch edge, same beam divided out of every
+spectrum). Simulated maps are whole projected faces binned to 128×128, so that a
+map wavenumber is a box wavenumber, and the band is k = 3–9 — the range where a
+256³ box is still turbulent rather than numerically damped.</p>
+
+<div class="scroll">
+<table>
+  <caption>Dust statistics over k = 3–9. The polarization fraction of a simulation
+  still needs the intrinsic grain fraction p₀ before it can be compared.</caption>
+  <thead><tr><th>source</th><th>α<sub>EE</sub></th><th>α<sub>BB</sub></th><th>BB/EE</th><th>r<sub>TE</sub></th><th>S at 2 px</th><th>p/p₀</th><th>skew ln T</th></tr></thead>
+  <tbody>
+    <tr class="ref"><td>PySM3 d1</td><td>−2.78</td><td>−2.70</td><td>0.56</td><td>0.17</td><td>5.6°</td><td>0.09</td><td>0.27</td></tr>
+    <tr class="ref"><td>PySM3 d10</td><td>−2.81</td><td>−2.68</td><td>0.58</td><td>0.29</td><td>4.6°</td><td>0.04</td><td>0.55</td></tr>
+    <tr class="ref"><td>PySM3 d12</td><td>−2.85</td><td>−3.04</td><td>0.61</td><td>0.30</td><td>3.3°</td><td>0.06</td><td>0.61</td></tr>
+    <tr class="mark"><td>Enzo — M<sub>S</sub> 5.3, M<sub>A</sub> 1.5 (1 snapshot)</td><td class="num-bad">−2.01</td><td>−2.44</td><td class="num-bad">1.10</td><td class="num-bad">−0.29</td><td>7.7°</td><td>0.35</td><td>−0.11</td></tr>
+    <tr><td>Well — M<sub>S</sub> 7, M<sub>A</sub> ≈ 8</td><td class="num-bad">−1.90</td><td>−2.56</td><td class="num-bad">0.96</td><td class="num-bad">0.51</td><td>11.7°</td><td>0.17</td><td>−0.06</td></tr>
+    <tr><td>Well — M<sub>S</sub> 7, M<sub>A</sub> ≈ 0.8</td><td class="num-bad">−1.92</td><td>−2.35</td><td class="num-bad">1.17</td><td class="num-bad">0.08</td><td>2.5°</td><td class="num-bad">0.74</td><td>0.09</td></tr>
+    <tr><td>Well — M<sub>S</sub> 2.5, M<sub>A</sub> ≈ 8</td><td>−2.26</td><td>−3.18</td><td class="num-bad">0.97</td><td class="num-bad">0.55</td><td>9.9°</td><td>0.16</td><td>0.01</td></tr>
+    <tr><td>Well — M<sub>S</sub> 2.5, M<sub>A</sub> ≈ 0.8</td><td>−2.32</td><td>−3.09</td><td class="num-bad">1.25</td><td>0.21</td><td>1.7°</td><td class="num-bad">0.73</td><td>−0.04</td></tr>
+  </tbody>
+</table>
+</div>
+
+<figure class="figure">
+  <img src="stats.png" alt="Box plots comparing nine statistics across PySM3 dust models, public MHD boxes and the Enzo run">
+  <figcaption>Every statistic, every map. Boxes span the middle half of the maps in
+  each family; the dashed line is the Planck value where one exists.</figcaption>
+</figure>
+
+<div class="scroll">
+<table>
+  <caption>How far off, in units of how much one dust patch differs from another
+  (half the 16–84% spread of d10 over its 72 patches)</caption>
+  <thead><tr><th>statistic</th><th>the three dust models differ by</th><th>simulations sit away by</th></tr></thead>
+  <tbody>
+    <tr class="mark"><td>α<sub>EE</sub></td><td>0.2</td><td>1.4 – 2.6</td></tr>
+    <tr><td>α<sub>BB</sub></td><td>0.7</td><td>0.2 – 1.0</td></tr>
+    <tr class="mark"><td>BB/EE</td><td>0.2</td><td>1.4 – 2.5</td></tr>
+    <tr><td>r<sub>TE</sub></td><td>0.8</td><td>0.5 – 3.7</td></tr>
+    <tr><td>S</td><td>0.7</td><td>0.6 – 2.2</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="key">
+  <p class="eyebrow">the honest result</p>
+  <p><b>The spectral shapes are reasonable; the E/B asymmetry is not.</b> B-mode
+  slopes land inside the patch-to-patch scatter of the dust models, and so does the
+  angle dispersion for some parameter choices — map by map nobody could tell those
+  apart. What is systematic is that E-mode slopes are too shallow by 0.5–0.9, and
+  that BB/EE is ≈ 1.0 where the dust models sit at ≈ 0.58 and Planck measures 0.53.
+  The sky's 2:1 excess of E over B is the most studied feature of dust
+  polarization and the subject of the paper this project set out to reproduce; a
+  box with BB/EE ≈ 1 has none of it, so a network trained on these maps would learn
+  a foreground with about 70% too much B relative to E — an error in exactly the
+  channel the experiment cares about.</p>
+</div>
+
+<div class="status">
+  <p><b>A claim withdrawn.</b> The first version of this report said the Enzo box
+  at M<sub>A</sub> = 1.5 matched PySM3 on nearly every statistic. That was an
+  artifact. Those numbers came from native-resolution 128² tiles cut from the 512³
+  face, which sample box wavenumbers 12–52 — mostly the numerically damped range,
+  where slopes steepen and happened to land near the dust values. The reviewer
+  found the inverted conversion; measured on the properly binned face, the same
+  snapshot gives the row above.</p>
+</div>
+
+<figure class="figure">
+  <img src="maps.png" alt="Intensity, Q and U maps for a PySM3 patch and a simulated box face">
+  <figcaption>A PySM3 d10 patch (top) beside a simulated face (bottom), same
+  quantities and colour scales.</figcaption>
+</figure>
+
+<h2 id="cost">Why one 512³ box cost more than the rest of the project</h2>
+<p class="eyebrow">finding 3</p>
+
+<p>We ran Enzo at 512³ at the paper's Planck point on one 112-core node. Parallel
+efficiency was never the problem: 2.8×10⁵ cell-updates per core per second, 62% of
+the wall time inside the MHD solver, load imbalance 1.04. The time step was.</p>
+
+<div class="scroll">
+<table>
+  <caption>Measured from the run's own log</caption>
+  <thead><tr><th>dynamical times</th><th>time steps needed</th><th>fastest signal in the box</th></tr></thead>
+  <tbody>
+    <tr><td>0 → 1</td><td>3,458</td><td>29</td></tr>
+    <tr><td>1 → 2</td><td>47,672</td><td>250</td></tr>
+    <tr><td>2 → 2.13</td><td>64,051</td><td>900</td></tr>
+    <tr class="mark"><td>→ 2.44</td><td>131,684</td><td class="num-bad">2,295</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The gas itself moves at about 5. The runaway comes from a handful of cells that
+the turbulence empties to a millionth of the mean density: their magnetic signal
+speed B/√ρ sets the time step for the whole box, and those cells carry a millionth
+of the mass and none of the dust emission. Two three-day segments — about 16,000
+core-hours — reached 2.44 of the 10 dynamical times requested.</p>
+
+<figure class="figure">
+  <img src="fig_cost.png" alt="Time steps per dynamical time rising for the uncapped runs and staying flat for the capped one">
+  <figcaption>With no cap on the Alfvén speed, the cost per dynamical time keeps
+  climbing; with the cap it is flat. The 512³ points are the production box, the
+  64³ pair is a controlled test with the same forcing seed.</figcaption>
+</figure>
+
+<h3>The fix, and the test that it changes nothing</h3>
+<p>Enzo has an Alfvén-speed limiter that raises the density of exactly those cells
+until their signal speed reaches a cap. Two details are not in the documentation
+and came from reading the source: the parameter usually recommended for this
+(<code>SmallRho</code>) is not a general floor for this solver, and the limiter
+prints one line per capped cell per step, which at 256³ means gigabytes of log. A
+one-line patch silences it.</p>
+
+<p>The limiter was then tested rather than assumed: two 64³ runs with identical
+parameters and forcing seed, one capped and one not.</p>
+
+<div class="scroll">
+<table>
+  <caption>64³, statistics averaged over the seven snapshots after 2 dynamical times</caption>
+  <thead><tr><th>quantity</th><th>no limiter</th><th>Alfvén cap 50</th></tr></thead>
+  <tbody>
+    <tr><td>cycles for 5 t<sub>dyn</sub></td><td>9,665</td><td class="num-good">4,571</td></tr>
+    <tr><td>M<sub>S</sub></td><td>4.66 ± 0.25</td><td>4.80 ± 0.26</td></tr>
+    <tr><td>M<sub>A</sub></td><td>1.44 ± 0.06</td><td>1.49 ± 0.07</td></tr>
+    <tr><td>σ(ln ρ)</td><td>1.31 ± 0.05</td><td>1.34 ± 0.09</td></tr>
+    <tr><td>α<sub>EE</sub></td><td>−2.38 ± 0.40</td><td>−2.02 ± 0.35</td></tr>
+    <tr><td>BB/EE</td><td>1.11 ± 0.23</td><td>0.89 ± 0.24</td></tr>
+    <tr><td>α<sub>v</sub></td><td>−3.90 ± 0.28</td><td>−4.01 ± 0.18</td></tr>
+    <tr><td>mass added</td><td>—</td><td>1.2 × 10⁻⁴</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The two runs are identical to four decimals until the limiter first fires, then
+drift apart as any two turbulence runs do after a tiny perturbation, so the
+comparison has to be statistical: no quantity differs by more than its scatter
+between snapshots. Treating the seven dumps as independent, the 95% intervals on
+the differences are about [−0.10, +0.84] for α<sub>EE</sub> and [−0.52, +0.08] for
+BB/EE — the test excludes a large effect and nothing finer, from one seed at 64³.
+The cost reduction, by contrast, is measured directly.</p>
+
+<div class="key">
+  <p class="eyebrow">cost after the fix</p>
+  <p>10 dynamical times take about <b>4 days and 10,000 core-hours at 512³</b>, or
+  about <b>8 hours and 900 core-hours at 256³</b>. Before the fix, the 512³ box was
+  heading for 40,000–70,000 core-hours with no end in sight.</p>
+</div>
+
+<h2 id="res">Is 256³ enough to train the CNN?</h2>
+<p class="eyebrow">finding 4</p>
+
+<p>Three measurements on real 256³ data decide this.</p>
+
+<h3>Where the turbulence stops being physical</h3>
+<p>The local slope of the power spectrum is flat through the cascade and steepens
+where the scheme's numerical dissipation takes over. That knee sits at
+<b>k ≈ 9</b> in a 256³ box: physical over a factor of 3 in scale. How far it sits
+depends on the criterion — between 7 and 14 as the reference window and tolerance
+are varied — and that spread is part of the result. The common assumption that the
+knee scales with resolution is <b>not</b> supported by our own ladder: the same
+criterion gives k ≈ 8 at 64³ and k ≈ 9 at 128³.</p>
+
+<figure class="figure">
+  <img src="fig_resolution.png" alt="Local spectral slope against wavenumber for density, velocity and magnetic field">
+  <figcaption>Density, velocity and magnetic field in a 256³ box, averaged over ten
+  snapshots. Inside the shaded band the slope is roughly constant — that is the
+  range a training map can use.</figcaption>
+</figure>
+
+<h3>What a 128×128 map keeps</h3>
+<p>Binning a 256² projected face down to 128² costs almost nothing. Cutting a
+native-resolution quarter tile instead is a mistake, and the reason is the one the
+review corrected: a half-width tile reaches a given box wavenumber at half its own
+k, so its band sits at <em>smaller</em> scales, past the knee. Its slopes are
+steeper by 0.4–0.9 because they are measuring numerical dissipation.</p>
+
+<div class="scroll">
+<table>
+  <caption>Median over four parameter pairs and ten snapshots each</caption>
+  <thead><tr><th>map product</th><th>α<sub>TT</sub></th><th>α<sub>EE</sub></th><th>α<sub>BB</sub></th><th>BB/EE</th><th>r<sub>TE</sub></th></tr></thead>
+  <tbody>
+    <tr><td>native 256² face</td><td>−2.52</td><td>−2.09</td><td>−2.71</td><td>1.08</td><td>0.36</td></tr>
+    <tr class="mark"><td>128² binned face</td><td>−2.54</td><td>−2.10</td><td>−2.73</td><td>1.07</td><td>0.36</td></tr>
+    <tr><td>128² native tile</td><td class="num-bad">−2.99</td><td class="num-bad">−2.62</td><td>−2.78</td><td class="num-bad">0.77</td><td>0.35</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>What the same band means on the sky</h3>
+<div class="scroll">
+<table>
+  <caption>A 128² map of angular size Θ carries k = 3–9 at these multipoles</caption>
+  <thead><tr><th>map size</th><th>ℓ at k = 3</th><th>ℓ at k = 9</th><th>pixel</th></tr></thead>
+  <tbody>
+    <tr><td>20°</td><td>54</td><td>162</td><td>9.4′</td></tr>
+    <tr class="mark"><td>10°</td><td>108</td><td>324</td><td>4.7′</td></tr>
+    <tr><td>5°</td><td>216</td><td>648</td><td>2.3′</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Planck measures dust over ℓ ≈ 40–600, a factor of 15 in scale. A 256³ box gives
+a factor of 3. Whether a bigger box buys range in proportion is exactly the scaling
+our ladder does not support, so the covered range has to be measured per box rather
+than assumed.</p>
+
+<div class="key">
+  <p class="eyebrow">answer</p>
+  <p><b>Pixels are not the limitation; scale range is.</b> Binning to 128×128 costs
+  0.02 in slope, so the CNN's input resolution is free. But a 256³ box is physical
+  over only a factor of 3 in scale — ℓ ≈ 108–324 for 10° maps — so training maps
+  must be binned full faces with a declared angular size, and the network cannot be
+  asked to learn structure outside that band. At 900 core-hours per box against
+  10,000 for 512³, more seeds still beat one large box. What this does not show is
+  that such training transfers to the sky: after the revision above, that question
+  now outranks resolution.</p>
+</div>
+
+<h2 id="review">What the external review changed</h2>
+<p class="eyebrow">cross-agent review</p>
+
+<p>A second agent (Codex, OpenAI) reviewed the code and the result files, with a
+prompt requiring every finding to point at a file, a line or a number. It returned
+ten findings; eight were accepted outright and two in part. Two were blocking:</p>
+
+<div class="cols">
+  <div class="c"><h3>Wrong frame on one projection axis</h3><p>For one of the three
+  lines of sight, Q was defined in the cyclic sky frame while the E/B transform used
+  the array's own axes, mixing E and B. Half the simulated maps in two result files
+  were affected. Fixed and verified against the same line of sight rotated onto a
+  different axis, to one part in 10¹⁵.</p></div>
+  <div class="c"><h3>Inverted scale conversion</h3><p>A half-width tile reaches a
+  given box wavenumber at <em>twice</em> its own k, not half. Native tiles were
+  therefore measured in the numerically damped range — which is what produced the
+  apparent agreement between the M<sub>A</sub> = 1.5 box and the dust models.</p></div>
+  <div class="c"><h3>A knee that could not be found</h3><p>The dissipation-knee
+  search started above its own reference window, so it could not return a value
+  below 11; five of twelve results sat at exactly that bound. Widened, the knee
+  moved from 12 to 9, with a published sensitivity table.</p></div>
+  <div class="c"><h3>Claims stronger than the data</h3><p>"Statistics unchanged" by
+  the Alfvén limiter became a bound (nothing finer than ≈0.8 in a slope is excluded
+  by seven snapshots at 64³), and "only M<sub>A</sub> ≈ 1.5 matches dust" was
+  withdrawn.</p></div>
+</div>
+
+<p>The full exchange — prompt, findings verbatim, and a response to each marked
+fixed, accepted or disputed — is in <span class="mono">review/</span> in the
+repository. Two earlier attempts produced no review at all: the reviewer's sandbox
+could not start, and it reported that as a blocking finding rather than inventing
+results.</p>
+
+<h2 id="next">What is left</h2>
+
+<div class="cols">
+  <div class="c"><h3>Finish one 256³ box</h3><p>At the Planck point with the limiter,
+  about 8 hours on one node. Queued as job 47520681.</p></div>
+  <div class="c"><h3>Build the training set</h3><p>Several seeds, snapshots every 2
+  dynamical times (the measured decorrelation time), binned faces, random rotations:
+  about 1,600 maps for roughly 5 × 900 core-hours — worth doing once the E/B
+  mismatch above is understood, since the network would learn it.</p></div>
+  <div class="c"><h3>Train and stress-test the CNN</h3><p>Then test it on PySM3 dust
+  models it never saw during training.</p></div>
+  <div class="c"><h3>Chase the B-mode excess</h3><p>Every box measured here, from
+  three codes, carries more B relative to E than the dust models do, and the same
+  excess appears against the paper's value. Estimator, projection model or physics —
+  the next test pushes known pure-E realizations through the whole pipeline.</p></div>
+</div>
+
+<footer>
+  <p>Every number on this page is measured in this project and reproducible from the
+  repository: the tables live in <span class="mono">results/</span>, produced by the
+  scripts in <span class="mono">python/</span>. Data: The Well / CATS (CC BY 4.0,
+  Burkhart et al. 2020), PySM3 dust models d1, d10 and d12, Enzo with Grete's
+  stochastic forcing. Planck values from Planck 2018 XI and XII.</p>
+</footer>
+
+</div>

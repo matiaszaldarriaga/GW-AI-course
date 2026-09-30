@@ -1,0 +1,1777 @@
+{
+  "qA_lphi4U1_default": {
+    "value": 1369.91,
+    "statement": "Parametro de resonancia U(1) q_A* = Q_A^2 g_A^2/lambda implicado por lphi4U1.in por defecto (gU1s = 1.11037e-5, CSU1Charges = 1, lambda = 9e-14).",
+    "produced_by": "code/verificar_variables_de_programa.py::comparar_defaults",
+    "from_scratch": "La reduccion de Art I ec. 476 a Q_A^2 g_A^2/lambda (chequeo 7, sympy) y la aritmetica sobre los valores del .in.",
+    "from_library": "sympy para la reduccion simbolica; ningun codigo de CosmoLattice se ejecuta.",
+    "choices": [
+      "Usar omega_* de la ec. 463 del Art I (sqrt(lambda)*varphi_*, varphi_* = sqrt(2)|phi_*|) y no el omegaStar del codigo (sqrt(lambda)|phi_*|): es la convencion con la que la ec. 476 compara contra el q del singlete; con el omegaStar del codigo el mismo cociente daria el doble."
+    ]
+  },
+  "qA_lphi4SU2U1_default": {
+    "value": 1369.91,
+    "statement": "q_A* = g_A^2/lambda implicado por lphi4SU2U1.in por defecto (gU1s = 1.11037e-5, lambda = 9e-14).",
+    "produced_by": "code/verificar_variables_de_programa.py::comparar_defaults",
+    "from_scratch": "Idem qA_lphi4U1_default.",
+    "from_library": "sympy (reduccion simbolica).",
+    "choices": [
+      "Misma convencion de omega_* que qA_lphi4U1_default."
+    ]
+  },
+  "qB_lphi4SU2U1_default": {
+    "value": 1369.93,
+    "statement": "Parametro de resonancia SU(2) q_B* = Q_B^2 g_B^2/(4 lambda) implicado por lphi4SU2U1.in por defecto (gSU2s = 2.22075e-5, lambda = 9e-14); coincide con q_A* a 1e-5, o sea gSU2s = 2 gU1s implementa el q_A* = q_B* del Art I sec. 8.3.",
+    "produced_by": "code/verificar_variables_de_programa.py::comparar_defaults",
+    "from_scratch": "La reduccion de Art I ec. 476 a Q_B^2 g_B^2/(4 lambda) (chequeo 7) y la aritmetica.",
+    "from_library": "sympy (reduccion simbolica).",
+    "choices": [
+      "Misma convencion de omega_* que qA_lphi4U1_default."
+    ]
+  },
+  "rho_ratio_U1_over_lphi4_default": {
+    "value": 4.0,
+    "statement": "Cociente entre la densidad de energia homogenea inicial de lphi4U1.in y la de lphi4.in por defecto (3.99998 por el redondeo de los .in): los defaults no parten del mismo estado.",
+    "produced_by": "code/verificar_variables_de_programa.py::comparar_defaults",
+    "from_scratch": "rho = |phi'|^2 + lambda|phi|^4 para el complejo (normalizacion de energies.h, verificada en el chequeo 7) y rho = phi'^2/2 + lambda phi^4/4 para el singlete, con los valores de los .in.",
+    "from_library": "ninguna (aritmetica en Python).",
+    "choices": [
+      "Comparar en unidades fisicas (GeV) con a = 1 y sin fluctuaciones, que es como los .in especifican el estado inicial homogeneo."
+    ]
+  },
+  "cmplx_norm_matched": {
+    "value": 4.02796e+18,
+    "statement": "cmplx_field_initial_norm (GeV) que hace que el modulo de phi en lphi4U1 reproduzca el inflaton de lphi4.in por defecto: 5.6964e18/sqrt(2).",
+    "produced_by": "code/verificar_variables_de_programa.py::comparar_defaults",
+    "from_scratch": "El mapa radial varphi_r = sqrt(2)|phi| (chequeo 7).",
+    "from_library": "ninguna.",
+    "choices": [
+      "Igualar el estado del inflaton (amplitud y velocidad) y no el numero que se escribe en el .in; es lo que hace que la unica diferencia entre las corridas sea el sector gauge."
+    ]
+  },
+  "cmplx_momentum_matched": {
+    "value": -3.44174e+30,
+    "statement": "cmplx_momentum_initial_norm (GeV^2) correspondiente: -4.86735e30/sqrt(2).",
+    "produced_by": "code/verificar_variables_de_programa.py::comparar_defaults",
+    "from_scratch": "El mapa radial varphi_r' = sqrt(2)|phi|' (chequeo 7).",
+    "from_library": "ninguna.",
+    "choices": [
+      "Idem cmplx_norm_matched."
+    ]
+  },
+  "gU1s_matched_q300": {
+    "value": 5.19615e-06,
+    "statement": "gU1s que da q_A* = 300, el q de lphi4.in por defecto (Q_A = 1, lambda = 9e-14): sqrt(q lambda).",
+    "produced_by": "code/verificar_variables_de_programa.py::comparar_defaults",
+    "from_scratch": "q_A* = g_A^2/lambda (chequeo 7) invertido.",
+    "from_library": "ninguna.",
+    "choices": [
+      "Tomar q = 300 del control como punto de referencia; es un valor a revisar cuando se fije la grilla de acoplamientos, no una eleccion final."
+    ]
+  },
+  "rho_ratio_SU2U1_over_lphi4_default": {
+    "value": 2.4841,
+    "statement": "Cociente entre la densidad de energia homogenea inicial de lphi4SU2U1.in por defecto (|Phi_*| = 5.25151e18, |Phi'_*| = 4.45258e30) y la de lphi4.in por defecto.",
+    "produced_by": "code/verificar_variables_de_programa.py::comparar_defaults",
+    "from_scratch": "rho = |Phi'|^2 + lambda|Phi|^4 (normalizacion de energies.h::kineticSU2Doublet, sin 1/2, y kernel de su2doubletkernels.h con el 1/2 del Art I ec. 369) contra phi'^2/2 + lambda phi^4/4.",
+    "from_library": "ninguna (aritmetica en Python).",
+    "choices": [
+      "Misma comparacion que rho_ratio_U1_over_lphi4_default: estado homogeneo en GeV, a = 1, sin fluctuaciones."
+    ]
+  },
+  "gSU2s_matched_q300": {
+    "value": 1.03923e-05,
+    "statement": "gSU2s que da q_B* = 300 (Q_B = 1, lambda = 9e-14): sqrt(4 q lambda).",
+    "produced_by": "code/verificar_variables_de_programa.py::comparar_defaults",
+    "from_scratch": "q_B* = g_B^2/(4 lambda) (chequeo 7) invertido.",
+    "from_library": "ninguna.",
+    "choices": [
+      "Tomar q_A* = q_B* = q (la eleccion del Art I sec. 8.3) y no q_A* + q_B* = q_eff = q; con ambos encendidos resuenan juntos con q_eff, asi que la alternativa (150 + 150) tambien es defendible y queda por decidir."
+    ]
+  },
+  "qG_matched": {
+    "value": 300,
+    "statement": "qG de lphi4SU2U1 que reproduce el hijo chi de lphi4.in por defecto: qG = g^2/lambda es el mismo q del control.",
+    "produced_by": "code/verificar_variables_de_programa.py::check (bloque 8, acoplamientos a los hijos) + comparar_defaults",
+    "from_scratch": "g^2|Phi|^2 varphi^2 = (1/2) g^2 varphi_r^2 varphi^2 con varphi_r = sqrt(2)|Phi|, y el reescalado de programa con f_* = |Phi_*|, omega_* = sqrt(lambda)|Phi_*|.",
+    "from_library": "sympy.",
+    "choices": [
+      "Emparejar el hijo singlete con chi; el hijo complejo (qH) no tiene contraparte en lphi4 y queda por decidir si se apaga (qH = 0) o se mantiene."
+    ]
+  },
+  "lambda_lphi4_puro_N50": {
+    "value": 2.34e-13,
+    "statement": "lambda de lambda*phi^4/4 normalizada al CMB con N = 50 e-folds.",
+    "produced_by": "code/analisis_parametros.py::lphi4_puro",
+    "from_scratch": "Formulas de slow-roll para phi^4 derivadas en la docstring.",
+    "from_library": "numpy",
+    "choices": [
+      "Slow-roll a primer orden con A_s = 2.1e-9 (Planck 2018); el conteo exacto de e-folds cambia lambda en ~10-15%."
+    ]
+  },
+  "lambda_lphi4_puro_N60": {
+    "value": 1.37e-13,
+    "statement": "lambda de lambda*phi^4/4 normalizada al CMB con N = 60 e-folds.",
+    "produced_by": "code/analisis_parametros.py::lphi4_puro",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": [
+      "Slow-roll a primer orden con A_s = 2.1e-9 (Planck 2018); el conteo exacto de e-folds cambia lambda en ~10-15%."
+    ]
+  },
+  "ns_lphi4_puro_N55": {
+    "value": 0.9464,
+    "statement": "n_s de lambda*phi^4 con N = 55 (Planck: 0.9649 +- 0.0042): excluido a ~4.5 sigma.",
+    "produced_by": "code/analisis_parametros.py::lphi4_puro",
+    "from_scratch": "n_s = 1 - 6 eps + 2 eta.",
+    "from_library": "numpy",
+    "choices": [
+      "Slow-roll a primer orden con A_s = 2.1e-9 (Planck 2018); el conteo exacto de e-folds cambia lambda en ~10-15%."
+    ]
+  },
+  "r_lphi4_puro_N55": {
+    "value": 0.286,
+    "statement": "r de lambda*phi^4 con N = 55 (BICEP/Keck: r < 0.036): excluido.",
+    "produced_by": "code/analisis_parametros.py::lphi4_puro",
+    "from_scratch": "r = 16 eps.",
+    "from_library": "numpy",
+    "choices": [
+      "Slow-roll a primer orden con A_s = 2.1e-9 (Planck 2018); el conteo exacto de e-folds cambia lambda en ~10-15%."
+    ]
+  },
+  "Lambda4_validacion_ArtII": {
+    "value": 8.5e-10,
+    "statement": "Lambda^4 en m_p^4 para p = 2, M = 5 m_p, N = 60; el Art II da 9.84e-10: mismo orden, ~15% de diferencia.",
+    "produced_by": "code/analisis_parametros.py::t_model",
+    "from_scratch": "Normalizacion del CMB en slow-roll para el T-model.",
+    "from_library": "numpy",
+    "choices": [
+      "T-model V = (Lambda^4/p) tanh^p(phi/M) como completamiento viable, el que usan el Art I y el Art II; otros completamientos darian otros numeros.",
+      "Fin de la inflacion en eps_V = 1 (Art I ec. 459)."
+    ]
+  },
+  "lambda_eff_Tmodel_M8p5_N60": {
+    "value": 1.07e-12,
+    "statement": "lambda efectiva (Lambda^4/M^4) del T-model p = 4 con M = 8.5 m_p (el maximo que permite r < 0.036) y N = 60; r = 0.034, n_s = 0.965.",
+    "produced_by": "code/analisis_parametros.py::t_model",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": [
+      "T-model V = (Lambda^4/p) tanh^p(phi/M) como completamiento viable, el que usan el Art I y el Art II; otros completamientos darian otros numeros.",
+      "Fin de la inflacion en eps_V = 1 (Art I ec. 459)."
+    ]
+  },
+  "lambda_eff_Tmodel_M5_N60": {
+    "value": 2.83e-12,
+    "statement": "lambda efectiva del T-model p = 4 con M = 5 m_p y N = 60; r = 0.013, n_s = 0.966.",
+    "produced_by": "code/analisis_parametros.py::t_model",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": [
+      "T-model V = (Lambda^4/p) tanh^p(phi/M) como completamiento viable, el que usan el Art I y el Art II; otros completamientos darian otros numeros.",
+      "Fin de la inflacion en eps_V = 1 (Art I ec. 459)."
+    ]
+  },
+  "u_star_fin_inflacion": {
+    "value": 2.33938,
+    "statement": "phi_*/m_p al final de la inflacion (eps_H = 1) para lambda*phi^4/4; independiente de lambda. Con m_p = 2.435e18 da 5.6964e18 GeV, el valor de lphi4.in v2.0.",
+    "produced_by": "code/analisis_parametros.py::fin_inflacion_lphi4",
+    "from_scratch": "Integracion del fondo exacto en variables adimensionales.",
+    "from_library": "scipy.integrate.solve_ivp",
+    "choices": [
+      "Fin de la inflacion definido por eps_H = 1 (a'' = 0), no por eps_V = 1 de slow-roll; es el criterio que reproduce los .in de la v2.0."
+    ]
+  },
+  "uprime_star_fin_inflacion": {
+    "value": -2.73636,
+    "statement": "phidot_*/(sqrt(lambda) m_p^2) al final de la inflacion; con lambda = 9e-14 da -4.86735e30 GeV^2, el valor de lphi4.in v2.0.",
+    "produced_by": "code/analisis_parametros.py::fin_inflacion_lphi4",
+    "from_scratch": "Idem.",
+    "from_library": "scipy.integrate.solve_ivp",
+    "choices": [
+      "Fin de la inflacion definido por eps_H = 1 (a'' = 0), no por eps_V = 1 de slow-roll; es el criterio que reproduce los .in de la v2.0."
+    ]
+  },
+  "epsH_manual_v1": {
+    "value": 0.674,
+    "statement": "eps_H del estado inicial del Manual v1 (7.42675e18, -6.2969e30), igual al doblete de lphi4SU2U1.in x sqrt(2): arranca antes del final de la inflacion.",
+    "produced_by": "code/analisis_parametros.py::main",
+    "from_scratch": "eps_H = (3/2) u'^2/(u'^2/2 + u^4/4).",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "floquet_q120": {
+    "value": 0.1752,
+    "statement": "mu_max de la resonancia para q = 120: K_* = 1.24, media altura en K = 0.45-1.72; borde inferior de la banda n = 8 (120 < q < 136): K = 0 marginal, pico en K finito. Es el caso principal de Dufaux et al. 2007.",
+    "produced_by": "code/analisis_parametros.py::banda_principal",
+    "from_scratch": "Exponente de Floquet por matriz de monodromia.",
+    "from_library": "scipy.special.ellipj/ellipk (funciones elipticas); integrador RK4 propio",
+    "choices": [
+      "Ecuacion de Lame (Dufaux et al. 2007 ec. 68) con cn(x, m = 1/2), sin el termino a''/a (promedia a cero para phi^4).",
+      "Grilla de 240 valores de K entre 0 y 2 q^(1/4) + 1; RK4 con 4000 pasos por periodo de cn^2."
+    ]
+  },
+  "floquet_q300": {
+    "value": 0.0822,
+    "statement": "mu_max de la resonancia para q = 300: K_* = 3.0, media altura en K = 2.85-3.16; borde superior de la banda n = 12 (276 < q < 300): resonancia debil y angosta.",
+    "produced_by": "code/analisis_parametros.py::banda_principal",
+    "from_scratch": "Exponente de Floquet por matriz de monodromia.",
+    "from_library": "scipy.special.ellipj/ellipk (funciones elipticas); integrador RK4 propio",
+    "choices": [
+      "Ecuacion de Lame (Dufaux et al. 2007 ec. 68) con cn(x, m = 1/2), sin el termino a''/a (promedia a cero para phi^4).",
+      "Grilla de 240 valores de K entre 0 y 2 q^(1/4) + 1; RK4 con 4000 pasos por periodo de cn^2."
+    ]
+  },
+  "floquet_q100": {
+    "value": 0.2267,
+    "statement": "mu_max de la resonancia para q = 100: K_* = 0.0, media altura en K = 0.00-0.89; dentro de la banda n = 7 (91 < q < 105): crecimiento maximo en K = 0, a la escala de la caja.",
+    "produced_by": "code/analisis_parametros.py::banda_principal",
+    "from_scratch": "Exponente de Floquet por matriz de monodromia.",
+    "from_library": "scipy.special.ellipj/ellipk (funciones elipticas); integrador RK4 propio",
+    "choices": [
+      "Ecuacion de Lame (Dufaux et al. 2007 ec. 68) con cn(x, m = 1/2), sin el termino a''/a (promedia a cero para phi^4).",
+      "Grilla de 240 valores de K entre 0 y 2 q^(1/4) + 1; RK4 con 4000 pasos por periodo de cn^2."
+    ]
+  },
+  "floquet_q240": {
+    "value": 0.2342,
+    "statement": "mu_max de la resonancia para q = 240: K_* = 0.0, media altura en K = 0.00-1.45; dentro de la banda n = 11: q_eff de SU(2)xU(1) si q_A = q_B = 120.",
+    "produced_by": "code/analisis_parametros.py::banda_principal",
+    "from_scratch": "Exponente de Floquet por matriz de monodromia.",
+    "from_library": "scipy.special.ellipj/ellipk (funciones elipticas); integrador RK4 propio",
+    "choices": [
+      "Ecuacion de Lame (Dufaux et al. 2007 ec. 68) con cn(x, m = 1/2), sin el termino a''/a (promedia a cero para phi^4).",
+      "Grilla de 240 valores de K entre 0 y 2 q^(1/4) + 1; RK4 con 4000 pasos por periodo de cn^2."
+    ]
+  },
+  "floquet_q60": {
+    "value": 0.1074,
+    "statement": "mu_max de la resonancia para q = 60: K_* = 1.73, media altura en K = 1.54-1.92; entre bandas; es el q de cada sector gauge si q_A = q_B = 60 y no se acoplaran.",
+    "produced_by": "code/analisis_parametros.py::banda_principal",
+    "from_scratch": "Exponente de Floquet por matriz de monodromia.",
+    "from_library": "scipy.special.ellipj/ellipk (funciones elipticas); integrador RK4 propio",
+    "choices": [
+      "Ecuacion de Lame (Dufaux et al. 2007 ec. 68) con cn(x, m = 1/2), sin el termino a''/a (promedia a cero para phi^4).",
+      "Grilla de 240 valores de K entre 0 y 2 q^(1/4) + 1; RK4 con 4000 pasos por periodo de cn^2."
+    ]
+  },
+  "floquet_q150": {
+    "value": 0.1543,
+    "statement": "mu_max de la resonancia para q = 150: K_* = 1.61, media altura en K = 1.10-1.97; entre bandas.",
+    "produced_by": "code/analisis_parametros.py::banda_principal",
+    "from_scratch": "Exponente de Floquet por matriz de monodromia.",
+    "from_library": "scipy.special.ellipj/ellipk (funciones elipticas); integrador RK4 propio",
+    "choices": [
+      "Ecuacion de Lame (Dufaux et al. 2007 ec. 68) con cn(x, m = 1/2), sin el termino a''/a (promedia a cero para phi^4).",
+      "Grilla de 240 valores de K entre 0 y 2 q^(1/4) + 1; RK4 con 4000 pasos por periodo de cn^2."
+    ]
+  },
+  "bandas_K0_bordes": {
+    "value": "n(2n-1) < q < n(2n+1)",
+    "statement": "Rango de q en el que el modo K = 0 es inestable en la banda n (verificado para n = 1, 7, 8, 12: mu < 0 justo afuera, mu = 0.2377 en q = 2n^2).",
+    "produced_by": "code/analisis_parametros.py::main",
+    "from_scratch": "Barrido de mu(K = 0) a ambos lados de cada borde.",
+    "from_library": "scipy.special.ellipj/ellipk (funciones elipticas); integrador RK4 propio",
+    "choices": [
+      "Ecuacion de Lame (Dufaux et al. 2007 ec. 68) con cn(x, m = 1/2), sin el termino a''/a (promedia a cero para phi^4).",
+      "Grilla de 240 valores de K entre 0 y 2 q^(1/4) + 1; RK4 con 4000 pasos por periodo de cn^2."
+    ]
+  },
+  "gU1s_rec_U1": {
+    "value": 3.28634e-06,
+    "statement": "gU1s recomendado para lphi4U1: q_A = 120 con lambda = 9e-14.",
+    "produced_by": "code/analisis_parametros.py::recomendacion",
+    "from_scratch": "sqrt(q lambda).",
+    "from_library": "numpy",
+    "choices": [
+      "q = 120 como canal unico: benchmark de GWs de Dufaux et al. 2007 para este mismo control, pico de resonancia en K finito (no a la escala de la caja) y mu alto.",
+      "lambda = 9e-14 igual en los tres modelos: en variables de programa la dinamica no depende de lambda salvo por la amplitud de las fluctuaciones iniciales (ver pagina).",
+      "En SU(2)xU(1): q_A = q_B = q/2 para que q_eff = q_A + q_B = q (Art I); la alternativa del paper, q_A = q_B = q, da q_eff = 2q y cae en otra banda.",
+      "qG = qH = 0 en SU(2)xU(1): un unico canal resonante, como en los otros dos modelos."
+    ]
+  },
+  "gU1s_rec_SU2U1": {
+    "value": 2.32379e-06,
+    "statement": "gU1s recomendado para lphi4SU2U1: q_A = 60.",
+    "produced_by": "code/analisis_parametros.py::recomendacion",
+    "from_scratch": "sqrt(q_A lambda).",
+    "from_library": "numpy",
+    "choices": [
+      "q = 120 como canal unico: benchmark de GWs de Dufaux et al. 2007 para este mismo control, pico de resonancia en K finito (no a la escala de la caja) y mu alto.",
+      "lambda = 9e-14 igual en los tres modelos: en variables de programa la dinamica no depende de lambda salvo por la amplitud de las fluctuaciones iniciales (ver pagina).",
+      "En SU(2)xU(1): q_A = q_B = q/2 para que q_eff = q_A + q_B = q (Art I); la alternativa del paper, q_A = q_B = q, da q_eff = 2q y cae en otra banda.",
+      "qG = qH = 0 en SU(2)xU(1): un unico canal resonante, como en los otros dos modelos."
+    ]
+  },
+  "gSU2s_rec_SU2U1": {
+    "value": 4.64758e-06,
+    "statement": "gSU2s recomendado para lphi4SU2U1: q_B = 60.",
+    "produced_by": "code/analisis_parametros.py::recomendacion",
+    "from_scratch": "sqrt(4 q_B lambda).",
+    "from_library": "numpy",
+    "choices": [
+      "q = 120 como canal unico: benchmark de GWs de Dufaux et al. 2007 para este mismo control, pico de resonancia en K finito (no a la escala de la caja) y mu alto.",
+      "lambda = 9e-14 igual en los tres modelos: en variables de programa la dinamica no depende de lambda salvo por la amplitud de las fluctuaciones iniciales (ver pagina).",
+      "En SU(2)xU(1): q_A = q_B = q/2 para que q_eff = q_A + q_B = q (Art I); la alternativa del paper, q_A = q_B = q, da q_eff = 2q y cae en otra banda.",
+      "qG = qH = 0 en SU(2)xU(1): un unico canal resonante, como en los otros dos modelos."
+    ]
+  },
+  "kIR_gauge_rec": {
+    "value": 0.353553,
+    "statement": "kIR de los modelos gauge equivalente a kIR = 0.25 de lphi4 (x sqrt(2) porque omega_* del codigo es sqrt(2) menor).",
+    "produced_by": "code/analisis_parametros.py::traducir",
+    "from_scratch": "Conversion de unidades de programa.",
+    "from_library": "numpy",
+    "choices": [
+      "kIR = 0.25 en lphi4 para tener varios modos dentro de la banda de q = 120 (K = 0.45-1.72)."
+    ]
+  },
+  "tMax_gauge_rec": {
+    "value": 212.132,
+    "statement": "tMax de los modelos gauge equivalente a tMax = 300 de lphi4 (/ sqrt(2)).",
+    "produced_by": "code/analisis_parametros.py::traducir",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": [
+      "tMax = 300 en lphi4: el pico de GWs de Dufaux et al. deja de cambiar despues de x ~ 150 y su corrida llega a x = 240."
+    ]
+  },
+  "dt_gauge_rec": {
+    "value": 0.00707107,
+    "statement": "dt de los modelos gauge equivalente a dt = 0.01 de lphi4 (/ sqrt(2)).",
+    "produced_by": "code/analisis_parametros.py::traducir",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "omegaStar_gauge_rec": {
+    "value": 1208390000000.0,
+    "statement": "omega_* (GeV) del codigo en los modelos gauge emparejados; en lphi4 es 1.70892e12.",
+    "produced_by": "code/analisis_parametros.py::recomendacion",
+    "from_scratch": "sqrt(lambda) f_*.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "floquet_q128": {
+    "value": 0.2377,
+    "statement": "mu_max de la resonancia para q = 128: K_* = 0.0, media altura en K = 0.00-1.13; centro de la banda n = 8 (2*8^2): el caso especial de Dufaux et al.",
+    "produced_by": "code/analisis_parametros.py::banda_principal",
+    "from_scratch": "Exponente de Floquet por matriz de monodromia.",
+    "from_library": "scipy.special.ellipj/ellipk (funciones elipticas); integrador RK4 propio",
+    "choices": [
+      "Ecuacion de Lame (Dufaux et al. 2007 ec. 68) con cn(x, m = 1/2), sin el termino a''/a (promedia a cero para phi^4).",
+      "Grilla de 240 valores de K entre 0 y 2 q^(1/4) + 1; RK4 con 4000 pasos por periodo de cn^2."
+    ]
+  },
+  "floquet_q1370": {
+    "value": 0.1714,
+    "statement": "mu_max de la resonancia para q = 1370: K_* = 0.0, media altura en K = 0.00-0.99; q_A y q_B de los .in gauge por defecto: crecimiento en K = 0.",
+    "produced_by": "code/analisis_parametros.py::banda_principal",
+    "from_scratch": "Exponente de Floquet por matriz de monodromia.",
+    "from_library": "scipy.special.ellipj/ellipk (funciones elipticas); integrador RK4 propio",
+    "choices": [
+      "Ecuacion de Lame (Dufaux et al. 2007 ec. 68) con cn(x, m = 1/2), sin el termino a''/a (promedia a cero para phi^4).",
+      "Grilla de 240 valores de K entre 0 y 2 q^(1/4) + 1; RK4 con 4000 pasos por periodo de cn^2."
+    ]
+  },
+  "lambda_eff_Tmodel_M10_N50": {
+    "value": 1.19e-12,
+    "statement": "lambda efectiva del T-model p = 4, M = 10 m_p (Art I), N = 50: Lambda^4 = 4.2e65 GeV^4 (Art I tabla 1: 4.3e65), n_s = 0.957, r = 0.062 (hoy excluido por r < 0.036).",
+    "produced_by": "code/analisis_parametros.py::t_model",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": [
+      "T-model V = (Lambda^4/p) tanh^p(phi/M) como completamiento viable, el que usan el Art I y el Art II; otros completamientos darian otros numeros.",
+      "Fin de la inflacion en eps_V = 1 (Art I ec. 459)."
+    ]
+  },
+  "lambda_eff_Tmodel_M10_N60": {
+    "value": 8.07e-13,
+    "statement": "lambda efectiva del T-model p = 4, M = 10 m_p, N = 60: n_s = 0.964, r = 0.045 (excluido por r < 0.036).",
+    "produced_by": "code/analisis_parametros.py::t_model",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": [
+      "T-model V = (Lambda^4/p) tanh^p(phi/M) como completamiento viable, el que usan el Art I y el Art II; otros completamientos darian otros numeros.",
+      "Fin de la inflacion en eps_V = 1 (Art I ec. 459)."
+    ]
+  },
+  "efecto_lambda_ruido": {
+    "value": 6.9,
+    "statement": "Adelanto (en tiempo de programa) del fin de la resonancia al pasar de lambda = 9e-14 a 1e-12: ln(sqrt(1e-12/9e-14))/mu con mu = 0.175; el ruido inicial escala como sqrt(lambda).",
+    "produced_by": "estimacion analitica en paginas/analisis-parametros.html sec. 4 (a partir de floquet_q120)",
+    "from_scratch": "Crecimiento exponencial e^(mu x) desde una amplitud inicial proporcional a sqrt(lambda).",
+    "from_library": "ninguna",
+    "choices": [
+      "Estimacion de orden de magnitud: ignora la dependencia logaritmica del retroefecto."
+    ]
+  },
+  "efecto_lambda_frecuencia": {
+    "value": 1.83,
+    "statement": "Factor en la frecuencia de GWs hoy al pasar de lambda = 9e-14 a 1e-12: (1e-12/9e-14)^(1/4) (Dufaux et al. ec. 72).",
+    "produced_by": "estimacion analitica en paginas/analisis-parametros.html sec. 4",
+    "from_scratch": "Escaleo f ~ lambda^(1/4).",
+    "from_library": "ninguna",
+    "choices": []
+  },
+  "kmax_red_rec": {
+    "value": 55.4,
+    "statement": "Momento maximo de la red recomendada para lphi4 (N = 256, kIR = 0.25): sqrt(3)/2 N kIR, ~45 veces K_* de q = 120.",
+    "produced_by": "estimacion analitica en paginas/analisis-parametros.html sec. 7",
+    "from_scratch": "k_max = sqrt(3) pi/dx con dx = 2 pi/(N kIR).",
+    "from_library": "ninguna",
+    "choices": []
+  },
+  "piloto_err_friedmann_max": {
+    "value": 0.00021,
+    "statement": "Error relativo maximo del vinculo de Friedmann en el piloto lphi4 N=128 (en tau ~ 72); al final 3e-5.",
+    "produced_by": "data/lphi4_piloto_N128/average_energy_conservation.txt (salida de CosmoLattice), leido en code/analisis_corridas.py::celda de la seccion 1",
+    "from_scratch": "Maximo de |rel_diff_friedmann| sobre la corrida.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "piloto_mu_medido_banda": {
+    "value": 0.2,
+    "statement": "Exponente de crecimiento medido del modo k = 1.25 de a*chi en el piloto (ajuste en tau entre 20 y 55); Floquet da 0.175 en kappa* = 1.24.",
+    "produced_by": "code/analisis_corridas.py::celda 'Exponente medido por modo' (mu_k_medido)",
+    "from_scratch": "Pendiente de 1/2 ln(a^2 Delta_chi) por bin de k.",
+    "from_library": "numpy (polyfit, interp), scipy.special (ellipj, ellipk)",
+    "choices": [
+      "Ventana tau entre 20 y 55: despues de que el espectro inicial de vacio deja de dominar y antes del retroefecto (tau ~ 80); se puede mover con el slider.",
+      "Espectro conforme a^2 Delta (la ecuacion de Lame es para a*chi)."
+    ]
+  },
+  "piloto_tasa_GW_lineal": {
+    "value": 0.757,
+    "statement": "d ln(rho_GW/rho)/dtau en el piloto para tau entre 20 y 55, contra 4mu = 0.80 (mu medido) y 0.70 (Floquet).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 5 (tasa_GW)",
+    "from_scratch": "Ajuste lineal de ln(rho_GW/rho).",
+    "from_library": "numpy",
+    "choices": [
+      "Misma ventana que el ajuste de mu."
+    ]
+  },
+  "piloto_t_grad_1pc": {
+    "value": 83.9,
+    "statement": "Tiempo de programa en que la energia de gradiente (phi + chi) supera el 1 % de la energia total en el piloto.",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 5 (tiempos['t_grad'])",
+    "from_scratch": "Primer cruce del umbral, interpolado en log.",
+    "from_library": "numpy",
+    "choices": [
+      "Umbral de 1 % (seleccionable: 0.1 %, 1 %, 5 %, 10 %)."
+    ]
+  },
+  "piloto_t_nl_estimado": {
+    "value": 76.8,
+    "statement": "Estimacion analitica del fin de la resonancia en el piloto: (1/2mu) ln(1/(q <X^2>_banda(0))) con mu de Floquet reescalado por la amplitud conforme medida (mu = 0.199); con el mu medido da 76.4.",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 5 (tiempos['t_nl_est_floquet'])",
+    "from_scratch": "Criterio de retroefecto q<X^2> ~ 1 y varianza inicial de a*chi en la banda reescalada (mu > mu_max/2, k entre 0.52 y 1.98).",
+    "from_library": "numpy",
+    "choices": [
+      "Criterio de retroefecto q<X^2> ~ 1 (orden de magnitud; la masa del inflaton conforme es O(1) en unidades de programa).",
+      "Varianza inicial solo de la banda resonante, no de todo el espectro (que esta dominado por modos que no crecen)."
+    ]
+  },
+  "piloto_t_GW_50": {
+    "value": 129.8,
+    "statement": "Tiempo en que rho_GW/rho alcanza el 50 % de su valor final en el piloto.",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 5 (tiempos['t_GW_50'])",
+    "from_scratch": "Primer cruce interpolado.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "piloto_t_GW_90": {
+    "value": 203.1,
+    "statement": "Tiempo en que rho_GW/rho alcanza el 90 % de su valor final en el piloto.",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 5 (tiempos['t_GW_90'])",
+    "from_scratch": "Primer cruce interpolado.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "piloto_rhoGW_final": {
+    "value": 9.9e-06,
+    "statement": "rho_GW/rho al final del piloto (tau = 295).",
+    "produced_by": "data/lphi4_piloto_N128/average_energies_gws.txt (salida de CosmoLattice)",
+    "from_scratch": "Ninguna.",
+    "from_library": "CosmoLattice (GWsMeasurer)",
+    "choices": []
+  },
+  "piloto_h2Omega_pico_hoy": {
+    "value": 6.8e-11,
+    "statement": "Pico de h^2 Omega_GW hoy del piloto con g* = 100, a f ~ 1.1e8 Hz.",
+    "produced_by": "code/analisis_corridas.py::gws_hoy",
+    "from_scratch": "Traslado a hoy con dilucion de radiacion y conservacion de entropia (T0 = 2.7255 K, g_s0 = 3.931, h^2 Omega_gamma = 2.473e-5).",
+    "from_library": "numpy",
+    "choices": [
+      "g* = 100 (ajustable en el notebook; entra como g*^(-1/3) en la amplitud y g*^(-1/12) en f).",
+      "Se toma el espectro del ultimo tiempo; al final todavia crece levemente en el UV.",
+      "lphi4 es radiacion desde el principio, asi que no se agrega una fase de materia antes de la termalizacion."
+    ]
+  },
+  "piloto_f_pico_hoy": {
+    "value": 110000000.0,
+    "statement": "Frecuencia hoy (Hz) del pico del espectro de GWs del piloto con g* = 100.",
+    "produced_by": "code/analisis_corridas.py::gws_hoy",
+    "from_scratch": "Idem piloto_h2Omega_pico_hoy.",
+    "from_library": "numpy",
+    "choices": [
+      "Idem piloto_h2Omega_pico_hoy."
+    ]
+  },
+  "piloto_A_conforme": {
+    "value": 1.138,
+    "statement": "Amplitud conforme del inflaton en el piloto despues del transitorio inicial: rho a^4 = A^4/4 promediado en tau entre 10 y 60 (rho a^4 pasa de 0.375 a 0.418).",
+    "produced_by": "code/analisis_corridas.py::celda de Floquet (A_conf)",
+    "from_scratch": "Relacion rho a^4 = A^4/4 para un oscilador lambda Phi^4 conforme en unidades de programa.",
+    "from_library": "numpy",
+    "choices": [
+      "Ventana tau entre 10 y 60: despues del transitorio (a' deja de oscilar fuerte) y antes de que chi le saque energia al inflaton; rho a^4 es constante a 1e-3 en toda la corrida despues de tau ~ 10."
+    ]
+  },
+  "piloto_mu_floquet_A": {
+    "value": 0.199,
+    "statement": "Maximo del exponente de Floquet con la amplitud conforme medida A = 1.138: mu_A(k) = A mu_1(k/A), en k* = 1.42 (con amplitud 1: 0.175 en 1.24).",
+    "produced_by": "code/analisis_corridas.py::floquet_mu_vec",
+    "from_scratch": "Integracion RK4 de la matriz de transferencia de Lame en un periodo de cn^2 (vectorizada en k) y reescalamiento por A.",
+    "from_library": "scipy.special (ellipj, ellipk), numpy",
+    "choices": [
+      "Reescalar por la amplitud medida en lugar de integrar la ecuacion completa con a''/a: el transitorio dura tau ~ 10, antes de la ventana de ajuste."
+    ]
+  },
+  "piloto_runtime_min": {
+    "value": 77,
+    "statement": "Duracion del piloto lphi4 N=128 hasta tau = 300, con OpenMP en los 8 nucleos de la maquina (795 % de CPU).",
+    "produced_by": "data/lphi4_piloto_N128/tiempo.log (/usr/bin/time -v)",
+    "from_scratch": "Ninguna.",
+    "from_library": "GNU time",
+    "choices": []
+  },
+  "piloto_memoria_MB": {
+    "value": 318,
+    "statement": "Memoria maxima (RSS) del piloto lphi4 N=128 con GWs.",
+    "produced_by": "data/lphi4_piloto_N128/tiempo.log (/usr/bin/time -v)",
+    "from_scratch": "Ninguna.",
+    "from_library": "GNU time",
+    "choices": []
+  },
+  "memoria_N256_estimada_GB": {
+    "value": 2.5,
+    "statement": "Memoria estimada de lphi4 con N=256 y GWs: 8 veces la del piloto N=128 (escala con N^3).",
+    "produced_by": "estimacion a partir de piloto_memoria_MB",
+    "from_scratch": "Escaleo N^3.",
+    "from_library": "ninguna",
+    "choices": [
+      "Ignora la parte de memoria que no escala con N (pequena)."
+    ]
+  },
+  "piloto_pendiente_IR": {
+    "value": 0.96,
+    "statement": "Pendiente logaritmica de dOmega_GW/dlnk en los 6 bins de menor k al final del piloto (Dufaux: Omega ∝ f).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (comparacion['pendiente_IR'])",
+    "from_scratch": "Ajuste lineal en log-log.",
+    "from_library": "numpy",
+    "choices": [
+      "Seis bins (k de 0.25 a 1.5): la cola IR antes del pico."
+    ]
+  },
+  "piloto_h2Omega_pico_convDufaux": {
+    "value": 3.8e-11,
+    "statement": "Pico de h^2 Omega_GW hoy del piloto con la convencion de Dufaux et al. ec. 47 (h^2 Omega = 9.3e-6 (Omega_gw)_p), a f = 9.7e7 Hz.",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (h2Omega_D, f_D)",
+    "from_scratch": "Traslado con f = k/(a rho^(1/4)) 4e10 Hz de Dufaux ec. 47.",
+    "from_library": "numpy",
+    "choices": [
+      "Usar la convencion de Dufaux para comparar con su fig. 4 (la del notebook, con g_s y g distintos hoy, da un factor 1.8 mayor con g* = 100)."
+    ]
+  },
+  "piloto_f_pico_convDufaux": {
+    "value": 97000000.0,
+    "statement": "Frecuencia (Hz) del pico hoy con la convencion de Dufaux ec. 47.",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (f_D)",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "dufaux_f_pico_reescalado": {
+    "value": 120000000.0,
+    "statement": "Pico de Dufaux (7e7 Hz para lambda = 1e-14) llevado a lambda = 9e-14 con f ∝ lambda^(1/4) (su ec. 72).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (f_pico_dufaux_reescalado)",
+    "from_scratch": "Escaleo lambda^(1/4).",
+    "from_library": "ninguna",
+    "choices": []
+  },
+  "piloto_Omega_p_x90": {
+    "value": 6.8e-09,
+    "statement": "Pico de dOmega_GW/dlnk del piloto en x = A tau ≈ 91 (Dufaux: ~1e-9 en x ~ 90).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (comparacion)",
+    "from_scratch": "Tiempo de espectro mas cercano a x = 90.",
+    "from_library": "numpy",
+    "choices": [
+      "Comparar en x = A tau (amplitud conforme) y no en tau."
+    ]
+  },
+  "piloto_Omega_p_x150": {
+    "value": 2.8e-06,
+    "statement": "Pico de dOmega_GW/dlnk del piloto en x ≈ 148 (Dufaux: ~5e-6 en x ~ 150).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (comparacion)",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "piloto_Omega_p_fin": {
+    "value": 4.1e-06,
+    "statement": "Pico de dOmega_GW/dlnk al final del piloto (x ≈ 336), en K = k/A ≈ 3.1.",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (comparacion)",
+    "from_scratch": "Idem.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "piloto_crec_pico_x170_fin": {
+    "value": 0.22,
+    "statement": "Crecimiento relativo del pico de dOmega_GW/dlnk entre x ≈ 170 y el final del piloto (Dufaux: el pico no cambia despues de x ~ 150).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (comparacion['crec_pico_desde_x170'])",
+    "from_scratch": "Cociente de picos.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "piloto_rhoGW_x150_frac": {
+    "value": 0.52,
+    "statement": "rho_GW/rho en x = 150 como fraccion de su valor final en el piloto.",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (comparacion)",
+    "from_scratch": "Interpolacion en x.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "piloto_K_max_red": {
+    "value": 24.4,
+    "statement": "Momento maximo de la red del piloto en unidades de sqrt(lambda) A: sqrt(3)/2 N kIR / A con los centros de bin de CosmoLattice (Dufaux: el espectro cae en K ~ 50, leido de su fig. 6).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (K_A)",
+    "from_scratch": "k/A.",
+    "from_library": "numpy",
+    "choices": [
+      "El valor de Dufaux (K ~ 50) se leyo a ojo de su fig. 6."
+    ]
+  },
+  "piloto_t_res": {
+    "value": 7.8,
+    "statement": "Tiempo de programa en que el modo del centro de la banda (reescalada) crece x10 respecto de su valor inicial en el piloto.",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 5 (tiempos['t_res'])",
+    "from_scratch": "Primer cruce interpolado.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "costo_N128_lphi4_VV2_s_paso": {
+    "value": 0.16,
+    "statement": "Segundos por paso de lphi4 N=128 con VV2 y GWs, en 8 nucleos (~1 h 20 min la corrida completa, 318 MB).",
+    "produced_by": "data/pruebas_costo_N128/lphi4_VV2/salida.log",
+    "from_scratch": "Diferencia de marcas de tiempo del log entre los pasos 0 y 100, por 30 000 pasos para la corrida completa.",
+    "from_library": "CosmoLattice (log), GNU time",
+    "choices": [
+      "Medido con 100 pasos que incluyen dos salidas frecuentes y una infrecuente, con la misma frecuencia de salida que las corridas previstas.",
+      "Extrapolacion lineal a 30 000 pasos (tMax/dt es igual en los tres modelos)."
+    ]
+  },
+  "costo_N128_lphi4U1_s_paso": {
+    "value": 1.04,
+    "statement": "Segundos por paso de lphi4U1 N=128 con VV2 y GWs, en 8 nucleos (~8.5 h la corrida completa).",
+    "produced_by": "data/pruebas_costo_N128/lphi4U1/salida.log",
+    "from_scratch": "Diferencia de marcas de tiempo del log entre los pasos 0 y 100, por 30 000 pasos para la corrida completa.",
+    "from_library": "CosmoLattice (log), GNU time",
+    "choices": [
+      "Medido con 100 pasos que incluyen dos salidas frecuentes y una infrecuente, con la misma frecuencia de salida que las corridas previstas.",
+      "Extrapolacion lineal a 30 000 pasos (tMax/dt es igual en los tres modelos)."
+    ]
+  },
+  "costo_N128_lphi4SU2U1_s_paso": {
+    "value": 10.4,
+    "statement": "Segundos por paso de lphi4SU2U1 N=128 con VV2 y GWs, en 8 nucleos (~86 h la corrida completa).",
+    "produced_by": "data/pruebas_costo_N128/lphi4SU2U1/salida.log",
+    "from_scratch": "Diferencia de marcas de tiempo del log entre los pasos 0 y 100, por 30 000 pasos para la corrida completa.",
+    "from_library": "CosmoLattice (log), GNU time",
+    "choices": [
+      "Medido con 100 pasos que incluyen dos salidas frecuentes y una infrecuente, con la misma frecuencia de salida que las corridas previstas.",
+      "Extrapolacion lineal a 30 000 pasos (tMax/dt es igual en los tres modelos)."
+    ]
+  },
+  "memoria_N128_lphi4U1_MB": {
+    "value": 543,
+    "statement": "Memoria maxima (RSS) de lphi4U1 N=128 con GWs.",
+    "produced_by": "data/pruebas_costo_N128/lphi4U1/tiempo.log (/usr/bin/time -v)",
+    "from_scratch": "Ninguna.",
+    "from_library": "GNU time",
+    "choices": []
+  },
+  "memoria_N128_lphi4SU2U1_MB": {
+    "value": 1562,
+    "statement": "Memoria maxima (RSS) de lphi4SU2U1 N=128 con GWs.",
+    "produced_by": "data/pruebas_costo_N128/lphi4SU2U1/tiempo.log (/usr/bin/time -v)",
+    "from_scratch": "Ninguna.",
+    "from_library": "GNU time",
+    "choices": []
+  },
+  "gauss_t0_U1_rel": {
+    "value": 2e-11,
+    "statement": "Violacion relativa de la ley de Gauss U(1) en t=0 en lphi4U1 N=128 (SU2U1: 1.5e-11 en U(1) y 4.3e-10 en SU(2)).",
+    "produced_by": "data/pruebas_costo_N128/lphi4U1/average_gauss_U1_0.txt (salida de CosmoLattice)",
+    "from_scratch": "Ninguna.",
+    "from_library": "CosmoLattice",
+    "choices": []
+  },
+  "vv2_runtime_min": {
+    "value": 92,
+    "statement": "Duracion del control lphi4 N=128 con VV2 hasta tau = 300 en 8 nucleos (318 MB).",
+    "produced_by": "data/lphi4_control_N128_VV2/tiempo.log (/usr/bin/time -v)",
+    "from_scratch": "Lectura de la salida o del notebook ejecutado con CORRIDA=lphi4_control_N128_VV2.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "vv2_friedmann_max": {
+    "value": 0.00077,
+    "statement": "Error relativo maximo de Friedmann del control VV2 (crece desde 1.2e-5 en tau = 5 hasta 7.5e-4 al final; con LF oscila en ~1e-4 sin crecer).",
+    "produced_by": "data/lphi4_control_N128_VV2/average_energy_conservation.txt",
+    "from_scratch": "Lectura de la salida o del notebook ejecutado con CORRIDA=lphi4_control_N128_VV2.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "vv2_mu_medido": {
+    "value": 0.2001,
+    "statement": "Exponente medido del modo k = 1.25 de a*chi en el control VV2 (piloto LF: 0.2002).",
+    "produced_by": "code/analisis_corridas.py::mu_k_medido",
+    "from_scratch": "Lectura de la salida o del notebook ejecutado con CORRIDA=lphi4_control_N128_VV2.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "vv2_rhoGW_final": {
+    "value": 9.92e-06,
+    "statement": "rho_GW/rho al final del control VV2 (piloto LF: 9.87e-6, +0.4 %).",
+    "produced_by": "data/lphi4_control_N128_VV2/average_energies_gws.txt",
+    "from_scratch": "Lectura de la salida o del notebook ejecutado con CORRIDA=lphi4_control_N128_VV2.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "vv2_h2Omega_pico_hoy": {
+    "value": 6.9e-11,
+    "statement": "Pico de h^2 Omega_GW hoy del control VV2 con g* = 100, a 1.1e8 Hz (piloto LF: 6.8e-11, +2.4 %).",
+    "produced_by": "code/analisis_corridas.py::gws_hoy",
+    "from_scratch": "Lectura de la salida o del notebook ejecutado con CORRIDA=lphi4_control_N128_VV2.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "g* = 100."
+    ]
+  },
+  "vv2_Omega_p_x150": {
+    "value": 2.7e-06,
+    "statement": "Pico de dOmega_GW/dlnk del control VV2 en x ≈ 148 (piloto LF: 2.83e-6, -4.6 %).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (comparacion)",
+    "from_scratch": "Lectura de la salida o del notebook ejecutado con CORRIDA=lphi4_control_N128_VV2.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "vv2_crec_pico_x170_fin": {
+    "value": 0.28,
+    "statement": "Crecimiento relativo del pico entre x ≈ 170 y el final en el control VV2 (piloto LF: 0.22).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 6 (comparacion)",
+    "from_scratch": "Lectura de la salida o del notebook ejecutado con CORRIDA=lphi4_control_N128_VV2.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "vv2_t_GW_90": {
+    "value": 201.4,
+    "statement": "Tiempo en que rho_GW/rho alcanza el 90 % de su valor final en el control VV2 (piloto LF: 203.1).",
+    "produced_by": "code/analisis_corridas.py::celda de la seccion 5 (tiempos)",
+    "from_scratch": "Lectura de la salida o del notebook ejecutado con CORRIDA=lphi4_control_N128_VV2.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N32_rhoGW_rel": {
+    "value": 6.035,
+    "statement": "rho_GW/rho final de lphi4 VV2 con N = 32 (kIR = 0.25 salvo que se indique) dividido por el de N = 128, kIR = 0.25.",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N32_gw_pico_rel": {
+    "value": 19.483,
+    "statement": "Maximo de dOmega_GW/dlnk a tau = 300 con N = 32, dividido por el de N = 128 (el maximo puede estar en otro k).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Espectro final (tau = 300), sin promediar en tiempo."
+    ]
+  },
+  "conv_N32_minutos": {
+    "value": 1.2,
+    "statement": "Tiempo de pared de la corrida completa con N = 32 (8 nucleos, OpenMP; N = 128: 91.7 min).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N48_rhoGW_rel": {
+    "value": 2.53,
+    "statement": "rho_GW/rho final de lphi4 VV2 con N = 48 (kIR = 0.25 salvo que se indique) dividido por el de N = 128, kIR = 0.25.",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N48_gw_pico_rel": {
+    "value": 8.523,
+    "statement": "Maximo de dOmega_GW/dlnk a tau = 300 con N = 48, dividido por el de N = 128 (el maximo puede estar en otro k).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Espectro final (tau = 300), sin promediar en tiempo."
+    ]
+  },
+  "conv_N48_minutos": {
+    "value": 4.5,
+    "statement": "Tiempo de pared de la corrida completa con N = 48 (8 nucleos, OpenMP; N = 128: 91.7 min).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N64_rhoGW_rel": {
+    "value": 1.749,
+    "statement": "rho_GW/rho final de lphi4 VV2 con N = 64 (kIR = 0.25 salvo que se indique) dividido por el de N = 128, kIR = 0.25.",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N64_gw_pico_rel": {
+    "value": 5.144,
+    "statement": "Maximo de dOmega_GW/dlnk a tau = 300 con N = 64, dividido por el de N = 128 (el maximo puede estar en otro k).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Espectro final (tau = 300), sin promediar en tiempo."
+    ]
+  },
+  "conv_N64_minutos": {
+    "value": 10.5,
+    "statement": "Tiempo de pared de la corrida completa con N = 64 (8 nucleos, OpenMP; N = 128: 91.7 min).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N96_rhoGW_rel": {
+    "value": 1.209,
+    "statement": "rho_GW/rho final de lphi4 VV2 con N = 96 (kIR = 0.25 salvo que se indique) dividido por el de N = 128, kIR = 0.25.",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N96_gw_pico_rel": {
+    "value": 1.973,
+    "statement": "Maximo de dOmega_GW/dlnk a tau = 300 con N = 96, dividido por el de N = 128 (el maximo puede estar en otro k).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Espectro final (tau = 300), sin promediar en tiempo."
+    ]
+  },
+  "conv_N96_minutos": {
+    "value": 37.5,
+    "statement": "Tiempo de pared de la corrida completa con N = 96 (8 nucleos, OpenMP; N = 128: 91.7 min).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N64_kIR05_rhoGW_rel": {
+    "value": 1.003,
+    "statement": "rho_GW/rho final de lphi4 VV2 con N = 64, kIR = 0.5 (kIR = 0.25 salvo que se indique) dividido por el de N = 128, kIR = 0.25.",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N64_kIR05_gw_pico_rel": {
+    "value": 1.018,
+    "statement": "Maximo de dOmega_GW/dlnk a tau = 300 con N = 64, kIR = 0.5, dividido por el de N = 128 (el maximo puede estar en otro k).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Espectro final (tau = 300), sin promediar en tiempo."
+    ]
+  },
+  "conv_N64_kIR05_minutos": {
+    "value": 10.8,
+    "statement": "Tiempo de pared de la corrida completa con N = 64, kIR = 0.5 (8 nucleos, OpenMP; N = 128: 91.7 min).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N64_kIR05_gw_banda_rms": {
+    "value": 0.091,
+    "statement": "Desvio rms del cociente dOmega_GW/dlnk (N = 64, kIR = 0.5)/(N = 128, kIR = 0.25) a tau = 300, en k entre 3.5/3 y 3.5*3.",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Banda: factor 3 a cada lado del k del maximo de la referencia (3.5); el espectro es una meseta de k ~ 2 a ~ 15, asi que el k del maximo no es robusto."
+    ]
+  },
+  "conv_tau_res": {
+    "value": 88.5,
+    "statement": "Tiempo en que la fraccion de energia en chi cruza 0.1: 88.5 en todas las corridas (88.6 con kIR = 0.5).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N128_kIR05_rhoGW_rel": {
+    "value": 0.841,
+    "statement": "rho_GW/rho final con N = 128, kIR = 0.5 (k max 55.5) sobre el de N = 128, kIR = 0.25 (k max 27.75): el control no esta convergido en el UV.",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N128_kIR05_gw_pico_rel": {
+    "value": 0.983,
+    "statement": "Maximo de dOmega_GW/dlnk a tau = 300 con N = 128, kIR = 0.5 sobre el de la referencia.",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "conv_N128_kIR05_cociente_k05a4": {
+    "value": [
+      0.84,
+      1.18
+    ],
+    "statement": "Rango del cociente dOmega_GW/dlnk (N = 128, kIR = 0.5)/(referencia) en k de 0.5 a 4 a tau = 300 (rms 0.12).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Calculado con convergencia_N.en_comun a mano sobre las dos corridas (no lo guarda resumen.json)."
+    ]
+  },
+  "conv_N128_kIR05_cociente_k5a20": {
+    "value": [
+      0.31,
+      0.89
+    ],
+    "statement": "Rango del cociente en k de 5 a 20: la meseta UV de la referencia esta inflada por apilamiento en su borde.",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Idem."
+    ]
+  },
+  "conv_N128_kIR05_minutos": {
+    "value": 78.8,
+    "statement": "Tiempo de pared de N = 128, kIR = 0.5 (8 nucleos).",
+    "produced_by": "code/convergencia_N.py::main",
+    "from_scratch": "Lectura de las salidas de data/convergencia_N/ y data/lphi4_control_N128_VV2/; cocientes sobre bins de k comunes.",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "U1_def_tau_1pc": {
+    "value": 104.6,
+    "statement": "τ (unidades del control) en que el campo U(1) llega al 1 % de la energía con la condición de CosmoLattice (control: 68.3), N = 64, kIR = 0.5.",
+    "produced_by": "code/comparar_modelos.py::main",
+    "from_scratch": "Lectura de average_energies*.txt y spectra_energy_gws.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Fracción = (E_kin + E_grad del U(1))/E_tot."
+    ]
+  },
+  "U1_vT_tau_1pc": {
+    "value": 68.1,
+    "statement": "Idem con vacío transversal (ICtype_U1 = RandomWithMatterTransverseVacuum).",
+    "produced_by": "code/comparar_modelos.py::main",
+    "from_scratch": "Lectura de average_energies*.txt y spectra_energy_gws.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "control_N64_kIR05_tau_1pc": {
+    "value": 68.3,
+    "statement": "Idem para χ en el control con la misma red.",
+    "produced_by": "code/comparar_modelos.py::main",
+    "from_scratch": "Lectura de average_energies*.txt y spectra_energy_gws.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "U1_def_rhoGW_rel": {
+    "value": 0.713,
+    "statement": "rho_GW/rho final de U(1) con la condición de CosmoLattice sobre el del control (misma red).",
+    "produced_by": "code/comparar_modelos.py::main",
+    "from_scratch": "Lectura de average_energies*.txt y spectra_energy_gws.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "U1_vT_rhoGW_rel": {
+    "value": 1.533,
+    "statement": "Idem con vacío transversal; dominado por k > 4, no convergido.",
+    "produced_by": "code/comparar_modelos.py::main",
+    "from_scratch": "Lectura de average_energies*.txt y spectra_energy_gws.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "U1_vT_gw_cociente_k05a25": {
+    "value": [
+      0.61,
+      0.69
+    ],
+    "statement": "Rango de dOmega_GW/dlnk (U(1) vacío transversal)/(control) a tau final en k = 0.5-2.5.",
+    "produced_by": "code/comparar_modelos.py::main",
+    "from_scratch": "Lectura de average_energies*.txt y spectra_energy_gws.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Cociente bin a bin, calculado a mano sobre las salidas de comparar_modelos.cargar."
+    ]
+  },
+  "U1_def_gw_cociente_k05a25": {
+    "value": [
+      0.28,
+      0.42
+    ],
+    "statement": "Idem con la condición de CosmoLattice.",
+    "produced_by": "code/comparar_modelos.py::main",
+    "from_scratch": "Lectura de average_energies*.txt y spectra_energy_gws.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Idem."
+    ]
+  },
+  "U1_mu_B_banda": {
+    "value": [
+      0.2,
+      0.23
+    ],
+    "statement": "μ medido en el espectro magnético del U(1), k = 0.5-2, τ = 10-50, en las dos corridas (Floquet q = 120: 0.199).",
+    "produced_by": "code/crecimiento_por_modo_U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt y spectra_energy_gws.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "CosmoLattice, numpy",
+    "choices": [
+      "Espectro magnético (columna 3 de spectra_norm_U1_0.txt), que es transversal; el eléctrico está dominado por la parte longitudinal de Gauss."
+    ]
+  },
+  "U1_vT_masa2": {
+    "value": 240.001,
+    "statement": "Masa efectiva² del vacío transversal impresa por el parche (unidades gauge; 120 en unidades del control, igual que χ).",
+    "produced_by": "CosmoLattice/include/CosmoInterface/initializers/u1initializer.h::initializeRandomWithMatterTransverseVacuumU1 (salida.log)",
+    "from_scratch": "Lectura de average_energies*.txt y spectra_energy_gws.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "CosmoLattice, numpy",
+    "choices": []
+  },
+  "SU2U1_matriz_masas": {
+    "value": [
+      [
+        120,
+        -120,
+        0,
+        0
+      ],
+      [
+        -120,
+        120,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        120,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        120
+      ]
+    ],
+    "statement": "Matriz de masas² de (A, B1, B2, B3) que mide el parche con el doblete homogéneo de lphi4SU2U1 (q_A = q_B = 60), unidades de programa; sale simétrica.",
+    "produced_by": "CosmoLattice/include/CosmoInterface/initializers/su2initializer.h::addTransverseVacuumSU2 (salida.log)",
+    "from_scratch": "Linealización de MatterCurrents::U1Current y SU2Current en los campos gauge, con scalar_prod, i_sigma y complexPhase sobre el doblete.",
+    "from_library": "CosmoLattice, TempLat",
+    "choices": [
+      "Programa: m² en unidades de programa del modelo gauge, a = 1."
+    ]
+  },
+  "SU2U1_autoestados_masa2": {
+    "value": {
+      "Z (A-B1)/sqrt2": 240,
+      "foton (A+B1)/sqrt2": 0,
+      "W (B2)": 120,
+      "W (B3)": 120
+    },
+    "statement": "Autoestados de masa de los campos gauge en lphi4SU2U1 con q_A = q_B = 60: un fotón sin masa, una Z con m² = 240 (como el A de lphi4U1 con q = 120) y dos W con m² = 120.",
+    "produced_by": "CosmoLattice/include/CosmoInterface/initializers/su2initializer.h::addTransverseVacuumSU2 (salida.log)",
+    "from_scratch": "Diagonalización de Jacobi de la matriz de masas.",
+    "from_library": "CosmoLattice",
+    "choices": []
+  },
+  "SU2_vT_energia_t0_cociente": {
+    "value": {
+      "EkU1": 0.902,
+      "EgU1": 1.027,
+      "EkSU2": 0.912,
+      "EgSU2": 1.032
+    },
+    "statement": "Energía eléctrica (Ek) y magnética (Eg) que agrega el vacío transversal en t = 0, dividida por la cuenta analítica de dos polarizaciones por autoestado. B: 1.03; E: 0.90–0.91, el mismo déficit en U(1) y SU(2) (y en la cuenta de lphi4U1), atribuible a la cuenta analítica.",
+    "produced_by": "code/validar_vacio_su2.py::main",
+    "from_scratch": "Resta vacioT − defecto en average_energies.txt; suma sobre modos de red (1/V) Σ ω/4 y Σ k_red²/(4ω) con k < kCutOff.",
+    "from_library": "numpy",
+    "choices": [
+      "Misma semilla en las dos corridas: la resta aísla la parte transversal."
+    ]
+  },
+  "SU2_vT_gauss": {
+    "value": {
+      "SU2_defecto": 1.49080527778061e-09,
+      "SU2_vacioT": 3.52434979759022e-07,
+      "U1_vacioT": 1.12130899778168e-10
+    },
+    "statement": "Violación relativa de la ley de Gauss en t = 0 (N = 64): SU(2) pasa de 1.5e-9 a 3.5e-7 con el vacío transversal (término no abeliano g[B,E], escala como amplitud²: 0.2 con ×1000); U(1) no cambia (1e-10).",
+    "produced_by": "code/validar_vacio_su2.py::main",
+    "from_scratch": "Columna 2 de average_gauss_*_0.txt.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "SU2_vT_doblete_identico": {
+    "value": 2.1645576935696783e-15,
+    "statement": "Diferencia relativa máxima del doblete (promedios y espectro) entre la corrida por defecto y la de vacío transversal en t = 0: el parche no toca el ruido del inflatón.",
+    "produced_by": "code/validar_vacio_su2.py::main",
+    "from_scratch": "average_SU2Doublet_0_0.txt y spectra_norm_SU2Doublet_scalar_0.txt.",
+    "from_library": "numpy",
+    "choices": []
+  },
+  "SU2_vT_estacionariedad": {
+    "value": {
+      "U1_E": [
+        1.0,
+        1.155
+      ],
+      "U1_B": [
+        0.869,
+        1.0
+      ],
+      "SU2_E": [
+        1.0,
+        1.17
+      ],
+      "SU2_B_amp1000": [
+        0.86,
+        1.0
+      ],
+      "SU2_B_amp1": [
+        1.0,
+        1.354
+      ],
+      "ref_lphi4U1_E": [
+        1.0,
+        1.18
+      ],
+      "ref_lphi4U1_B": [
+        0.87,
+        1.0
+      ],
+      "v1_sin_mezcla_U1_B": [
+        1.0,
+        3.6
+      ]
+    },
+    "statement": "Rango de E·a⁴ y B·a⁴ (relativos a t = 0) de la parte transversal en t = 0–0.71. Con autoestados de masa, U(1) y SU(2) quedan como la referencia lphi4U1; sin la mezcla (v1) U(1) llegaba a B ×3.6. B_SU2 con amplitud física sube a 1.35 por redondeo del diagnóstico (2 − tr plaqueta); con ×1000 queda en 0.86–1.0.",
+    "produced_by": "code/validar_vacio_su2.py::main",
+    "from_scratch": "average_energies.txt × a⁴ (average_scale_factor.txt).",
+    "from_library": "numpy",
+    "choices": [
+      "Prueba ×1000 con COSMOLATTICE_VACIO_T_AMP (solo prueba) para salir del piso de redondeo."
+    ]
+  },
+  "U1_vT_gw_cociente_3semillas": {
+    "value": {
+      "medio_por_semilla": [
+        0.66,
+        0.67,
+        0.72
+      ],
+      "de_promedios_rango": [
+        0.56,
+        0.79
+      ],
+      "de_promedios_medio": 0.68
+    },
+    "statement": "Espectro final de GWs U(1) vacío transversal / control en k = 0.5-2.5 con tres semillas (1234, 2345, 3456): cociente medio por semilla 0.66, 0.67, 0.72; con los promedios, 0.56-0.79 (medio 0.68).",
+    "choices": [
+      "Media geométrica de los cocientes bin a bin."
+    ],
+    "produced_by": "code/semillas_U1.py::main",
+    "from_scratch": "Reusa comparar_modelos.cargar; cociente bin a bin dentro de cada semilla y entre promedios.",
+    "from_library": "numpy, matplotlib"
+  },
+  "semillas_dispersion": {
+    "value": {
+      "tau_1pc_control": [
+        68.4,
+        0.04
+      ],
+      "tau_1pc_U1": [
+        68.1,
+        0.02
+      ],
+      "disp_gw_control": 0.34,
+      "disp_gw_U1": 0.18,
+      "rhoGW_U1_sobre_control": [
+        1.53,
+        1.65,
+        1.64
+      ]
+    },
+    "statement": "Entre semillas: tau(1 %) no cambia (68.4 control, 68.1 U(1), desvío < 0.1); el espectro de GWs en k = 0.5-2.5 varía hasta 34 % (control) y 18 % (U(1)) bin a bin; rho_GW U(1)/control 1.53-1.65 (dominado por k > 4, no convergido).",
+    "choices": [
+      "Desvío estándar muestral (ddof = 1) sobre 3 semillas."
+    ],
+    "produced_by": "code/semillas_U1.py::main",
+    "from_scratch": "Reusa comparar_modelos.cargar; cociente bin a bin dentro de cada semilla y entre promedios.",
+    "from_library": "numpy, matplotlib"
+  },
+  "SU2U1_tau_1pc": {
+    "value": {
+      "control: χ": 68.3,
+      "U(1): A": 68.1,
+      "SU(2)×U(1): todos los gauge": 68.1,
+      "SU(2)×U(1): Z + fotón (2 ρ_U1)": 68.1,
+      "SU(2)×U(1): W (ρ_SU2 − ρ_U1)": 117.0
+    },
+    "statement": "τ en que cada componente llega al 1 % de la energía total: control χ 68.3, U(1) A 68.1, SU(2)×U(1) gauge total y Z+γ 68.1, W 117.0.",
+    "produced_by": "code/analisis_SU2U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": [
+      "Z+γ = 2 ρ_U1, W = ρ_SU2 − ρ_U1 (autoestados alrededor del doblete homogéneo; salvo término cruzado Z·γ)."
+    ]
+  },
+  "SU2U1_tau_10pc": {
+    "value": {
+      "control: χ": 88.6,
+      "U(1): A": 86.0,
+      "SU(2)×U(1): todos los gauge": 85.7,
+      "SU(2)×U(1): Z + fotón (2 ρ_U1)": 85.7,
+      "SU(2)×U(1): W (ρ_SU2 − ρ_U1)": 130.5
+    },
+    "statement": "Idem al 10 %: control 88.6, U(1) 86.0, SU(2)×U(1) total 85.7, Z+γ 85.7, W 130.5.",
+    "produced_by": "code/analisis_SU2U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": []
+  },
+  "SU2U1_fraccion_final": {
+    "value": {
+      "control: χ": 0.477,
+      "U(1): A": 0.404,
+      "SU(2)×U(1): todos los gauge": 0.636,
+      "SU(2)×U(1): Z + fotón (2 ρ_U1)": 0.311,
+      "SU(2)×U(1): W (ρ_SU2 − ρ_U1)": 0.324
+    },
+    "statement": "Fracción de la energía en los campos hijos/gauge al final (τ = 300): control χ 0.48, U(1) A 0.40, SU(2)×U(1) total 0.64 (Z+γ 0.31, W 0.32); gradiente del doblete 0.16.",
+    "produced_by": "code/analisis_SU2U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": []
+  },
+  "SU2U1_mu_energia": {
+    "value": {
+      "20-40": {
+        "control_chi": 0.12498694815447754,
+        "U1_A_magnetico": 0.12402052795697031,
+        "SU2U1_Zgamma_magnetico": 0.11968313919423725,
+        "SU2U1_W_magnetico": 0.05210367622730326,
+        "SU2U1_W_electrico": 0.009839933573935252
+      },
+      "40-60": {
+        "control_chi": 0.178374539669821,
+        "U1_A_magnetico": 0.17537271353540096,
+        "SU2U1_Zgamma_magnetico": 0.17561426968103316,
+        "SU2U1_W_magnetico": 0.07840141613544603,
+        "SU2U1_W_electrico": 0.06786017595752995
+      },
+      "30-70": {
+        "control_chi": 0.1621599462537622,
+        "U1_A_magnetico": 0.16228469033468937,
+        "SU2U1_Zgamma_magnetico": 0.16237244152825742,
+        "SU2U1_W_magnetico": 0.0713684091225881,
+        "SU2U1_W_electrico": 0.07436053475468489
+      },
+      "100-125": {
+        "control_chi": 0.017353573776654807,
+        "U1_A_magnetico": 0.035834524428562435,
+        "SU2U1_Zgamma_magnetico": 0.030952564909047686,
+        "SU2U1_W_magnetico": 0.1765963482830342,
+        "SU2U1_W_electrico": 0.15816626673341647
+      }
+    },
+    "statement": "μ = ½ d ln ρ/dτ de la energía (magnética para los gauge) por ventana. Fase lineal (τ 30-70): χ, A y Z+γ 0.16; W 0.07. Tardía (τ 100-125): W 0.18 (eléctrico 0.16), el resto < 0.04.",
+    "produced_by": "code/analisis_SU2U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": [
+      "La pendiente de la energía total subestima μ_max (χ: 0.16-0.18 contra Floquet 0.20)."
+    ]
+  },
+  "SU2U1_floquet": {
+    "value": {
+      "120": {
+        "mu_max": 0.19937587209248164,
+        "k_max": 1.4217610062893082,
+        "k_media_altura": [
+          0.5206289308176101,
+          1.9724528301886792
+        ]
+      },
+      "60": {
+        "mu_max": 0.1222231675020587,
+        "k_max": 1.9724528301886792,
+        "k_media_altura": [
+          1.7471698113207548,
+          2.197735849056604
+        ]
+      }
+    },
+    "statement": "Floquet (Lamé, A = 1.138): q = 120 μ_max 0.199 en k 1.42, media altura k 0.52-1.97; q = 60 μ_max 0.122 en k 1.97, media altura k 1.75-2.20.",
+    "produced_by": "code/analisis_SU2U1.py::floquet_banda",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": []
+  },
+  "SU2U1_mu_Z_por_modo": {
+    "value": {
+      "10-30": {
+        "mu_max": 0.225,
+        "k": 1.4999997570666468
+      },
+      "30-50": {
+        "mu_max": 0.227,
+        "k": 1.4999997570666468
+      },
+      "50-70": {
+        "mu_max": 0.35,
+        "k": 2.0000020331114663
+      }
+    },
+    "statement": "μ por modo del espectro magnético U(1) de SU(2)×U(1) (mitad Z+γ): 0.225 en k = 1.5 (τ 10-50), igual que A en lphi4U1 (0.23) y cerca de Floquet q = 120 (0.20).",
+    "produced_by": "code/crecimiento_por_modo_U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": [
+      "Columna 3 de spectra_norm_U1_0.txt (magnético, transversal)."
+    ]
+  },
+  "SU2U1_cruzado_y_piso": {
+    "value": {
+      "piso_B_SU2": 1.0143033459213503e-12,
+      "min_W_magnetico": -4.657980606608144e-05,
+      "min_W_electrico": -1.3165302257414713e-05,
+      "tau_min": 106.00003280158695,
+      "rho_U1_en_ese_tau": 0.05690147462178827
+    },
+    "statement": "ρ_SU2 − ρ_U1 sale negativo en dos regímenes: antes de τ = 40 hasta −1e-12 (piso de redondeo de B_SU2) y en τ 75-110 hasta −4.7e-5 (término cruzado Z·γ, ~0.1 % de ρ_U1). La separación de las W vale después de τ ≈ 110.",
+    "produced_by": "code/analisis_SU2U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": []
+  },
+  "SU2U1_gw": {
+    "value": {
+      "rhoGW_fin": {
+        "control": 9.94676778094537e-06,
+        "U(1)": 1.52524171803511e-05,
+        "SU(2)×U(1)": 7.01774766800946e-06
+      },
+      "pico_k4": {
+        "control": [
+          2.0,
+          3.990815116050915e-06
+        ],
+        "U(1)": [
+          4.000004066222933,
+          4.102059971197052e-06
+        ],
+        "SU(2)×U(1)": [
+          2.0000020331114663,
+          6.631488984845936e-06
+        ]
+      },
+      "tau_mitad": {
+        "control": 129.9,
+        "U(1)": 145.7,
+        "SU(2)×U(1)": 116.7
+      }
+    },
+    "statement": "GWs finales (semilla 1234): ρ_GW/ρ control 9.9e-6, U(1) 1.5e-5, SU(2)×U(1) 7.0e-6 (dominado por k > 4, no convergido). Máximo en k ≤ 4: control 4.0e-6 en k = 2 (meseta k = 2-4), U(1) 4.1e-6 en k = 4 (borde de lo convergido), SU(2)×U(1) 6.6e-6 en k = 2 (pico). ρ_GW llega a la mitad del final en τ 130 (control), 146 (U(1)), 117 (SU(2)×U(1)).",
+    "produced_by": "code/analisis_SU2U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": []
+  },
+  "SU2U1_gw_cocientes": {
+    "value": {
+      "SU2U1/control": {
+        "cociente": [
+          0.799,
+          1.061,
+          1.919,
+          1.662,
+          0.636
+        ],
+        "medio": 1.11,
+        "rhoGW": 0.71
+      },
+      "SU2U1/U1": {
+        "cociente": [
+          1.275,
+          1.533,
+          3.134,
+          2.391,
+          0.925
+        ],
+        "medio": 1.68,
+        "rhoGW": 0.46
+      },
+      "U1/control": {
+        "cociente": [
+          0.626,
+          0.692,
+          0.612,
+          0.695,
+          0.688
+        ],
+        "medio": 0.66,
+        "rhoGW": 1.53
+      }
+    },
+    "statement": "Cociente bin a bin del espectro final en k = 0.5, 1, 1.5, 2, 2.5 (una semilla): SU(2)×U(1)/control 0.80, 1.06, 1.92, 1.66, 0.64 (medio 1.11); SU(2)×U(1)/U(1) medio 1.68; U(1)/control medio 0.66.",
+    "produced_by": "code/analisis_SU2U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": [
+      "Una sola semilla: la dispersión entre semillas del control llega a 34 % por bin (data/semillas/resumen.json)."
+    ]
+  },
+  "SU2U1_calidad": {
+    "value": {
+      "gauss_SU2_max": 1.15677541581493e-06,
+      "gauss_SU2_final": 7.00907865216039e-12,
+      "gauss_U1_max": 1.11389049176738e-09,
+      "friedmann_max": 0.000403130508567968
+    },
+    "statement": "Calidad numérica de la corrida larga: Gauss SU(2) máx 1.2e-6 (final 7e-12), Gauss U(1) máx 1.1e-9, Friedmann máx 4e-4; sin NaN.",
+    "produced_by": "code/analisis_SU2U1.py::main",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": []
+  },
+  "SU2U1_costo": {
+    "value": {
+      "horas": 9.37,
+      "MB": 249
+    },
+    "statement": "La corrida SU(2)×U(1) N = 64 tardó 9 h 22 min con 8 núcleos (1.12 s/paso) y usó 249 MB.",
+    "produced_by": "data/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/tiempo.log",
+    "from_scratch": "Lectura de average_energies*.txt, spectra_energy_gws.txt, average_gauss_*.txt; unidades del control (k/√2, √2 t).",
+    "from_library": "numpy, matplotlib, scipy.special",
+    "choices": []
+  },
+  "gws_fraccion_antes_tau100": {
+    "value": {
+      "control": {
+        "k_hasta_4": 0.034,
+        "antes_120": 0.477,
+        "por_bin": {
+          "0.5": 0.013,
+          "1.0": 0.036,
+          "1.5": 0.034,
+          "2.0": 0.048,
+          "2.5": 0.043
+        }
+      },
+      "U(1)": {
+        "k_hasta_4": 0.017,
+        "antes_120": 0.352,
+        "por_bin": {
+          "0.5": 0.003,
+          "1.0": 0.008,
+          "1.5": 0.016,
+          "2.0": 0.025,
+          "2.5": 0.02
+        }
+      },
+      "SU(2)×U(1)": {
+        "k_hasta_4": 0.247,
+        "antes_120": 0.805,
+        "por_bin": {
+          "0.5": 0.163,
+          "1.0": 0.21,
+          "1.5": 0.327,
+          "2.0": 0.335,
+          "2.5": 0.209
+        }
+      }
+    },
+    "statement": "Fracción de Ω_GW final (k ≤ 4) ya producida en τ = 100: control 0.03, U(1) 0.02, SU(2)×U(1) 0.25 (0.33 en k = 1.5-2); en τ = 120: 0.48, 0.35, 0.80.",
+    "produced_by": "code/produccion_gws.py::main",
+    "from_scratch": "Lectura de spectra_energy_gws.txt (cada 5 τ), average_energies*.txt y average_scale_factor.txt; unidades del control.",
+    "from_library": "numpy, matplotlib",
+    "choices": [
+      "Ω_GW deja de cambiar sin fuente porque fondo y GWs escalan como radiación; τ = 100 es antes del disparo de las W (1 % en τ = 117)."
+    ]
+  },
+  "gws_tau_mitad": {
+    "value": {
+      "control": 121.2,
+      "U(1)": 126.4,
+      "SU(2)×U(1)": 112.5
+    },
+    "statement": "τ en que Ω_GW(k ≤ 4) llega a la mitad del final: control 121, U(1) 126, SU(2)×U(1) 112.",
+    "produced_by": "code/produccion_gws.py::main",
+    "from_scratch": "Lectura de spectra_energy_gws.txt (cada 5 τ), average_energies*.txt y average_scale_factor.txt; unidades del control.",
+    "from_library": "numpy, matplotlib",
+    "choices": []
+  },
+  "gws_rho_tau60_75": {
+    "value": {
+      "control": [
+        2.053685715760662e-14,
+        1.4871611423910923e-09
+      ],
+      "U(1)": [
+        6.831342707697194e-13,
+        3.2239629849484254e-08
+      ],
+      "SU(2)×U(1)": [
+        2.240146746105725e-11,
+        3.493157539809261e-07
+      ]
+    },
+    "statement": "ρ_GW/ρ en τ = 60 y 75: control 2.1e-14, 1.5e-9; U(1) 6.8e-13, 3.2e-8; SU(2)×U(1) 2.2e-11, 3.5e-7.",
+    "produced_by": "code/produccion_gws.py::main",
+    "from_scratch": "Lectura de spectra_energy_gws.txt (cada 5 τ), average_energies*.txt y average_scale_factor.txt; unidades del control.",
+    "from_library": "numpy, matplotlib",
+    "choices": [
+      "En la fase lineal el nivel incluye GWs sembradas por el vacío de todos los campos (más grados de libertad en los modelos gauge): no es una comparación limpia."
+    ]
+  },
+  "gws_SU2U1_sobre_otros": {
+    "value": {
+      "SU2U1/control antes de τ=100": 9.92,
+      "SU2U1/control final": 1.24,
+      "SU2U1/U(1) antes de τ=100": 33.34,
+      "SU2U1/U(1) final": 1.86
+    },
+    "statement": "Ω_GW en k ≤ 2.5 de SU(2)×U(1) sobre control y U(1): en τ = 100, 9.9 y 33; al final, 1.24 y 1.86.",
+    "produced_by": "code/produccion_gws.py::main",
+    "from_scratch": "Lectura de spectra_energy_gws.txt (cada 5 τ), average_energies*.txt y average_scale_factor.txt; unidades del control.",
+    "from_library": "numpy, matplotlib",
+    "choices": []
+  },
+  "gws_ritmo": {
+    "value": {
+      "control": {
+        "dlnrho_campo": 0.40679094122101395,
+        "dlnrho_gw": 0.7651879409945582,
+        "cociente": 1.8810348595713278,
+        "mu_campo": 0.20339547061050697,
+        "mu_gw_equivalente": 0.19129698524863956
+      },
+      "U(1)": {
+        "dlnrho_campo": 0.41139146568373336,
+        "dlnrho_gw": 0.7321485391682437,
+        "cociente": 1.7796882051294174,
+        "mu_campo": 0.20569573284186668,
+        "mu_gw_equivalente": 0.18303713479206093
+      },
+      "SU(2)×U(1)": {
+        "dlnrho_campo": 0.4120678227272993,
+        "dlnrho_gw": 0.726025754773041,
+        "cociente": 1.76190839160357,
+        "mu_campo": 0.20603391136364965,
+        "mu_gw_equivalente": 0.18150643869326025
+      }
+    },
+    "statement": "Fase lineal (τ 35-62): d ln ρ_GW/dτ = 1.88 (control), 1.78 (U(1)) y 1.76 (SU(2)×U(1)) veces d ln ρ_campo/dτ; se espera 2 (fuente cuadrática). μ del campo 0.20-0.21 en los tres.",
+    "produced_by": "code/produccion_gws.py::main",
+    "from_scratch": "Lectura de spectra_energy_gws.txt (cada 5 τ), average_energies*.txt y average_scale_factor.txt; unidades del control.",
+    "from_library": "numpy, matplotlib",
+    "choices": [
+      "Campo: gradiente de χ, magnético de A, 2× magnético U(1) (Z + γ) en SU(2)×U(1)."
+    ]
+  },
+  "gws_eficiencia": {
+    "value": {
+      "control": {
+        "fraccion_media_produccion": 0.1870714938069741,
+        "fraccion_final": 0.4770438663395397,
+        "Omega_convergido": 3.632874061053582e-06,
+        "eficiencia": 0.00010380902552940435
+      },
+      "U(1)": {
+        "fraccion_media_produccion": 0.1568964329579626,
+        "fraccion_final": 0.40406212393938334,
+        "Omega_convergido": 2.41218712342675e-06,
+        "eficiencia": 9.79906988075736e-05
+      },
+      "SU(2)×U(1)": {
+        "fraccion_media_produccion": 0.18178560359888057,
+        "fraccion_final": 0.6356761020525465,
+        "Omega_convergido": 4.493725485693702e-06,
+        "eficiencia": 0.00013598392283105013
+      },
+      "U(1)/control": {
+        "Omega": 0.6639886444968542,
+        "fraccion_al_cuadrado": 0.7034138442380529,
+        "eficiencia": 0.9439516295220142
+      },
+      "SU(2)×U(1)/control": {
+        "Omega": 1.2369615379373933,
+        "fraccion_al_cuadrado": 0.9442864214924229,
+        "eficiencia": 1.3099431589648445
+      }
+    },
+    "statement": "Eficiencia Ω_GW(k ≤ 2.5)/⟨f⟩² con ⟨f⟩ la fracción media de energía en el campo fuente en τ 70-150: U(1)/control 0.94 (Ω 0.66, f² 0.70): U(1) produce menos ondas porque recibe menos energía; SU(2)×U(1)/control 1.31 (Ω 1.24, f² 0.94).",
+    "produced_by": "code/produccion_gws.py::main",
+    "from_scratch": "Lectura de spectra_energy_gws.txt (cada 5 τ), average_energies*.txt y average_scale_factor.txt; unidades del control.",
+    "from_library": "numpy, matplotlib",
+    "choices": [
+      "Estimación de orden de magnitud Ω_GW ~ f² (aH/k)², con el mismo k de pico en los tres."
+    ]
+  },
+  "gws_hoy": {
+    "value": {
+      "control": {
+        "f_pico_k_menor_4": 63959399.600688696,
+        "h2Omega_pico_k_menor_4": 6.59568319939828e-11,
+        "f_pico_global": 255837598.40275478,
+        "h2Omega_pico_global": 7.054093942226818e-11,
+        "f_por_unidad_de_k": 31979699.800344348
+      },
+      "U(1)": {
+        "f_pico_k_menor_4": 127928470.94530848,
+        "h2Omega_pico_k_menor_4": 6.779539329228951e-11,
+        "f_pico_global": 271847378.8531736,
+        "h2Omega_pico_global": 1.970770032607303e-10,
+        "f_por_unidad_de_k": 31982004.662580423
+      },
+      "SU(2)×U(1)": {
+        "f_pico_k_menor_4": 63971446.92349579,
+        "h2Omega_pico_k_menor_4": 1.0959966626473272e-10,
+        "f_pico_global": 63971446.92349579,
+        "h2Omega_pico_global": 1.0959966626473272e-10,
+        "f_por_unidad_de_k": 31985610.375253048
+      }
+    },
+    "statement": "Hoy (g★ = 100, radiación y entropía conservada desde el final): pico convergido h²Ω_GW 6.6e-11 (control, 6.4e7 Hz), 6.8e-11 (U(1), 1.3e8 Hz), 1.1e-10 (SU(2)×U(1), 6.4e7 Hz); 3.2e7 Hz por unidad de k en los tres.",
+    "produced_by": "code/produccion_gws.py::main",
+    "from_scratch": "Lectura de spectra_energy_gws.txt (cada 5 τ), average_energies*.txt y average_scale_factor.txt; unidades del control.",
+    "from_library": "numpy, matplotlib",
+    "choices": [
+      "Misma cuenta que code/analisis_corridas.py::gws_hoy, con f★ y ω★ de cada modelo."
+    ]
+  },
+  "forma_espectro": {
+    "value": {
+      "control": {
+        "n_IR": {
+          "media": 1.1449912080158666,
+          "desv": 0.3388893788390776,
+          "min": 0.7568076360799112,
+          "max": 1.3818748968302708
+        },
+        "n_UV": {
+          "media": 0.08948446293726618,
+          "desv": 0.11742351870616538,
+          "min": -0.026990114243369556,
+          "max": 0.20783445732495495
+        },
+        "k_pico": {
+          "media": 3.1666666666666665,
+          "desv": 1.0408329997330663,
+          "min": 2.0,
+          "max": 4.0
+        },
+        "altura_pico": {
+          "media": 3.950657715137423e-06,
+          "desv": 6.084206842892592e-08,
+          "min": 3.880656127598549e-06,
+          "max": 3.990815116050915e-06
+        }
+      },
+      "U(1)": {
+        "n_IR": {
+          "media": 0.8523131184394691,
+          "desv": 0.17107242570216333,
+          "min": 0.7529707203337642,
+          "max": 1.04984942760819
+        },
+        "n_UV": {
+          "media": 0.5543306969305698,
+          "desv": 0.12195510301525078,
+          "min": 0.41819480840408757,
+          "max": 0.6535965905300947
+        },
+        "k_pico": {
+          "media": 4.000004066222933,
+          "desv": 0.0,
+          "min": 4.000004066222933,
+          "max": 4.000004066222933
+        },
+        "altura_pico": {
+          "media": 4.184644772709705e-06,
+          "desv": 9.972639216859998e-08,
+          "min": 4.102059971197052e-06,
+          "max": 4.295436570688613e-06
+        }
+      },
+      "SU(2)×U(1)": {
+        "n_IR": {
+          "media": 1.512987415217626,
+          "desv": null,
+          "min": 1.512987415217626,
+          "max": 1.512987415217626
+        },
+        "n_UV": {
+          "media": -1.7750553735572645,
+          "desv": null,
+          "min": -1.7750553735572645,
+          "max": -1.7750553735572645
+        },
+        "k_pico": {
+          "media": 2.0000020331114663,
+          "desv": null,
+          "min": 2.0000020331114663,
+          "max": 2.0000020331114663
+        },
+        "altura_pico": {
+          "media": 6.631488984845936e-06,
+          "desv": null,
+          "min": 6.631488984845936e-06,
+          "max": 6.631488984845936e-06
+        }
+      }
+    },
+    "statement": "Espectro final en k ≤ 4 (media ± desvío entre semillas): control n_IR 1.14 ± 0.34, n_UV (k 2-4) 0.09 ± 0.12, meseta con máximo en k = 2-4 de altura 3.9-4.0e-6; U(1) n_IR 0.85 ± 0.17, n_UV 0.55 ± 0.12, máximo 4.1-4.3e-6 en el borde k = 4; SU(2)×U(1) (una semilla) n_IR 1.51, n_UV −1.78, pico en k = 2 de 6.6e-6.",
+    "produced_by": "code/pendientes_espectro.py::main",
+    "from_scratch": "Ajuste lineal en log-log de dΩ_GW/d ln k final: IR con k = 0.5-1.5, UV con k = 2-4.",
+    "from_library": "numpy, matplotlib",
+    "choices": [
+      "IR con solo tres bins (la caja no baja de k = 0.5).",
+      "UV hasta k = 4, el límite de lo convergido (bitácora 3.3)."
+    ]
+  }
+}

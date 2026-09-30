@@ -1,0 +1,40 @@
+# Piloto del control lphi4 (N=128) — ver analisis-parametros.html#tabla
+# Igual que la corrida final N=256 salvo N (misma kIR => misma caja física, menos UV).
+
+#Salida
+outputfile = ./
+print_headers = true
+overwriteFiles = false
+
+#Evolución
+expansion = true
+evolver = LF
+
+#Red
+N = 128
+dt = 0.01
+kIR = 0.25
+kCutOff = 4
+baseSeed = 1234
+
+#Tiempos
+tMax = 300
+tOutputFreq = 0.5
+tOutputInfreq = 5
+
+#Espectros
+PS_type = 1
+PS_version = 1
+saveUnbinnedSpectra = false
+
+#GWs
+withGWs = true
+GWprojectorType = 1
+
+#Condiciones iniciales (inflatón al final de la inflación, GeV y GeV²)
+initial_amplitudes = 5.6964e18 0
+initial_momenta = -4.86735e30 0
+
+#Modelo
+lambda = 9e-14
+q = 120

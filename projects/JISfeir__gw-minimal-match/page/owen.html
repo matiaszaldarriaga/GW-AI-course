@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guía para entender y reproducir Owen (1995)</title>
+  <meta name="description" content="Apunte autocontenido sobre la métrica de bancos de plantillas de Owen, desde ondas gravitacionales y filtrado adaptado hasta una reproducción numérica.">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['\\[', '\\]']], tags: 'ams'},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root { --ink:#182028; --muted:#59636e; --paper:#fbfaf6; --accent:#185f69;
+      --accent2:#8a4b20; --line:#d8d4c9; --soft:#edf4f3; --warn:#fff2dd; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:18px/1.65 Georgia,serif; }
+    header { padding:4.5rem 1.5rem 3rem; color:white; background:#173f46; }
+    header > div, main { max-width:920px; margin:auto; }
+    h1 { max-width:800px; margin:0 0 1rem; font-size:clamp(2.3rem,6vw,4.5rem); line-height:1.02; }
+    header p { max-width:760px; margin:.6rem 0; color:#dbe8e8; font-size:1.15rem; }
+    main { padding:2rem 1.5rem 6rem; }
+    h2 { margin-top:3.5rem; padding-top:1rem; color:var(--accent); font:700 2rem/1.2 system-ui,sans-serif; border-top:1px solid var(--line); }
+    h3 { margin-top:2.2rem; font:700 1.35rem/1.3 system-ui,sans-serif; }
+    h4 { margin-top:1.7rem; font:700 1.05rem/1.3 system-ui,sans-serif; }
+    nav { padding:1rem 1.3rem; background:var(--soft); border-left:5px solid var(--accent); }
+    nav ol { columns:2; padding-left:1.4rem; }
+    a { color:#0f6672; }
+    .lead { font-size:1.15rem; }
+    .box, .warning, .checkpoint { margin:1.5rem 0; padding:1rem 1.2rem; border-radius:5px; }
+    .box { background:var(--soft); border-left:5px solid var(--accent); }
+    .warning { background:var(--warn); border-left:5px solid var(--accent2); }
+    .checkpoint { background:#f1f0fb; border-left:5px solid #5a5192; }
+    .label { font:700 .78rem/1 system-ui,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+    table { width:100%; margin:1.3rem 0; border-collapse:collapse; font-size:.94rem; }
+    th, td { padding:.65rem .7rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    th { font-family:system-ui,sans-serif; background:#f0eee7; }
+    code, pre { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.88em; }
+    pre { overflow:auto; padding:1rem; background:#20272c; color:#f2f4f4; border-radius:5px; }
+    .eqnote { color:var(--muted); font-size:.92rem; }
+    .roadmap { display:grid; grid-template-columns:repeat(5,1fr); gap:.4rem; margin:1.5rem 0; }
+    .roadmap div { padding:.7rem .4rem; text-align:center; background:var(--soft); font:600 .85rem/1.25 system-ui,sans-serif; }
+    .roadmap span { display:block; color:var(--accent); font-size:1.2rem; }
+    .small { color:var(--muted); font-size:.92rem; }
+    .pagebreak { break-before:page; }
+    @media (max-width:700px) { nav ol { columns:1; } .roadmap { grid-template-columns:1fr; } }
+    @media print { body { font-size:11pt; } header { padding:1.5rem; } h1 { font-size:28pt; }
+      main { max-width:none; padding:0 1cm; } nav { display:none; } a { color:inherit; text-decoration:none; }
+      h2 { break-after:avoid; } pre, table, .box, .warning { break-inside:avoid; } }
+  </style>
+</head>
+<body>
+<header><div>
+  <div class="label">Apunte de lectura y reproducción</div>
+  <h1>Owen (1995): del filtrado adaptado a la geometría de un banco de plantillas</h1>
+  <p>Una introducción autocontenida para quien no conoce ondas gravitacionales, con las derivaciones necesarias para reconstruir el cálculo central.</p>
+  <p class="small">Fuente: Benjamin J. Owen, <em>Search templates for gravitational waves from inspiraling binaries: Choice of template spacing</em>, enviado en 1995 y publicado en <em>Physical Review D</em> en 1996.</p>
+</div></header>
+
+<main>
+  <div class="box">
+    <div class="label">La idea en una frase</div>
+    <p>Dos formas de onda cercanas pierden <em>match</em> de manera cuadrática; esa forma cuadrática actúa como una métrica. Cubrir el espacio de parámetros con plantillas pasa entonces a ser un problema geométrico: cubrir un volumen curvo con bolas de radio fijado por la pérdida de señal tolerable.</p>
+  </div>
+
+  <nav aria-label="Contenido">
+    <strong>Recorrido recomendado</strong>
+    <ol>
+      <li><a href="#mapa">Mapa del argumento</a></li>
+      <li><a href="#fisica">Qué señal buscamos</a></li>
+      <li><a href="#filtro">Filtrado adaptado</a></li>
+      <li><a href="#familias">Familias y match</a></li>
+      <li><a href="#metrica">De match a métrica</a></li>
+      <li><a href="#evento">Minimal match y eventos</a></li>
+      <li><a href="#modelo">El modelo de Owen</a></li>
+      <li><a href="#calculo">Cálculo de la métrica</a></li>
+      <li><a href="#banco">Espaciado y cantidad</a></li>
+      <li><a href="#replica">Receta reproducible</a></li>
+      <li><a href="#limites">Supuestos y límites</a></li>
+      <li><a href="#diccionario">Diccionario de símbolos</a></li>
+    </ol>
+  </nav>
+
+  <section id="mapa">
+    <h2>1. Mapa del argumento</h2>
+    <p class="lead">Owen no intenta predecir toda la forma de una onda gravitacional. Resuelve una decisión de ingeniería: dadas formas de onda que dependen continuamente de parámetros como las masas, ¿cuántas formas discretas debemos probar para no perder demasiadas señales?</p>
+    <div class="roadmap" aria-label="Cadena lógica">
+      <div><span>1</span>ruido + señal</div><div><span>2</span>producto interno</div>
+      <div><span>3</span>match local</div><div><span>4</span>métrica</div><div><span>5</span>banco finito</div>
+    </div>
+    <p>El compromiso es inevitable. Una grilla fina conserva más relación señal-ruido (SNR), pero requiere más filtros y más cómputo. Una grilla gruesa cuesta menos, pero algunas señales caen entre plantillas y pueden quedar bajo el umbral de detección.</p>
+    <p>El aporte durable del paper es el paso 3 → 4: reconocer que la curvatura local del <em>match</em> define una geometría en el espacio de parámetros. Los números concretos del artículo son históricos; la construcción geométrica sigue siendo la base conceptual de los bancos de plantillas.</p>
+  </section>
+
+  <section id="fisica">
+    <h2>2. Qué señal estamos buscando</h2>
+    <h3>2.1 Ondas gravitacionales sin prerrequisitos</h3>
+    <p>Una onda gravitacional es una perturbación propagante de la geometría del espacio-tiempo. Un interferómetro no mide una fuerza: mide una deformación relativa extremadamente pequeña, llamada <em>strain</em> $h(t)$, comparando la longitud de dos brazos. El dato registrado puede idealizarse como</p>
+    \[
+      o(t)=n(t)+\mathcal{A}s(t),
+    \]
+    <p>donde $n(t)$ es ruido, $s(t)$ es la forma normalizada de la señal y $\mathcal A$ fija su amplitud.</p>
+
+    <h3>2.2 Por qué una binaria produce un “chirp”</h3>
+    <p>Dos objetos compactos en órbita —estrellas de neutrones o agujeros negros— irradian energía. La órbita se contrae, la frecuencia orbital aumenta y también lo hacen la frecuencia y la amplitud de la onda: eso es un <em>chirp</em>. Las masas controlan cuánto dura y cómo acumula fase.</p>
+    <p>En el régimen de inspiral lento se usa una expansión post-newtoniana (PN): una corrección sistemática a la dinámica newtoniana en potencias de $v/c$. “1PN en la fase” significa conservar la contribución newtoniana y la primera corrección relativa de orden $(v/c)^2$. No significa que la gravedad sea débil durante toda la coalescencia; el modelo se usa sólo donde la expansión resulta adecuada.</p>
+
+    <div class="checkpoint">
+      <div class="label">Punto de control</div>
+      <p>Para este paper basta entender que cada par de masas produce un chirp con una evolución de fase distinta. Detectar consiste en decidir cuál de muchas fases posibles está escondida en el ruido.</p>
+    </div>
+  </section>
+
+  <section id="filtro">
+    <h2>3. Filtrado adaptado: comparar dando menos peso al ruido</h2>
+    <h3>3.1 Fourier y densidad espectral de ruido</h3>
+    <p>Owen usa la convención</p>
+    \[
+      \tilde a(f)=\int_{-\infty}^{\infty} a(t)e^{i2\pi ft}\,dt.
+    \]
+    <p>La densidad espectral unilateral $S_h(f)$ describe cuánta varianza de ruido hay alrededor de cada frecuencia positiva. Frecuencias con $S_h(f)$ grande son poco confiables; frecuencias con $S_h(f)$ pequeño son informativas.</p>
+
+    <h3>3.2 El producto interno correcto</h3>
+    <p>La comparación entre dos series temporales se define como</p>
+    \[
+      \langle a|b\rangle
+      =4\,\mathrm{Re}\!\int_0^\infty
+      \frac{\tilde a^{*}(f)\tilde b(f)}{S_h(f)}\,df.
+      \tag{Owen 1}
+    \]
+    <p>El factor $1/S_h(f)$ “blanquea” conceptualmente el dato: penaliza las bandas ruidosas y premia las sensibles. El factor $4$ proviene de usar una PSD unilateral y señales reales. Otras convenciones de Fourier cambian signos o factores, pero no la lógica si se usan de modo consistente.</p>
+
+    <h3>3.3 Normalización y SNR</h3>
+    <p>Las plantillas $u$ se normalizan de modo que $\langle u|u\rangle=1$. Bajo el modelo de ruido gaussiano estacionario de media cero, $\langle n|u\rangle$ tiene varianza unidad. Por eso Owen puede escribir la estadística de SNR como</p>
+    \[
+      \rho=\langle o|u\rangle.
+    \]
+    <p>Si $u=s$, entonces $\mathbb E[\rho]=\mathcal A$. Si la plantilla no coincide con la señal,</p>
+    \[
+      \mathbb E[\rho]=\mathcal A\langle s|u\rangle.
+    \]
+    <p>El producto interno normalizado es, por tanto, la fracción de SNR óptima que se recupera.</p>
+  </section>
+
+  <section id="familias">
+    <h2>4. Familia continua, banco discreto y dos pérdidas distintas</h2>
+    <p>Una plantilla se escribe $u(t;\boldsymbol\mu,\boldsymbol\lambda)$. Owen separa:</p>
+    <table>
+      <thead><tr><th>Tipo</th><th>Símbolo</th><th>Ejemplos</th><th>Tratamiento</th></tr></thead>
+      <tbody>
+        <tr><td>Extrínseco o cinemático</td><td>$\boldsymbol\mu$</td><td>tiempo $t_0$, fase $\Phi_0$</td><td>se maximiza con bajo costo; $t_0$ mediante FFT y $\Phi_0$ con el módulo complejo</td></tr>
+        <tr><td>Intrínseco o dinámico</td><td>$\boldsymbol\lambda$</td><td>masas, espines, excentricidad</td><td>requiere plantillas separadas</td></tr>
+      </tbody>
+    </table>
+
+    <p>El <em>match</em> entre dos formas de la misma familia, luego de ajustar parámetros extrínsecos, es</p>
+    \[
+      M(\boldsymbol\lambda,\Delta\boldsymbol\lambda)
+      =\max_{\boldsymbol\mu,\Delta\boldsymbol\mu}
+      \left\langle
+      u(\boldsymbol\mu,\boldsymbol\lambda)
+      \middle|
+      u(\boldsymbol\mu+\Delta\boldsymbol\mu,
+        \boldsymbol\lambda+\Delta\boldsymbol\lambda)
+      \right\rangle .
+      \tag{Owen 10}
+    \]
+    <p>Conviene no confundir dos conceptos:</p>
+    <table>
+      <thead><tr><th>Concepto</th><th>Qué compara</th><th>Qué diagnostica</th></tr></thead>
+      <tbody>
+        <tr><td>Fitting factor $FF$</td><td>una señal física con el mejor punto de toda la familia continua</td><td>error del modelo: física ausente o aproximación insuficiente</td></tr>
+        <tr><td>Minimal match $MM$</td><td>un punto de la familia continua con la plantilla discreta más cercana, en el peor lugar de una celda</td><td>error de discretización del banco</td></tr>
+      </tbody>
+    </table>
+    <p>Owen aísla el segundo problema suponiendo que la señal pertenece exactamente a la familia continua, es decir, que el error de modelado no interviene. En una búsqueda real ambas pérdidas pueden combinarse.</p>
+  </section>
+
+  <section id="metrica">
+    <h2>5. Del match a una métrica</h2>
+    <h3>5.1 La expansión local</h3>
+    <p>El match vale uno cuando las dos plantillas coinciden. Alrededor de ese máximo no hay término lineal. La expansión comienza en segundo orden:</p>
+    \[
+      M(\boldsymbol\lambda,\Delta\boldsymbol\lambda)
+      \simeq 1+rac12
+      \left.\frac{\partial^2M}
+      {\partial\Delta\lambda^i\partial\Delta\lambda^j}
+      \right|_{\Delta\boldsymbol\lambda=0}
+      \Delta\lambda^i\Delta\lambda^j.
+    \]
+    <p>Owen define</p>
+    \[
+      g_{ij}(\boldsymbol\lambda)
+      \equiv-\frac12
+      \left.\frac{\partial^2M}
+      {\partial\Delta\lambda^i\partial\Delta\lambda^j}
+      \right|_{0},
+      \qquad
+      1-M\simeq g_{ij}\Delta\lambda^i\Delta\lambda^j.
+      \tag{Owen 12–13}
+    \]
+    <p>Se sobreentiende suma sobre índices repetidos. La cantidad $\mathcal m\equiv1-M$ se llama <em>mismatch</em>. El elemento de distancia</p>
+    \[
+      ds^2=g_{ij}\,d\lambda^i d\lambda^j
+    \]
+    <p>mide pérdida de SNR, no distancia en kilogramos ni en segundos. Una misma separación numérica en masas puede ser inocua en una zona y grave en otra.</p>
+
+    <h3>5.2 Qué significa geométricamente</h3>
+    <p>En dos dimensiones, $g_{ij}\Delta\lambda^i\Delta\lambda^j=\text{constante}$ es localmente una elipse. Sus ejes indican combinaciones de parámetros a las que la fase es muy o poco sensible. Si un autovalor es pequeño, se puede avanzar mucho en su autovector antes de perder el mismo match: ésa es la “casi degeneración” observada en los primeros estudios.</p>
+    <p>El elemento de volumen propio es</p>
+    \[
+      dV_g=\sqrt{\det g}\,d^N\boldsymbol\lambda.
+    \]
+    <p>Ésta es la cantidad invariante bajo cambios suaves de coordenadas. Las componentes de $g$ y el volumen coordenado cambian, pero su producto no.</p>
+
+    <div class="warning">
+      <div class="label">Convención que suele causar errores</div>
+      <p>Hay autores que colocan un factor distinto entre la métrica y el Hessiano del match. Aquí se usa exactamente la convención de Owen: $1-M=g_{ij}\Delta\lambda^i\Delta\lambda^j$. Copiar componentes de una referencia con otra convención produce un espaciado incorrecto por una raíz cuadrada.</p>
+    </div>
+  </section>
+
+  <section id="evento">
+    <h2>6. De la métrica al minimal match y a la tasa de eventos</h2>
+    <h3>6.1 La construcción hipercúbica del paper</h3>
+    <p>Owen imagina una celda hipercúbica de dimensión $N$, con lado propio $dl$ y plantillas en sus vértices. El punto peor cubierto es el centro. Su mismatch respecto de cualquier vértice es</p>
+    \[
+      1-MM=N\left(\frac{dl}{2}\right)^2,
+      \qquad
+      dl=2\sqrt{\frac{1-MM}{N}}.
+      \tag{Owen 15}
+    \]
+    <p>Al dividir el volumen propio total por el volumen propio asignado a cada plantilla se obtiene</p>
+    \[
+      \mathcal N=
+      \frac{\displaystyle\int d^N\boldsymbol\lambda\,\sqrt{\det g}}
+      {\displaystyle\left[2\sqrt{(1-MM)/N}\right]^N}.
+      \tag{Owen 16}
+    \]
+    <p>Para $N=2$, $\mathcal N\propto(1-MM)^{-1}$: exigir la mitad de mismatch máximo duplica aproximadamente el número de plantillas, ignorando bordes.</p>
+
+    <h3>6.2 Por qué $MM=0.97$ se relaciona con cerca del diez por ciento</h3>
+    <p>En el modelo euclídeo y homogéneo usado por Owen, la amplitud cae como $1/R$, de modo que la distancia alcanzable es proporcional a la SNR y el volumen accesible escala como $R^3$. En el peor caso:</p>
+    \[
+      \frac{\Gamma_{\rm banco}}{\Gamma_{\rm ideal}}\gtrsim MM^3,
+      \qquad
+      \mathcal L\equiv1-MM^3.
+    \]
+    <p>Para $MM=0.97$, $MM^3=0.912673$ y $\mathcal L=0.087327$: una pérdida pesimista de $8.73\%$, que el artículo redondea conceptualmente a “alrededor de $10\%$”. Para mismatch pequeño,</p>
+    \[
+      1-MM^3\simeq3(1-MM).
+    \]
+    <p>Esto es una cota de peor caso, no el promedio real dentro de una celda. También mantiene fijo el umbral $\rho_0$; el propio Owen advierte que el número y la correlación de plantillas alteran la distribución del máximo en ruido y, por tanto, el umbral a igual tasa de falsas alarmas.</p>
+  </section>
+
+  <section id="modelo" class="pagebreak">
+    <h2>7. El modelo concreto de Owen</h2>
+    <h3>7.1 PSD histórica</h3>
+    <p>Para mostrar el método, el paper adopta un ajuste analítico de las curvas de ruido que se proyectaban para LIGO:</p>
+    \[
+      S_h(f)=
+      \begin{cases}
+      \dfrac{S_0}{5}\left[(f/f_0)^{-4}+2\bigl(1+(f/f_0)^2\bigr)\right],&amp;f>f_s,\\[4pt]
+      \infty,&amp;f&lt;f_s.
+      \end{cases}
+      \tag{Owen 17}
+    \]
+    <table>
+      <thead><tr><th>Caso histórico</th><th>$f_s$</th><th>$f_0$</th><th>$f_s/f_0$</th></tr></thead>
+      <tbody><tr><td>“first LIGO”</td><td>$40\,\mathrm{Hz}$</td><td>$200\,\mathrm{Hz}$</td><td>$1/5$</td></tr>
+      <tr><td>“advanced LIGO” del paper</td><td>$10\,\mathrm{Hz}$</td><td>$70\,\mathrm{Hz}$</td><td>$1/7$</td></tr></tbody>
+    </table>
+    <p>$S_0$ desaparece al normalizar. Estas curvas no son las PSD actuales de los detectores: sirven para reproducir el paper, no para diseñar hoy un banco operativo.</p>
+
+    <h3>7.2 Forma de onda restringida en frecuencia</h3>
+    <p>Con la aproximación de fase estacionaria y conservando la amplitud newtoniana, la plantilla es, salvo normalización,</p>
+    \[
+      \tilde u(f)=f^{-7/6}\exp\!\left\{i\left[-\frac\pi4-\Phi_0+2\pi ft_0+\Psi(f;\boldsymbol\lambda)\right]\right\}.
+      \tag{Owen 19}
+    \]
+    <p>El producto de dos amplitudes aporta $f^{-7/3}$ al integrando. El paper muestra la fase conocida entonces hasta 2PN, pero para su ejemplo la trunca a 1PN.</p>
+
+    <h3>7.3 Parámetros de masa</h3>
+    <p>A partir de masas componentes $m_1,m_2$, se definen</p>
+    \[
+      M=m_1+m_2,
+      \qquad
+      \eta=\frac{m_1m_2}{M^2},
+      \qquad 0&lt;\eta\le\frac14.
+    \]
+    <p>La igualdad $\eta=1/4$ corresponde a masas iguales. Owen cambia a dos “tiempos de chirp”:</p>
+    \[
+      \tau_1=\frac{5}{256}\eta^{-1}M^{-5/3}(\pi f_0)^{-8/3},
+      \tag{Owen 35}
+    \]
+    \[
+      \tau_2=\frac{5}{192}(\eta M)^{-1}
+      \left(\frac{743}{336}+\frac{11}{4}\eta\right)(\pi f_0)^{-2}.
+      \tag{Owen 36}
+    \]
+    <p>Se usa $G=c=1$, de modo que una masa debe convertirse a segundos mediante $M_{\rm geom}=GM_{\rm SI}/c^3$. Los nombres $\tau_1,\tau_2$ son los de este paper; no deben identificarse automáticamente con la notación moderna $(\tau_0,\tau_3)$.</p>
+    <p>La ventaja decisiva es que la fase 1PN queda lineal:</p>
+    \[
+      \Psi(f;\tau_1,\tau_2)=
+      \frac65\pi f_0\left(\frac f{f_0}\right)^{-5/3}\tau_1
+      +2\pi f_0\left(\frac f{f_0}\right)^{-1}\tau_2.
+      \tag{Owen 37}
+    \]
+    <p>Por eso el match depende del desplazamiento $(\Delta\tau_1,\Delta\tau_2)$, no de la ubicación. Bajo el corte superior $f_c\to\infty$, la métrica es constante y el problema se vuelve plano.</p>
+  </section>
+
+  <section id="calculo">
+    <h2>8. Cómo se calcula la métrica</h2>
+    <h3>8.1 Momentos del ruido</h3>
+    <p>Defina $x=f/f_0$ y</p>
+    \[
+      I(q)=\int_{f_s/f_0}^{f_c/f_0}
+      \frac{5x^{-q/3}}{x^{-4}+2(1+x^2)}\,dx,
+      \qquad J(q)=\frac{I(q)}{I(7)}.
+      \tag{Owen 18}
+    \]
+    <p>Owen toma $f_c/f_0\to\infty$. Para integrar sin un intervalo infinito, el script incluido usa $t=1/x$:</p>
+    \[
+      I(q)=\int_0^{f_0/f_s}
+      \frac{5t^{q/3}}{t^6+2t^2+2}\,dt.
+    \]
+    <p>Es una integral finita y regular para todos los momentos necesarios.</p>
+
+    <h3>8.2 La premétrica como covarianza de fase</h3>
+    <p>Incluya temporalmente $\lambda^0=t_0$ y defina las derivadas de fase</p>
+    \[
+      \psi_0=2\pi f,
+      \qquad
+      \psi_1=(2\pi f_0)\frac35x^{-5/3},
+      \qquad
+      \psi_2=(2\pi f_0)x^{-1}.
+    \]
+    <p>Si $\mathcal J[\cdot]$ denota el promedio con peso normalizado $x^{-7/3}/S_h(xf_0)$, la expansión del módulo del solapamiento da</p>
+    \[
+      \gamma_{\alpha\beta}
+      =\frac12\left(
+      \mathcal J[\psi_\alpha\psi_\beta]
+      -\mathcal J[\psi_\alpha]\mathcal J[\psi_\beta]
+      \right).
+      \tag{Owen 33}
+    \]
+    <p>Es la mitad de una matriz de covarianza de las derivadas de fase. Restar el producto de medias aparece porque maximizar sobre una fase constante equivale a tomar el módulo del solapamiento complejo.</p>
+
+    <h3>8.3 Proyectar el tiempo de coalescencia</h3>
+    <p>Buscamos la menor pérdida posible al permitir que $\Delta t_0$ se ajuste. Escribiendo la forma cuadrática y minimizando respecto de $\Delta t_0$, se obtiene el complemento de Schur:</p>
+    \[
+      g_{ij}=\gamma_{ij}-\frac{\gamma_{0i}\gamma_{0j}}{\gamma_{00}}.
+      \tag{Owen 34}
+    \]
+    <p>Ésta es la métrica intrínseca relevante para colocar el banco. No es simplemente “borrar la fila y columna del tiempo”: el segundo término recoge cuánto de una diferencia de masas puede compensarse desplazando el tiempo.</p>
+
+    <h3>8.4 Resultado numérico reproducido</h3>
+    <p>La integración incluida en este repositorio produce, en unidades de $(2\pi f_0)^2$,</p>
+    \[
+      \frac{g^{\rm inicial}}{(2\pi f_0)^2}\simeq
+      \begin{pmatrix}0.55179&amp;0.30361\\0.30361&amp;0.17320\end{pmatrix},
+      \qquad
+      \frac{g^{\rm avanzada}}{(2\pi f_0)^2}\simeq
+      \begin{pmatrix}1.00544&amp;0.48554\\0.48554&amp;0.24615\end{pmatrix}.
+    \]
+    <p>Redondeadas como Owen, son las matrices de sus ecuaciones (40) y (42). La raíz del determinante adimensional resulta $0.05821$ y $0.10835$, respectivamente.</p>
+    <table>
+      <thead><tr><th>Caso</th><th>Autovalores recalculados de $g/(2\pi f_0)^2$</th><th>Espaciados recalculados para $MM=0.97$</th></tr></thead>
+      <tbody><tr><td>Inicial</td><td>$0.72028,\ 0.004704$</td><td>$0.230\,\mathrm{ms},\ 2.84\,\mathrm{ms}$</td></tr>
+      <tr><td>Avanzada histórica</td><td>$1.24214,\ 0.009452$</td><td>$0.500\,\mathrm{ms},\ 5.73\,\mathrm{ms}$</td></tr></tbody>
+    </table>
+    <p>Los autovectores muestran una dirección rígida y otra blanda. El cociente grande entre espaciados no reduce el problema exactamente a una dimensión, pero explica la casi degeneración.</p>
+
+    <div class="warning">
+      <div class="label">Tres detalles editoriales del original</div>
+      <ol>
+        <li>En las ecuaciones (44)–(45) aparece $(MM/0.03)^{-1}$. Debe ser $((1-MM)/0.03)^{-1}$: así se deduce de (16), se repite en (43) y se entiende la normalización $0.03=1-0.97$.</li>
+        <li>En la primera línea de (49), el vector del lado derecho se imprime como $\mathbf e_{x_1}$; por consistencia debe ser $\mathbf e_{\tau_1}$.</li>
+        <li>Los autovalores y espaciados impresos no coinciden exactamente con los obtenidos al reintegrar los momentos. Las matrices sí coinciden al redondeo mostrado. Para una réplica conviene conservar precisión completa hasta el final.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="banco">
+    <h2>9. Del tensor métrico al banco</h2>
+    <h3>9.1 Diagonalizar y espaciar</h3>
+    <p>Si $E_j$ son los autovalores completos —incluido el factor $(2\pi f_0)^2$— y $x_j$ sus coordenadas ortogonales, entonces</p>
+    \[
+      ds^2=E_1(dx_1)^2+E_2(dx_2)^2,
+      \qquad
+      dx_j=\sqrt{\frac{2(1-MM)}{E_j}}.
+      \tag{Owen 50}
+    \]
+    <p>El factor $2$ aparece porque en dos dimensiones el centro de una celda cuadrada está a media arista en cada eje.</p>
+
+    <h3>9.2 El borde físico en coordenadas de masas</h3>
+    <p>Para imponer $m_1,m_2\ge m_{\min}$, puede parametrizarse el dominio con $(M,\eta)$:</p>
+    \[
+      m_{1,2}=\frac M2\left(1\pm\sqrt{1-4\eta}\right),
+      \qquad
+      M\ge M_{\rm low}(\eta)
+      =\frac{2m_{\min}}{1-\sqrt{1-4\eta}}.
+    \]
+    <p>La reproducción integra el valor absoluto del Jacobiano de $(M,\eta)\mapsto(\tau_1,\tau_2)$. Con $a=743/336$, $b=11/4$, $A=(5/256)(\pi f_0)^{-8/3}$ y $B=(5/192)(\pi f_0)^{-2}$,</p>
+    \[
+      \left|\frac{\partial(\tau_1,\tau_2)}{\partial(M,\eta)}\right|
+      =AB\,M^{-11/3}\eta^{-3}
+      \left(\frac{2a}{3}-b\eta\right).
+    \]
+    <p>La integral en $M$ puede hacerse analíticamente:</p>
+    \[
+      \int_{M_{\rm low}}^\infty M^{-11/3}\,dM
+      =\frac38M_{\rm low}^{-8/3}.
+    \]
+    <p>Queda una sola cuadratura en $\eta$. Para $m_{\min}=0.2M_\odot$, el script obtiene áreas coordenadas $0.1864\,\mathrm{s}^2$ y $25.013\,\mathrm{s}^2$; Owen reporta aproximadamente $0.18\,\mathrm{s}^2$ y $24\,\mathrm{s}^2$ mediante Monte Carlo.</p>
+
+    <h3>9.3 Cantidad de plantillas</h3>
+    <p>Como la métrica es constante y $N=2$,</p>
+    \[
+      \mathcal N=
+      \frac{\sqrt{\det g}}{2(1-MM)}
+      \int d\tau_1d\tau_2.
+      \tag{Owen 43}
+    \]
+    <p>Usando la cuadratura determinista, precisión completa y $MM=0.97$, se obtienen $2.856\times10^5$ plantillas para el caso inicial y $8.738\times10^6$ para el avanzado histórico. Owen, con su área Monte Carlo redondeada, informa $2.7\times10^5$ y $8.4\times10^6$. La diferencia es compatible con los redondeos y la integración histórica.</p>
+
+    <h3>9.4 Costo computacional: resultado histórico, no presupuesto moderno</h3>
+    <p>El artículo estima el costo de filtrar un flujo continuo mediante FFT. Si $F$ es la longitud de cada filtro y $f_u\simeq4f_0$ el corte superior efectivo, obtiene</p>
+    \[
+      \mathcal P\simeq2\mathcal N f_u\left(16+3\log_2F\right).
+      \tag{Owen 59}
+    \]
+    <p>Para una pérdida de eventos cercana al diez por ciento y $m_{\min}=0.2M_\odot$, sus estimaciones son $20\,\mathrm{Gflop/s}$ y $270\,\mathrm{Gflop/s}$. Esos valores dependen del hardware, algoritmos, PSD, banda y modelo de 1995; lo reproducible conceptualmente es la cadena “más volumen métrico → más plantillas → más costo”.</p>
+  </section>
+
+  <section id="replica" class="pagebreak">
+    <h2>10. Receta reproducible</h2>
+    <h3>10.1 Réplica mínima incluida</h3>
+    <p>Desde la raíz del repositorio ejecute:</p>
+    <pre><code>python3 scripts/reproduce_owen1995.py</code></pre>
+    <p>El programa usa sólo la biblioteca estándar, no emplea aleatoriedad y escribe <code>data/owen1995_reproduction.json</code>. Reproduce momentos, premétrica, proyección, determinante, autovalores, espaciados, área física y conteo del banco.</p>
+
+    <h3>10.2 Algoritmo, paso por paso</h3>
+    <ol>
+      <li><strong>Fije convenciones.</strong> Use la transformada y el producto interno de Owen, PSD unilateral y masas geométricas en segundos.</li>
+      <li><strong>Elija el caso histórico.</strong> Fije $f_s/f_0$ y $f_0$ según la tabla de la sección 7.</li>
+      <li><strong>Calcule los momentos.</strong> Evalúe $I(q)$ para $q\in\{1,4,7,9,10,12,13,15,17\}$ y normalice con $I(7)$.</li>
+      <li><strong>Construya las medias.</strong> Use $\psi_0,\psi_1,\psi_2$ y la regla $\mathcal J[\sum a_nx^n]=\sum a_nJ(7-3n)$.</li>
+      <li><strong>Forme $\gamma$.</strong> Evalúe la covarianza de la ecuación (33).</li>
+      <li><strong>Proyecte $t_0$.</strong> Aplique la ecuación (34), no una simple submatriz.</li>
+      <li><strong>Diagonalice.</strong> Verifique que ambos autovalores sean positivos. Calcule $dx_j$ con la ecuación (50).</li>
+      <li><strong>Integre el dominio físico.</strong> Transforme $m_1,m_2$ a $M,\eta$, use el Jacobiano anterior e integre el área en tiempos de chirp.</li>
+      <li><strong>Cuente.</strong> Inserte el área y $\sqrt{\det g}$ en la ecuación (43).</li>
+      <li><strong>No redondee antes del final.</strong> Compare primero las matrices; las discrepancias pequeñas en la dirección blanda se amplifican al invertir su raíz.</li>
+    </ol>
+
+    <h3>10.3 Segunda validación: medir la métrica desde overlaps</h3>
+    <p>Una réplica más fuerte no debería confiar sólo en la fórmula de momentos. Para dos plantillas 1PN normalizadas, forme</p>
+    \[
+      Z(\Delta t_0,\Delta\boldsymbol\tau)=
+      \frac{\displaystyle\int_{f_s}^{f_c}
+      \frac{f^{-7/3}}{S_h(f)}
+      e^{i[2\pi f\Delta t_0+\Delta\Psi(f)]}\,df}
+      {\displaystyle\int_{f_s}^{f_c}\frac{f^{-7/3}}{S_h(f)}\,df}.
+    \]
+    <p>Maximizar sobre fase equivale a usar $|Z|$; maximizar sobre tiempo equivale a buscar $\max_{\Delta t_0}|Z|$, eficientemente mediante FFT. Luego estime por diferencias finitas:</p>
+    \[
+      g_{ii}\simeq\frac{1-M(\epsilon\mathbf e_i)}{\epsilon^2},
+    \]
+    \[
+      g_{ij}\simeq
+      \frac{[1-M(\epsilon(\mathbf e_i+\mathbf e_j))]
+      -[1-M(\epsilon\mathbf e_i)]-[1-M(\epsilon\mathbf e_j)]}{2\epsilon^2}.
+    \]
+    <p>Repita con varios $\epsilon$. Debe aparecer una meseta donde el error de truncación cuadrática y el error numérico sean ambos pequeños. Compare esa matriz con la fórmula analítica, y después pruebe puntos aleatorios dentro de celdas para verificar que el match exacto no caiga por debajo del objetivo.</p>
+
+    <div class="checkpoint">
+      <div class="label">Criterios de éxito</div>
+      <ul>
+        <li>$J(7)=1$ por construcción.</li>
+        <li>$\gamma$ y $g$ son simétricas; $g$ es definida positiva.</li>
+        <li>Las componentes de $g/(2\pi f_0)^2$ redondean a las ecuaciones (40) y (42).</li>
+        <li>El conteo escala como $(1-MM)^{-1}$ en dos dimensiones.</li>
+        <li>El overlap exacto se aproxima a $1-g_{ij}\Delta\lambda^i\Delta\lambda^j$ al reducir el desplazamiento.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="limites">
+    <h2>11. Qué demuestra el paper y qué no</h2>
+    <table>
+      <thead><tr><th>Supuesto</th><th>Para qué sirve</th><th>Qué ocurre al relajarlo</th></tr></thead>
+      <tbody>
+        <tr><td>Señal dentro de la familia</td><td>aísla el error de discretización</td><td>hay que combinar minimal match con fitting factor</td></tr>
+        <tr><td>Separaciones pequeñas</td><td>justifica truncar el match a segundo orden</td><td>para bancos gruesos hay que usar overlaps completos</td></tr>
+        <tr><td>Inspiral circular, sin espín, fase 1PN</td><td>deja dos parámetros y fase lineal</td><td>más física aumenta dimensión y hace variar la métrica</td></tr>
+        <tr><td>$f_c\to\infty$</td><td>vuelve constante la métrica en $(\tau_1,\tau_2)$</td><td>un corte dependiente de masa curva el espacio</td></tr>
+        <tr><td>Ruido gaussiano estacionario</td><td>da interpretación simple a SNR y umbral</td><td>glitches y no estacionariedad requieren estadística empírica y veto</td></tr>
+        <tr><td>Celda hipercúbica</td><td>produce una fórmula transparente en cualquier dimensión</td><td>no es el recubrimiento más eficiente; otras redes reducen plantillas</td></tr>
+        <tr><td>Un detector y una pasada</td><td>permite estimar costo directo</td><td>redes, coincidencia y búsquedas jerárquicas cambian el presupuesto</td></tr>
+        <tr><td>Umbral aproximadamente fijo</td><td>conecta $MM$ con volumen mediante $MM^3$</td><td>más plantillas implican más ensayos y pueden elevar el umbral</td></tr>
+      </tbody>
+    </table>
+
+    <h3>La lectura conceptual correcta</h3>
+    <p>El resultado más general no es “LIGO necesita cierta cantidad histórica de plantillas”. Es:</p>
+    \[
+      \boxed{\text{forma de onda + PSD}
+      \longrightarrow M
+      \longrightarrow g_{ij}
+      \longrightarrow \text{volumen métrico}
+      \longrightarrow \text{banco y costo}}
+    \]
+    <p>Cambiar detector, aproximante, banda o parámetros modifica la métrica; el procedimiento permanece.</p>
+  </section>
+
+  <section id="diccionario">
+    <h2>12. Diccionario mínimo de símbolos</h2>
+    <table>
+      <thead><tr><th>Símbolo</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td>$h(t)$</td><td>strain de onda gravitacional</td></tr>
+        <tr><td>$o=n+\mathcal As$</td><td>salida del detector: ruido más señal</td></tr>
+        <tr><td>$S_h(f)$</td><td>densidad espectral unilateral de ruido</td></tr>
+        <tr><td>$\rho$</td><td>relación señal-ruido del filtro</td></tr>
+        <tr><td>$M$</td><td>match maximizado sobre parámetros extrínsecos; también masa total cuando el contexto es masas</td></tr>
+        <tr><td>$\mathcal m=1-M$</td><td>mismatch</td></tr>
+        <tr><td>$MM$</td><td>minimal match garantizado por el banco en el peor punto</td></tr>
+        <tr><td>$FF$</td><td>fitting factor de la familia continua frente a la señal física</td></tr>
+        <tr><td>$g_{ij}$</td><td>métrica intrínseca de mismatch</td></tr>
+        <tr><td>$\gamma_{\alpha\beta}$</td><td>premétrica que todavía incluye el tiempo de coalescencia</td></tr>
+        <tr><td>$\eta=m_1m_2/(m_1+m_2)^2$</td><td>razón de masa simétrica</td></tr>
+        <tr><td>$\tau_1,\tau_2$</td><td>tiempos de chirp newtoniano y 1PN en la notación de Owen</td></tr>
+        <tr><td>$\mathcal N$</td><td>cantidad estimada de plantillas</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Fuentes y archivos de reproducción</h3>
+    <ul>
+      <li><a href="https://arxiv.org/abs/gr-qc/9511032">Preprint original en arXiv</a> y <a href="https://doi.org/10.1103/PhysRevD.53.6749">versión publicada, DOI 10.1103/PhysRevD.53.6749</a>.</li>
+      <li><a href="../scripts/reproduce_owen1995.py">Código de la réplica numérica</a>.</li>
+      <li><a href="../data/owen1995_reproduction.json">Salida numérica completa</a>.</li>
+      <li><a href="../provenance/claims.yaml">Procedencia de afirmaciones y cifras</a>.</li>
+    </ul>
+    <p class="small">Las ecuaciones están escritas en LaTeX y se renderizan con MathJax. Sin conexión, el fuente LaTeX sigue visible en el HTML; para imprimir, abra la página con conexión una vez y use la función de impresión del navegador.</p>
+  </section>
+</main>
+</body>
+</html>

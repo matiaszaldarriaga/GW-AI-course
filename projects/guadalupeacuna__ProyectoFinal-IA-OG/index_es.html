@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bigravedad camaleónica y espín 2</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root { --bg:#fdfcfa; --fg:#1d1d1f; --muted:#5f6368; --line:#e3e0da; --accent:#c8702a;
+        --claude:#e8a05c; --codex:#3b6ea8; --me:#333; --ok:#1a7a2a; --warn:#a36d00; --bad:#b03030;
+        --card:#ffffff; --code:#f3f1ed; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg:#17181a; --fg:#e8e6e3; --muted:#a0a4a8; --line:#34363a; --card:#1f2124; --code:#2a2c30;
+  --me:#cfcfcf; --ok:#5fc46f; --warn:#e0b040; --bad:#f07070; } }
+:root[data-theme="dark"] { --bg:#17181a; --fg:#e8e6e3; --muted:#a0a4a8; --line:#34363a; --card:#1f2124;
+  --code:#2a2c30; --me:#cfcfcf; --ok:#5fc46f; --warn:#e0b040; --bad:#f07070; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--fg);
+       font: 16px/1.6 "Iowan Old Style", "Palatino Linotype", Georgia, serif; }
+main { max-width: 920px; margin: 0 auto; padding: 2.5rem 16px 4rem; }
+h1 { font-size: 2rem; line-height:1.2; margin: 0 0 .3rem; }
+.sub { color: var(--muted); margin: 0 0 1.5rem; font-size: 1.05rem; }
+h2 { font-size: 1.3rem; margin: 2.6rem 0 .8rem; padding-bottom:.3rem; border-bottom: 2px solid var(--accent); }
+p, li { max-width: 72ch; }
+a { color: var(--accent); }
+code { font-family: ui-monospace, Consolas, monospace; font-size: .85em; background: var(--code);
+       padding: .05em .35em; border-radius: 3px; word-break: break-word; }
+pre { background: var(--code); padding: .9rem 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; }
+.links { display:flex; flex-wrap:wrap; gap:.6rem; margin: 1rem 0 0; }
+.links a { border:1px solid var(--line); background:var(--card); padding:.4rem .8rem; border-radius: 6px;
+           text-decoration:none; font-family: system-ui, sans-serif; font-size:.9rem; }
+.lead { font-size: 1.08rem; }
+.flow { display:grid; grid-template-columns: repeat(3, 1fr); gap: .7rem; margin: 1rem 0; font-family: system-ui, sans-serif; font-size:.86rem; }
+.flow div { background: var(--card); border:1px solid var(--line); border-left: 4px solid var(--me); border-radius:6px; padding:.55rem .7rem; }
+.flow .c { border-left-color: var(--claude); } .flow .x { border-left-color: var(--codex); } .flow .v { border-left-color: var(--ok); }
+.flow b { display:block; }
+figure { margin: 1.4rem 0; } figure img { width:100%; height:auto; background:#fff; border-radius:6px; border:1px solid var(--line); }
+figcaption { color: var(--muted); font-size: .9rem; margin-top:.4rem; }
+.table-wrap { overflow-x:auto; }
+table { border-collapse: collapse; width:100%; font-family: system-ui, sans-serif; font-size: .86rem; }
+th, td { border-bottom:1px solid var(--line); padding:.5rem .45rem; text-align:left; vertical-align:top; }
+th { font-weight:600; color: var(--muted); }
+.st { font-weight:700; white-space:nowrap; } .ok { color:var(--ok); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+.eq { background: var(--card); border:1px solid var(--line); border-radius: 6px; padding:.3rem 1rem; margin: 1rem 0; overflow-x:auto; }
+.two { display:grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; align-items:start; }
+footer { color:var(--muted); font-size:.85rem; margin-top:3rem; border-top:1px solid var(--line); padding-top:1rem; }
+@media (max-width: 700px) { .flow, .two { grid-template-columns: 1fr; } h1 { font-size:1.6rem; } }
+</style>
+<body>
+<main>
+<p class="sub" style="text-align:right;margin:0"><a href="index.html">English version</a></p>
+<h1>Bigravedad camaleónica y materia oscura de espín 2</h1>
+<p class="sub">Proyecto final: investigación asistida por agentes de IA (Claude Code + Codex) · Guadalupe Ahumada Acuña, DF–FCEN–UBA · septiembre 2026</p>
+
+<p class="lead">¿Pueden los gravitones sin masa de la métrica \(g\) mezclarse con los de una segunda métrica dinámica \(f\) y producir partículas masivas de espín 2 que se comporten como materia oscura? Tomé un cálculo propio de bigravedad y usé dos agentes para extenderlo al caso <em>camaleónico</em>, \(\beta_n\to\beta_n(\phi)\), con lapso relativo \(c(t)\) y cociente de fondos \(\xi(t)\) generales. Registré de dónde sale cada resultado y lo verifiqué por un camino que no comparte código con el que lo produjo.</p>
+
+<div class="links">
+  <a href="informe/informe_proyecto_final.pdf">Informe PDF</a>
+  <a href="PROVENANCE.md">Proveniencia</a>
+  <a href="AGENTS.md">Cómo reproducirlo con un agente</a>
+  <a href="verificaciones/">Verificaciones</a>
+  <a href="codigo/">Mi notebook (corrida limpia)</a>
+  <a href="material/">Todo el material</a>
+</div>
+
+<h2>El modelo</h2>
+<div class="eq">\[
+S=\frac{M_g^2}{2}\!\int\!\sqrt{-g}R[g]+\frac{M_f^2}{2}\!\int\!\sqrt{-f}R[f]+M_g^2m^2\!\int\!\sqrt{-g}\sum_{n=0}^{4}\beta_n(\phi)\,e_n\!\big(\sqrt{g^{-1}f}\big)-\tfrac12\!\int\!\sqrt{-g}(\partial\phi)^2+S_m\!\left[A^2(\phi)g\right]
+\]</div>
+<p>Los fondos son \(ds_g^2=-dt^2+a^2d\vec x^2\) y \(ds_f^2=\xi^2(t)\,[-c^2(t)dt^2+a^2d\vec x^2]\). Mis notas de partida cubren la teoría estándar con \(c=1\) y \(\xi\) constante. La meta es el tensor de energía–momento a segundo orden en perturbaciones.</p>
+
+<h2>Cómo se trabajó</h2>
+<div class="flow">
+  <div><b>Mis notas</b>teoría estándar + <em>Next steps</em></div>
+  <div class="c"><b>Claude</b>escribe las Secs. 7–11 y 55 chequeos en sympy</div>
+  <div class="x"><b>Codex</b>4 auditorías de las notas (11 → 16 → 20 → 17 problemas)</div>
+  <div><b>Mi código modelo</b>xPand, \(c=1\), \(\xi\) constante</div>
+  <div class="c"><b>A/B</b>el mismo prompt a los dos agentes: reglas de \(R_{\mu\nu}[f]\)</div>
+  <div class="x"><b>Codex</b>rederiva 1711.04655 y audita mi notebook</div>
+  <div><b>Mi código general</b><code>codigo/Perturbaciones_Chameleon.nb</code></div>
+  <div class="v"><b>Verificación independiente</b><code>verificaciones/run_all.sh</code></div>
+  <div class="c"><b>Claude</b>signos, \(c(t)\), tensores con \(c\neq1\), corrida limpia de mi notebook</div>
+</div>
+<figure>
+  <img src="informe/figs/timeline.png" alt="Cronología del trabajo por carril: yo, Claude, Codex">
+  <figcaption>Cronología, reconstruida a partir de las fechas de los archivos.</figcaption>
+</figure>
+
+<h2>Resultados, y cuánto confío en cada uno</h2>
+<p>Notación: \(J=\beta_1+2\beta_2\xi+\beta_3\xi^2\), \(Z=\beta_1+(1+c)\beta_2\xi+c\beta_3\xi^2\), \(\kappa=M_f^2/M_g^2\), \(\Delta=H-\xi H_f\).</p>
+<div class="table-wrap"><table>
+<tr><th>Resultado</th><th>Quién lo produjo</th><th>Chequeo independiente</th><th>Estado</th></tr>
+<tr><td>Fondo de \(g\) y de \(f\), Klein–Gordon, conservación</td><td>yo (xPand), con la geometría de \(f\) diseñada con los agentes</td><td>rederivado desde la acción en componentes; con el signo viejo de \(\dot\rho\) el vínculo no cierra (control negativo)</td><td class="st ok">verificado</td></tr>
+<tr><td>Vínculo de Bianchi generalizado</td><td>yo · notas de Claude · 1702.04490</td><td>las tres formas son idénticas (sympy, 7/7 PASS)</td><td class="st ok">verificado</td></tr>
+<tr><td>\(c(t)\)</td><td>yo · notas de Claude</td><td>desde la acción (Mathematica sin xAct) y dentro de mi notebook (residuo 0)</td><td class="st ok">verificado</td></tr>
+<tr><td>Sector tensorial lineal con \(c\neq1\), \(\xi(t)\), y \(m_{\rm M}^2\)</td><td>yo (<code>EqTg</code>) + bloque en componentes en mi notebook</td><td><code>derivacion_TT_general.m</code>: 10 PASS; coincide con <code>EqTg</code> y con la masa de las notas</td><td class="st ok">verificado</td></tr>
+<tr><td>Vectores, no-fantasma escalar</td><td>notas de Claude; Codex rederivó 1711.04655</td><td>171 chequeos de Codex; Claude <em>copió</em> \(\kappa_1,\Sigma\) del paper</td><td class="st warn">parcial</td></tr>
+<tr><td>Materia oscura por conversión \(\mathcal G\to\mathcal M\)</td><td>sólo notas de Claude</td><td>4 auditorías, siguen 7 problemas abiertos</td><td class="st bad">no verificado</td></tr>
+</table></div>
+
+<p><b>Vínculo.</b> Con \(\beta_n(\phi)\), la dicotomía de ramas \(J(H-\xi H_f)=0\) de la bigravedad estándar se reemplaza por un vínculo inhomogéneo. El desajuste de las tasas de Hubble lo maneja el rodamiento del camaleón, no la materia:</p>
+<div class="eq">\[
+J\,(H-\xi H_f)=-\tfrac13\,\dot\phi\,\big(\beta_1'+3\beta_2'\xi+3\beta_3'\xi^2+\beta_4'\xi^3\big),\qquad
+c-1=\frac{\mathcal P-\Delta\,\xi H_f}{\widetilde W}
+\]</div>
+<p><b>Sector tensorial para \(c(t)\), \(\xi(t)\) generales.</b> El gravitón de \(f\) se propaga en el cono de luz de \(f\), y las masas cierran en \(h-\gamma\):</p>
+<div class="eq">\[
+\ddot\gamma+\Big(3H+2\tfrac{\dot\xi}{\xi}-\tfrac{\dot c}{c}\Big)\dot\gamma+c^2\tfrac{k^2}{a^2}\gamma+m_\gamma^2(\gamma-h)=0,\qquad
+m_{\rm M}^2=m_h^2+m_\gamma^2=-\frac{m^2Z\,(c+\kappa\xi^2)}{\kappa\xi}
+\]</div>
+<p>Con \(c\neq1\), la matriz de gradientes \(\mathrm{diag}(1,c^2)\) no conmuta con la de masas. Entonces ninguna base constante desacopla \(\mathcal G\) y \(\mathcal M\): hay un canal de mezcla \(\propto k^2(c^2-1)\), que se suma al que viene de \(\dot\theta\). Es el punto de partida del cálculo a segundo orden.</p>
+
+<h2>Qué aprendí sobre los agentes</h2>
+<div class="two">
+<figure>
+  <img src="informe/figs/auditorias.png" alt="Problemas por auditoría y por tema">
+  <figcaption>Los problemas de fondo desaparecen con las auditorías. El total no baja: se muda a la fenomenología.</figcaption>
+</figure>
+<ul>
+  <li><b>La auditoría cruzada sirve, pero no converge sola.</b> Cada corrección trae afirmaciones nuevas.</li>
+  <li><b>Copiar en lugar de derivar:</b> un notebook de Claude carga fórmulas del paper y después "verifica" contra ellas.</li>
+  <li><b>Números donde no corresponde:</b> chequeos en una sola curva numérica; una figura de dos rectas triviales.</li>
+  <li><b>Referencias inventadas</b> en la guía de derivaciones.</li>
+  <li><b>Fallas silenciosas:</b> un parche de Codex no pasó sus propios chequeos y escribió el archivo igual.</li>
+  <li><b>Lo que funcionó:</b> darles mi código como modelo; el A/B con el mismo prompt; ceros exactos desde un kernel limpio, con controles negativos; rederivar lo importante por un camino que no comparte código; correr el notebook entero, que destapó tres defectos latentes.</li>
+</ul>
+</div>
+
+<h2>Reproducir</h2>
+<pre>git clone &lt;este repo&gt; &amp;&amp; cd &lt;repo&gt;/verificaciones
+bash run_all.sh      # ~3 min: 7/7 + 6/6 + 21/21 + 34/34 + 17/17 PASS, y el sector TT con c=1 cierra</pre>
+<p>Entorno: Python 3.12 (sympy 1.12, numpy, scipy, mpmath) y Mathematica 12.1.1 para las dos derivaciones en componentes, sin necesidad de xAct. Los notebooks usan xAct (xTensor 1.2.0, xPert 1.0.6, xPand 0.4.3).</p>
+
+<h2>Próximos pasos</h2>
+<ol>
+  <li>Sectores vectorial y escalar en mi notebook, con la \(\delta\sqrt{g^{-1}f}\) exacta (ecuación de Sylvester).</li>
+  <li>\(T_{\mu\nu}\) a segundo orden sobre las ecuaciones tensoriales verificadas.</li>
+  <li>Recién entonces, la conversión y la abundancia para un \(\beta_n(\phi)=\bar\beta_n e^{-\lambda\phi}\) concreto.</li>
+</ol>
+
+<footer>
+Referencias: De Felice, Mukohyama, Uzan, arXiv:1702.04490 · De Felice, Mukohyama, Oliosi, Watanabe, arXiv:1711.04655 · Dimastrogiovanni, Fasiello, Gümrükçüoğlu, arXiv:2108.06722 · Marzola, Raidal, Urban, arXiv:1708.04253.
+</footer>
+</main>
+</body>
+</html>

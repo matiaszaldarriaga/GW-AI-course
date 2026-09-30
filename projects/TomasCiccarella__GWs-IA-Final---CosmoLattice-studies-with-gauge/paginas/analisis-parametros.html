@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parámetros comparables</title>
+<script>
+MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+:root {
+  --fondo: #ffffff; --texto: #1a1a1a; --suave: #666; --linea: #e3e3e3;
+  --acento: #e8a05c; --enlace: #a5651e; --caja: #fafafa;
+  --verde: #2f6b3c; --verde-fondo: #f3f9f4; --rojo: #c0504d; --rojo-fondo: #fcf5f5;
+}
+body { font: 16px/1.7 -apple-system, "Helvetica Neue", sans-serif;
+       max-width: 900px; margin: 2rem auto; padding: 0 16px;
+       color: var(--texto); background: var(--fondo); }
+h1 { font-size: 1.65rem; margin-bottom: .2rem; }
+.subtitulo { color: var(--suave); margin-top: 0; }
+h2 { font-size: 1.28rem; margin-top: 2.6rem; border-bottom: 2px solid var(--acento);
+     padding-bottom: .2rem; }
+h3 { font-size: 1.05rem; margin-top: 1.7rem; }
+a { color: var(--enlace); }
+code { background: #f2f2f2; padding: .05em .3em; font-size: .84em; border-radius: 3px; }
+.simple { border-left: 4px solid var(--acento); background: var(--caja);
+          padding: .7rem 1.1rem; margin: 1.1rem 0; }
+.simple::before { content: "En palabras simples"; display: block; font-weight: 600;
+                  font-size: .78rem; text-transform: uppercase; letter-spacing: .04em;
+                  color: var(--enlace); margin-bottom: .2rem; }
+.conclusion { border-left: 4px solid var(--verde); background: var(--verde-fondo);
+              padding: .7rem 1.1rem; margin: 1.1rem 0; }
+.conclusion::before { content: "Conclusión"; display: block; font-weight: 600;
+                      font-size: .78rem; text-transform: uppercase; letter-spacing: .04em;
+                      color: var(--verde); margin-bottom: .2rem; }
+.abierto { border-left: 4px solid var(--rojo); background: var(--rojo-fondo);
+           padding: .7rem 1.1rem; margin: 1.1rem 0; }
+.tabla { overflow-x: auto; margin: 1rem 0; }
+table { border-collapse: collapse; width: 100%; font-size: .86rem; }
+th, td { border: 1px solid var(--linea); padding: .4rem .55rem; text-align: left; vertical-align: top; }
+th { background: var(--caja); }
+td.num { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .82rem; white-space: nowrap; }
+tr.grupo td { background: #f5f3ee; font-weight: 600; }
+.cite { color: #888; font-size: .8rem; }
+.small { font-size: .86rem; color: #444; }
+figure { margin: 1.2rem 0; }
+figure img { width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 4px; }
+figcaption { font-size: .86rem; color: #444; margin-top: .4rem; }
+nav.indice { background: var(--caja); border: 1px solid var(--linea); padding: .8rem 1.2rem;
+             border-radius: 6px; font-size: .93rem; }
+nav.indice ol { margin: .3rem 0 0; padding-left: 1.3rem; }
+ul, ol { padding-left: 1.3rem; }
+li { margin: .25rem 0; }
+footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--linea);
+         color: var(--suave); font-size: .82rem; }
+/* texto justificado (con guiones, en castellano) */
+p, li, dd, figcaption, blockquote { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+</style>
+</head>
+<body>
+
+<h1>Parámetros comparables para los tres modelos</h1>
+<p class="subtitulo">Qué valores usan los autores, por qué, qué dicen las observaciones,
+y cómo elegir los parámetros para que <code>lphi4</code>, <code>lphi4U1</code> y
+<code>lphi4SU2U1</code> se comparen de igual a igual.</p>
+
+<p class="small">¿No sos de física? La <a href="bitacora.html">bitácora</a> explica el
+proyecto desde cero. Las cuentas de esta página están en
+<a href="../code/analisis_parametros.py"><code>code/analisis_parametros.py</code></a>, y cada
+número está registrado en <code>provenance/</code>.</p>
+
+<nav class="indice">
+<strong>Contenido</strong>
+<ol>
+<li><a href="#resumen">Resumen</a></li>
+<li><a href="#que-hace">Qué controla cada parámetro</a></li>
+<li><a href="#autores">Qué usan los autores, modelo por modelo</a></li>
+<li><a href="#lambda">λ: qué dicen las observaciones</a></li>
+<li><a href="#q">q: la intensidad de la resonancia</a></li>
+<li><a href="#su2">El caso SU(2)×U(1): cómo repartir q entre dos campos gauge</a></li>
+<li><a href="#red">La red: tamaño, resolución y duración</a></li>
+<li><a href="#tabla">La tabla: valores comparables para los tres modelos</a></li>
+<li><a href="#abierto">Qué queda abierto</a></li>
+</ol>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="resumen">1. Resumen</h2>
+
+<div class="simple">
+Para comparar tres simulaciones y poder decir "esta diferencia la causa el campo de
+gauge", las tres tienen que arrancar igual y recibir el mismo "empujón". Si una arranca
+con más energía o con un empujón más fuerte, cualquier diferencia en las ondas
+gravitacionales podría venir de eso y no del campo de gauge. Esta página busca los valores
+que hacen que los tres modelos sean lo más parecidos posible en todo, salvo en el tipo de
+campo que recibe la energía.
+</div>
+
+<ul>
+<li><strong>λ = 9×10⁻¹⁴ en los tres modelos.</strong> El λφ⁴ puro está descartado por las
+observaciones, pero dentro de la simulación λ casi no importa: sólo fija la escala absoluta
+(la frecuencia de las ondas hoy) y el tamaño del ruido inicial. Lo importante es que sea el
+mismo en los tres.</li>
+<li><strong>q = 120 en lugar de 300.</strong> Con q = 300 (el valor por defecto) la
+resonancia es débil y angosta. q = 120 es el caso de referencia de Dufaux et al. (2007),
+que ya calcularon el espectro de ondas gravitacionales de este mismo modelo de control. Eso
+permite validar nuestra corrida contra la literatura antes de agregar campos de gauge.</li>
+<li><strong>Un único canal resonante con el mismo q en cada modelo.</strong> En el control
+la energía va a un campo escalar hijo, en U(1) a un campo de gauge y en SU(2)×U(1) a dos
+campos de gauge que resuenan juntos. Por eso en SU(2)×U(1) cada sector lleva la mitad
+(q_A = q_B = 60): la suma es la que tiene que dar 120.</li>
+<li><strong>La red de los modelos gauge es la del control traducida por √2</strong>, porque
+el código usa una unidad de tiempo distinta en esos modelos.</li>
+</ul>
+<p>La <a href="#tabla">tabla final</a> tiene todos los valores.</p>
+
+<!-- ============================================================ -->
+<h2 id="que-hace">2. Qué controla cada parámetro</h2>
+
+<div class="tabla"><table>
+<tr><th>Parámetro</th><th>Qué es, en palabras simples</th><th>Qué cambia en el espectro de GWs</th></tr>
+<tr><td>\(\lambda\) (<code>lambda</code>)</td><td>Qué tan "empinado" es el potencial del inflatón. Fija la escala de energía de todo el proceso.</td><td>Casi sólo la frecuencia de las ondas hoy (\(f\propto\lambda^{1/4}\)). La forma del espectro no cambia (ver <a href="#lambda">§4</a>).</td></tr>
+<tr><td>\(q\) (<code>q</code>, <code>qG</code>, y el \(q_A,q_B\) que sale de <code>gU1s</code>, <code>gSU2s</code>)</td><td>Qué tan fuerte "empuja" el inflatón al campo hijo en cada oscilación: el acoplamiento medido en las unidades naturales del problema, \(q=g^2/\lambda\).</td><td>Dónde queda el pico (\(k_*\sim q^{1/4}\sqrt\lambda\,\varphi_*\)) y qué tan rápido se forma. Es el parámetro que más importa.</td></tr>
+<tr><td>Amplitud y velocidad iniciales del inflatón</td><td>Dónde y a qué velocidad está el inflatón cuando termina la inflación.</td><td>La energía total disponible. Tiene que ser la misma en los tres modelos.</td></tr>
+<tr><td><code>N</code>, <code>kIR</code></td><td>Cuántos puntos tiene la grilla por lado, y el tamaño de la caja (<code>kIR</code> = 2π/tamaño).</td><td>Qué rango de frecuencias se ve. La caja tiene que ser más grande que la escala del pico, y los puntos tienen que alcanzar para lo que se genera después, a escalas más chicas.</td></tr>
+<tr><td><code>dt</code>, <code>tMax</code></td><td>El paso de tiempo y cuánto dura la simulación.</td><td>Hay que llegar a la etapa en que el espectro deja de cambiar.</td></tr>
+<tr><td><code>kCutOff</code></td><td>Hasta qué escala se siembra el "ruido" cuántico inicial.</td><td>Poco, siempre que cubra la banda de resonancia.</td></tr>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="autores">3. Qué usan los autores, modelo por modelo</h2>
+<p>Todo lo que sigue sale de los papers de <a href="../bibliografía/BIBLIOGRAFIA.md">bibliografía/</a>
+y de los <code>.in</code> que trae CosmoLattice. En la columna "por qué" puse lo que dicen
+los propios autores. Cuando no lo dicen, lo aclaro.</p>
+
+<h3>3.1. <code>lphi4</code>: el control (λφ⁴ + un hijo escalar)</h3>
+<div class="tabla"><table>
+<tr><th>Fuente</th><th>λ</th><th>q</th><th>Estado inicial</th><th>Red</th><th>Por qué eligieron eso</th></tr>
+<tr><td><strong>Dufaux et al. 2007</strong><br><span class="cite">0707.0875, §VI</span></td>
+<td class="num">10⁻¹⁴</td><td class="num">1.2, 120, 128, 1130<br>(principal: 120)</td>
+<td>φ₀ ≈ 0.342 M<sub>Pl</sub></td><td>256³, hasta x = 240</td>
+<td>λ, "de la normalización de las anisotropías del CMB". q ≫ 1 porque λ es muy chico, así que la resonancia es ancha. q = 128 = 2·8² es un caso especial en el que el pico se corre a k → 0. Es <strong>el</strong> cálculo de referencia de GWs para este modelo: para q = 120 obtienen h²Ω<sub>GW</sub> ~ 3×10⁻¹¹ a f ~ 7×10⁷ Hz, y encuentran que el pico depende poco de q.</td></tr>
+<tr><td><strong>Manual v1</strong><br><span class="cite">2102.01031, §4.3</span></td>
+<td class="num">9×10⁻¹⁴</td><td class="num">100</td>
+<td class="num">7.42675e18 GeV<br>−6.2969e30 GeV²</td><td>N = 32, kIR = 0.75, dt = 0.01, tMax = 300</td>
+<td>Es el ejemplo pedagógico del manual. Justifican f<sub>*</sub>, ω<sub>*</sub> y α (amplitud y frecuencia al final de la inflación), pero no los valores de q ni de la red. N = 32 es para que corra rápido.</td></tr>
+<tr><td><strong>CosmoLattice 2.0</strong><br><span class="cite"><code>lphi4.in</code></span></td>
+<td class="num">9×10⁻¹⁴</td><td class="num">300</td>
+<td class="num">5.6964e18 GeV<br>−4.86735e30 GeV²</td><td>N = 64, kIR = 0.7, dt = 0.01, tMax = 10, sin GWs</td>
+<td>No está documentado. El paper de la v2.0 usa <code>lphi4</code> sólo como prueba de rendimiento. <strong>Encontré de dónde sale el estado inicial:</strong> es exactamente el final de la inflación (ε<sub>H</sub> = 1) para λ = 9×10⁻¹⁴ (ver <a href="#lambda">§4</a>). tMax = 10 no llega ni al final de la resonancia.</td></tr>
+<tr><td><strong>Zhou et al. 2026</strong><br><span class="cite">2605.04670 (otro modelo, mismo inflatón)</span></td>
+<td class="num">10⁻¹³</td><td class="num">q<sub>φh</sub> = 100<br>(viable: 10–10⁴)</td>
+<td>—</td><td>N = 256, kIR = 0.75, dt = 0.01, kCutOff = 4</td>
+<td>Usan CosmoLattice para GWs. Fijan λ y varían q. Eligen la red "para que las escalas físicas queden lejos de los cortes IR y UV", y verifican que el resultado no cambia al subir N ni al achicar kIR.</td></tr>
+</table></div>
+
+<h3>3.2. <code>lphi4U1</code>: el inflatón con carga U(1)</h3>
+<div class="tabla"><table>
+<tr><th>Fuente</th><th>λ</th><th>q<sub>A</sub></th><th>Estado inicial</th><th>Red</th><th>Por qué eligieron eso</th></tr>
+<tr><td><strong>Art I, §8.2, tabla 1</strong><br><span class="cite">2006.15122</span></td>
+<td class="num">Λ⁴ = 4.3×10⁶⁵ GeV⁴, M = 10 m<sub>p</sub><br>(λ<sub>ef</sub> ≈ 1.2×10⁻¹²)</td><td class="num">100</td>
+<td>fin de slow-roll, φ<sub>*</sub> (ec. 459)</td><td>N = 128, kIR = 0.6, dt = 0.01</td>
+<td>El potencial es un α-attractor que, cerca del mínimo, es λφ⁴. M = 10 m<sub>p</sub> "garantiza que la inflación termina en la región de curvatura positiva". q<sub>A</sub> "para tener resonancia paramétrica ancha". N y kIR "para resolver el crecimiento IR y la propagación posterior al UV". El retroefecto llega en η ≈ 40. <em>No calculan GWs.</em></td></tr>
+<tr><td><strong>CosmoLattice 2.0</strong><br><span class="cite"><code>lphi4U1.in</code></span></td>
+<td class="num">9×10⁻¹⁴</td><td class="num">≈ 1370<br>(gU1s = 1.11037e−5)</td>
+<td class="num">|φ<sub>*</sub>| = 5.6964e18</td><td>N = 64, kIR = 0.6, dt = 0.01, kCutOff = 3, tMax = 10</td>
+<td>No está documentado. Como ya vimos en la <a href="bases-teoricas-modelos-gauge.html#complejo">página teórica</a>, arranca con 4 veces la energía del control.</td></tr>
+<tr><td><strong>Dufaux, Figueroa &amp; García-Bellido 2010</strong><br><span class="cite">1006.0217 (otro modelo: inflación híbrida)</span></td>
+<td colspan="4">Modelo de Higgs abeliano con transición taquiónica, no resonancia paramétrica. Sus parámetros no se trasladan directamente a los nuestros.</td>
+<td>Es el precedente más cercano de GWs con un campo U(1) en el recalentamiento. Encuentran que el campo de gauge <strong>deja picos nuevos en el espectro</strong>, a frecuencias ligadas a las masas del problema, y asociados a cuerdas cósmicas. Es lo que conviene buscar en nuestros espectros.</td></tr>
+</table></div>
+
+<h3>3.3. <code>lphi4SU2U1</code>: el inflatón con carga SU(2)×U(1)</h3>
+<div class="tabla"><table>
+<tr><th>Fuente</th><th>λ</th><th>q de cada canal</th><th>Estado inicial</th><th>Red</th><th>Por qué eligieron eso</th></tr>
+<tr><td><strong>Art I, §8.3, tabla 1</strong></td>
+<td class="num">Λ⁴ = 4.3×10⁶⁵ GeV⁴, M = 10 m<sub>p</sub></td><td class="num">q<sub>A</sub> = q<sub>B</sub> = q<sub>*</sub> = 100<br>(hijo χ también con q<sub>*</sub>)</td>
+<td>fin de slow-roll</td><td>N = 128, kIR = 0.6, dt = 0.01</td>
+<td>"Fijamos q<sub>A</sub> = q<sub>B</sub> = q<sub>*</sub> con fines ilustrativos, con q<sub>*</sub> &gt; 1 para tener resonancia ancha en todos los sectores". Los mismos autores advierten que, con los dos campos gauge, estos resuenan juntos con q<sub>ef</sub> = q<sub>A</sub> + q<sub>B</sub> (ver <a href="#su2">§6</a>).</td></tr>
+<tr><td><strong>Manual v1 y CosmoLattice 2.0</strong><br><span class="cite"><code>lphi4SU2U1.in</code></span></td>
+<td class="num">9×10⁻¹⁴</td><td class="num">q<sub>A</sub> = q<sub>B</sub> ≈ 1370<br>qG = qH = 50</td>
+<td class="num">|Φ<sub>*</sub>| = 5.25151e18</td><td>N = 128, kIR = 0.75, kCutOff = 6, dt = 0.01, tMax = 10</td>
+<td>El Manual explica el potencial (ec. 90), pero no los valores. <strong>Algo que encontré:</strong> ese |Φ<sub>*</sub>| × √2 es <em>exactamente</em> el inflatón de <code>lphi4.in</code> del Manual v1. Este modelo estaba emparejado con el control de la v1, que arrancaba antes del final de la inflación (ε<sub>H</sub> = 0.67), no con el de la v2.0. gSU2s = 2·gU1s hace q<sub>A</sub> = q<sub>B</sub>, como en el Art I.</td></tr>
+<tr><td><strong>Tranberg et al. 2017</strong><br><span class="cite">1706.02365 (otro modelo: transición taquiónica)</span></td>
+<td colspan="2">Valores del Modelo Estándar: λ = 0.13 y g = 0.65. También λ = 0.001 y 0.01, para separar la escala del Higgs de la del W.</td><td colspan="2">—</td>
+<td>Para comparar U(1) con SU(2) <strong>igualan las masas a nivel árbol</strong>: el mismo criterio de "un solo cambio por vez" que usamos acá. Encuentran dos picos (masas del Higgs y del W). Los campos no abelianos <em>reducen</em> la producción de GWs, los abelianos la <em>aumentan</em>, y los campos gauge suprimen el espectro en el IR.</td></tr>
+</table></div>
+<p class="small">Adshead, Giblin &amp; Weiner (2018) y García-Bellido et al. (2007, 2008) estudian
+acoplamientos distintos (dilatónico o axial) o inflación híbrida. Sirven como contexto, pero
+no aportan valores trasladables a estos tres modelos.</p>
+
+<!-- ============================================================ -->
+<h2 id="lambda">4. λ: qué dicen las observaciones</h2>
+
+<div class="simple">
+La inflación dejó una huella medible en el fondo cósmico de microondas: el tamaño de las
+fluctuaciones (A<sub>s</sub>), cómo cambian con la escala (n<sub>s</sub>) y cuántas ondas
+gravitacionales primordiales hay (r). Un modelo de inflación tiene que reproducir las tres.
+λ se ajusta con la primera. Las otras dos dicen si el modelo sobrevive o no.
+</div>
+
+<div class="tabla"><table>
+<tr><th>Modelo de inflación</th><th>e-folds N</th><th>λ (o λ efectiva cerca del mínimo)</th><th>n<sub>s</sub></th><th>r</th><th>¿Permitido?</th></tr>
+<tr><td>λφ⁴ puro</td><td>50 / 55 / 60</td><td class="num">2.34e−13 / 1.77e−13 / 1.37e−13</td><td class="num">0.941 / 0.946 / 0.951</td><td class="num">0.31 / 0.29 / 0.26</td><td>No. Planck mide n<sub>s</sub> = 0.9649 ± 0.0042, y BICEP/Keck exige r &lt; 0.036.</td></tr>
+<tr><td>α-attractor, p = 4, M = 5 m<sub>p</sub></td><td>60</td><td class="num">2.83e−12</td><td class="num">0.966</td><td class="num">0.013</td><td>Sí</td></tr>
+<tr><td>α-attractor, p = 4, M = 8.5 m<sub>p</sub></td><td>60</td><td class="num">1.07e−12</td><td class="num">0.965</td><td class="num">0.034</td><td>Justo en el límite</td></tr>
+<tr><td>α-attractor, p = 4, M = 10 m<sub>p</sub> (Art I)</td><td>50 / 60</td><td class="num">1.19e−12 / 8.07e−13</td><td class="num">0.957 / 0.964</td><td class="num">0.062 / 0.045</td><td>Hoy no: r &gt; 0.036. El Art II ya lo señala (M ≲ 8.5 m<sub>p</sub>).</td></tr>
+</table></div>
+<p class="small">Cálculo en slow-roll con A<sub>s</sub> = 2.1×10⁻⁹ (<code>lphi4_puro</code>,
+<code>t_model</code>). Como validación, reproduce el Λ⁴ del Art&nbsp;II (p = 2, M = 5 m<sub>p</sub>,
+N = 60) con un 15&nbsp;% de diferencia (8.5 contra 9.84 ×10⁻¹⁰ m<sub>p</sub>⁴), y el de la
+tabla 1 del Art&nbsp;I para p = 4, M = 10 m<sub>p</sub> con N = 50 (4.2 contra 4.3 ×10⁶⁵ GeV⁴).
+La diferencia viene de cómo se cuentan los e-folds y del valor de A<sub>s</sub>.</p>
+
+<h3>¿Importa qué λ se elija?</h3>
+<p>Mucho menos de lo que parece. En variables de programa el potencial queda
+\(\widetilde V=\tilde\varphi^4/4+\tfrac q2\tilde\varphi^2\tilde\chi^2\): <strong>λ desaparece
+de las ecuaciones</strong> (ver la <a href="bases-teoricas-modelos-gauge.html#pot">página
+teórica</a>). Queda sólo en dos lugares:</p>
+<ol>
+<li><strong>El tamaño del ruido inicial</strong>, proporcional a \(\omega_*/f_*=\sqrt\lambda\).
+Pasar de 9×10⁻¹⁴ a 10⁻¹² multiplica el ruido por 3.3. Eso adelanta el final de la
+resonancia en \(\ln 3.3/\mu\approx 7\) unidades de tiempo sobre ~300: casi nada.</li>
+<li><strong>La frecuencia de las ondas hoy</strong>, que escala como \(\lambda^{1/4}\)
+(Dufaux et al., ec. 72). El mismo cambio la sube un factor 1.8. El eje se corre, pero la
+forma queda igual.</li>
+</ol>
+<p>Además, el estado del inflatón al final de la inflación, en unidades de m<sub>p</sub>, no
+depende de λ: integrando el fondo exacto hasta ε<sub>H</sub> = 1 da
+\(\varphi_* = 2.33938\,m_p\) y \(\dot\varphi_* = -2.73636\,\sqrt\lambda\,m_p^2\). Con
+λ = 9×10⁻¹⁴ eso es <strong>5.6964×10¹⁸ GeV y −4.86735×10³⁰ GeV², los valores de
+<code>lphi4.in</code> dígito por dígito</strong>.</p>
+
+<div class="conclusion">
+Estrictamente, ningún λ hace viable a λφ⁴ puro. En un completamiento viable, la λ efectiva
+cerca del mínimo es ~10⁻¹². Para comparar modelos, lo que importa es usar <strong>el mismo
+λ en los tres</strong>. Recomiendo <strong>λ = 9×10⁻¹⁴</strong>: coincide con los
+<code>.in</code> y con el orden de la literatura (Dufaux 10⁻¹⁴, Zhou 10⁻¹³), y el estado
+inicial correcto ya está calculado. Una corrida adicional con λ = 10⁻¹² serviría como
+prueba de robustez. Para eso hay que reescalar sólo la velocidad inicial, por √(10⁻¹²/9×10⁻¹⁴).
+</div>
+
+<!-- ============================================================ -->
+<h2 id="q">5. q: la intensidad de la resonancia</h2>
+
+<div class="simple">
+El inflatón oscila y en cada oscilación "empuja" al campo hijo. Algunas ondas del hijo
+reciben el empujón justo a su ritmo y crecen exponencialmente, como una hamaca bien
+empujada. Otras no crecen. Cuáles crecen, y qué tan rápido, depende de q. El gráfico de
+abajo lo muestra para cuatro valores.
+</div>
+
+<p>En la fase lineal, cada modo del hijo cumple una ecuación de Lamé
+\(X''+(K^2+q\,\mathrm{cn}^2(x,\tfrac12))X=0\) (Dufaux et al., ec. 68). Su solución crece
+como \(e^{\mu x}\), donde μ es el exponente de Floquet. Lo calculé para cada q candidato
+(<code>banda_principal</code>):</p>
+
+<figure>
+<img src="../figures/bandas_resonancia_q.png" alt="Ritmo de crecimiento mu en función del momento K para q = 120, 100, 240 y 300. q = 120 tiene un pico de 0.175 en K = 1.24; q = 100 y q = 240 tienen el máximo en K = 0 (0.227 y 0.234); q = 300 tiene un pico chico de 0.082 en K = 3.">
+<figcaption>Qué tan rápido crece el campo hijo (μ) en cada escala (K), para cuatro valores
+de q. Producida por <code>figura_bandas</code> en <code>code/analisis_parametros.py</code>.</figcaption>
+</figure>
+
+<div class="tabla"><table>
+<tr><th>q</th><th>De dónde sale</th><th>Pico en K<sub>*</sub></th><th>μ máximo</th><th>Banda (μ &gt; μ<sub>máx</sub>/2)</th><th>Lectura</th></tr>
+<tr><td class="num">120</td><td>Dufaux et al. (principal)</td><td class="num">1.24</td><td class="num">0.175</td><td class="num">0.45 – 1.72</td><td>Resonancia fuerte, con el pico en una escala bien definida dentro de la caja.</td></tr>
+<tr><td class="num">100</td><td>Manual v1, Art I</td><td class="num">0</td><td class="num">0.227</td><td class="num">0 – 0.89</td><td>Más rápida, pero crece más donde K → 0, a la escala de la caja: el resultado depende de <code>kIR</code>.</td></tr>
+<tr><td class="num">128</td><td>Dufaux et al. (caso especial 2·8²)</td><td class="num">0</td><td class="num">0.238</td><td class="num">0 – 1.13</td><td>Igual que 100.</td></tr>
+<tr><td class="num">300</td><td><code>lphi4.in</code> por defecto</td><td class="num">3.00</td><td class="num">0.082</td><td class="num">2.85 – 3.16</td><td><strong>Débil y angosta.</strong> Cae justo en el borde de una banda.</td></tr>
+<tr><td class="num">1370</td><td><code>.in</code> gauge por defecto</td><td class="num">0</td><td class="num">0.171</td><td class="num">0 – 0.99</td><td>Crecimiento a la escala de la caja.</td></tr>
+</table></div>
+
+<p class="small">Por qué pasa esto: el modo K = 0 es inestable sólo cuando
+\(n(2n-1)&lt;q&lt;n(2n+1)\), es decir 1–3, 6–10, 15–21, …, 91–105, 120–136, …, 276–300.
+En el centro de cada banda (q = 2n²) crece con μ = 0.238. Lo verifiqué para n = 1, 7, 8 y
+12. q = 120 y q = 300 caen justo en bordes: 120 en el borde inferior de la banda 8, y el
+pico se corre a K finito con μ alto; 300 en el borde superior de la banda 12, y la
+resonancia casi se apaga.</p>
+
+<div class="conclusion">
+<strong>q = 120.</strong> Tiene tres ventajas. Es el caso de referencia de GWs para este
+mismo control, así que nuestra corrida de <code>lphi4</code> se puede validar contra un
+resultado publicado. Su pico está en una escala finita, así que no depende del tamaño de la
+caja. Y la resonancia es fuerte. En cambio, q = 300 resuena poco, y q = 100, 128 o 1370
+ponen el crecimiento en la escala de la caja.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="su2">6. El caso SU(2)×U(1): cómo repartir q entre dos campos gauge</h2>
+<p>En el Art&nbsp;I (ec. 476) cada campo gauge tiene su propio parámetro de resonancia:
+\(q_A = g_A^2/\lambda\) y \(q_B = g_B^2/(4\lambda)\). Pero los mismos autores dicen que,
+cuando el inflatón se acopla a los dos, el término cruzado de la derivada covariante
+acopla sus ecuaciones y <strong>resuenan juntos con \(q_{\rm ef}=q_A+q_B\)</strong>. Anuncian
+el detalle para un trabajo posterior, que no está en la bibliografía.</p>
+<div class="tabla"><table>
+<tr><th>Opción</th><th>q<sub>A</sub>, q<sub>B</sub></th><th>q<sub>ef</sub></th><th>Resonancia gauge</th><th>¿Comparable con el control (q = 120)?</th></tr>
+<tr><td>La del Art I</td><td class="num">120, 120</td><td class="num">240</td><td>K<sub>*</sub> = 0, μ = 0.234 (otra banda)</td><td>No: el pico cambia de lugar.</td></tr>
+<tr><td><strong>Repartida (recomendada)</strong></td><td class="num">60, 60</td><td class="num">120</td><td>K<sub>*</sub> = 1.24, μ = 0.175 (igual que el control)</td><td>Sí, si vale q<sub>ef</sub> = q<sub>A</sub> + q<sub>B</sub>.</td></tr>
+</table></div>
+<p>Si la afirmación sobre q<sub>ef</sub> no valiera y cada sector resonara por separado con
+q = 60, el pico estaría en K<sub>*</sub> = 1.73 con μ = 0.107. Las dos hipótesis predicen
+picos distintos, así que <strong>la primera corrida de SU(2)×U(1) decide cuál vale</strong>:
+alcanza con mirar en qué K crecen los campos gauge durante la fase lineal.</p>
+<p>Por la misma razón, en <code>lphi4SU2U1</code> recomiendo apagar los hijos escalares
+(<code>qG = qH = 0</code>). Así el único canal que resuena es el gauge, como en los otros dos
+modelos. Si se quisiera el diseño del Art I (hijo χ más dos campos gauge), habría que tener
+en cuenta que el inflatón reparte la energía entre más canales que en el control.</p>
+
+<!-- ============================================================ -->
+<h2 id="red">7. La red: tamaño, resolución y duración</h2>
+<ul>
+<li><strong>Caja (<code>kIR</code>).</strong> La banda de q = 120 va de K = 0.45 a 1.72.
+Con <code>kIR = 0.25</code> entran varios modos de la red dentro de la banda. Con 0.6–0.75
+(Art I, Zhou) entrarían apenas uno o dos.</li>
+<li><strong>Puntos (<code>N</code>).</strong> Con N = 256 el momento máximo es
+\(\tfrac{\sqrt3}{2}N\,k_{IR}\approx 55\), unas 45 veces K<sub>*</sub>. Es margen de sobra
+para la cascada hacia escalas chicas después del retroefecto. Es el N de Dufaux y de Zhou.</li>
+<li><strong>Duración (<code>tMax</code>).</strong> Dufaux et al. llegan a x = 240 y ven que el
+pico de GWs deja de cambiar después de x ≈ 150. Recomiendo <code>tMax = 300</code> en
+<code>lphi4</code>. El <code>tMax = 10</code> de los <code>.in</code> no alcanza ni para el
+retroefecto (η ≈ 40 en el Art I).</li>
+<li><strong>Paso (<code>dt = 0.01</code>)</strong>: el de todas las fuentes. Con N = 256 y
+kIR = 0.25, el espaciado es δx ≈ 0.098, y dt/δx = 0.1 está lejos del límite de estabilidad
+1/√3.</li>
+<li><strong>La traducción a los modelos gauge.</strong> En <code>lphi4U1</code> y
+<code>lphi4SU2U1</code> el código usa \(\omega_*=\sqrt\lambda\,|\Phi_*|\), que con el
+inflatón emparejado es √2 menor que en <code>lphi4</code>. Para que la caja, la resolución y
+la duración sean <em>físicamente</em> las mismas: <code>kIR</code> y <code>kCutOff</code>
+se multiplican por √2, y <code>dt</code> y <code>tMax</code> se dividen por √2. Al comparar
+espectros, el eje de momentos de los modelos gauge se divide por √2 para llevarlo a las
+unidades de <code>lphi4</code>.</li>
+</ul>
+<p class="small">Costo: N = 256 con 30 000 pasos es una corrida larga en CPU, sobre todo para
+<code>lphi4SU2U1</code>. Conviene empezar con una corrida piloto con N = 128 y la misma
+<code>kIR</code>. Se pierde la mitad del rango UV, pero la fase lineal y el pico se ven
+igual.</p>
+
+<!-- ============================================================ -->
+<h2 id="tabla">8. La tabla: valores comparables para los tres modelos</h2>
+<p>Cada valor está en las unidades que espera el <code>.in</code> de ese modelo. Todos
+salen de <code>recomendacion()</code> en
+<a href="../code/analisis_parametros.py"><code>code/analisis_parametros.py</code></a>
+(<code>python3 code/analisis_parametros.py --tabla</code>).</p>
+
+<div class="tabla"><table>
+<tr><th>Parámetro</th><th><code>lphi4</code> (control)</th><th><code>lphi4U1</code></th><th><code>lphi4SU2U1</code></th></tr>
+<tr class="grupo"><td colspan="4">Física</td></tr>
+<tr><td>λ (<code>lambda</code>)</td><td class="num">9e-14</td><td class="num">9e-14</td><td class="num">9e-14</td></tr>
+<tr><td>Amplitud inicial del inflatón (GeV)</td><td class="num">initial_amplitudes = 5.6964e18 0</td><td class="num">cmplx_field_initial_norm = 4.02796e18</td><td class="num">SU2Doublet_initial_norm = 4.02796e18</td></tr>
+<tr><td>Velocidad inicial (GeV²)</td><td class="num">initial_momenta = -4.86735e30 0</td><td class="num">cmplx_momentum_initial_norm = -3.44174e30</td><td class="num">SU2Doublet_initial_momenta_norm = -3.44174e30</td></tr>
+<tr><td>Otros campos, homogéneos</td><td>hijo χ en 0</td><td>—</td><td class="num">initial_amplitudes = 0, initial_momenta = 0,<br>cmplx_field_initial_norm = 0, cmplx_momentum_initial_norm = 0</td></tr>
+<tr><td>Hijo escalar</td><td class="num">q = 120</td><td>no tiene</td><td class="num">qG = 0, qH = 0</td></tr>
+<tr><td>Acoplamiento U(1)</td><td>—</td><td class="num">gU1s = 3.28634e-6<br>CSU1Charges = 1</td><td class="num">gU1s = 2.32379e-6<br>SU2DoubletU1Charges = 1, CSU1Charges = 1</td></tr>
+<tr><td>Acoplamiento SU(2)</td><td>—</td><td>—</td><td class="num">gSU2s = 4.64758e-6<br>SU2DoubletSU2Charges = 1</td></tr>
+<tr><td><strong>q del canal resonante</strong></td><td class="num"><strong>120</strong> (χ)</td><td class="num"><strong>120</strong> (q<sub>A</sub>)</td><td class="num"><strong>120</strong> (q<sub>A</sub> + q<sub>B</sub> = 60 + 60)</td></tr>
+<tr><td>Resonancia esperada</td><td>K<sub>*</sub> ≈ 1.24, μ ≈ 0.175</td><td>la misma (ec. 475–476)</td><td>la misma, si vale q<sub>ef</sub></td></tr>
+<tr class="grupo"><td colspan="4">Red y tiempo (unidades de programa de cada modelo)</td></tr>
+<tr><td><code>N</code></td><td class="num">256</td><td class="num">256</td><td class="num">256</td></tr>
+<tr><td><code>kIR</code></td><td class="num">0.25</td><td class="num">0.353553</td><td class="num">0.353553</td></tr>
+<tr><td><code>kCutOff</code></td><td class="num">4</td><td class="num">5.65685</td><td class="num">5.65685</td></tr>
+<tr><td><code>dt</code></td><td class="num">0.01</td><td class="num">0.00707107</td><td class="num">0.00707107</td></tr>
+<tr><td><code>tMax</code></td><td class="num">300</td><td class="num">212.132</td><td class="num">212.132</td></tr>
+<tr><td><code>expansion</code>, <code>evolver</code></td><td class="num">true, VV2</td><td class="num">true, VV2</td><td class="num">true, VV2</td></tr>
+<tr><td><code>withGWs</code></td><td class="num">true</td><td class="num">true</td><td class="num">true</td></tr>
+<tr class="grupo"><td colspan="4">Derivados (no se escriben en el <code>.in</code>; sirven para comparar)</td></tr>
+<tr><td>f<sub>*</sub> (GeV)</td><td class="num">5.6964e18</td><td class="num">4.02796e18</td><td class="num">4.02796e18</td></tr>
+<tr><td>ω<sub>*</sub> (GeV)</td><td class="num">1.70892e12</td><td class="num">1.20839e12</td><td class="num">1.20839e12</td></tr>
+<tr><td>Para comparar espectros, K =</td><td>k de programa</td><td>k de programa / √2</td><td>k de programa / √2</td></tr>
+</table></div>
+<p class="small">Si se prefiere el diseño del Art I en SU(2)×U(1) (q<sub>A</sub> = q<sub>B</sub> = 120):
+gU1s = 3.28634e-6 y gSU2s = 6.57267e-6. Las cargas se dejan en 1, porque sólo importa el
+producto g·Q. En <code>lphi4SU2U1</code>, el escalar complejo hijo queda con carga U(1)
+pero sin acoplamiento al inflatón: sólo tiene fluctuaciones de vacío.</p>
+
+<!-- ============================================================ -->
+<h2 id="abierto">9. Qué queda abierto</h2>
+<div class="abierto">
+<ul>
+<li><strong>q<sub>ef</sub> = q<sub>A</sub> + q<sub>B</sub></strong> es una afirmación del
+Art I sin demostración en la bibliografía. La corrida piloto de SU(2)×U(1) la pone a prueba:
+¿el pico de los campos gauge aparece en K ≈ 1.24 (vale) o en K ≈ 1.73 (no vale)?</li>
+<li><strong>El campo gauge como sustituto del escalar</strong> (Art I, ec. 475) vale durante
+la fase lineal. Es justamente después, en la fase no lineal, donde esperamos las
+diferencias.</li>
+<li><strong>Grados de libertad.</strong> Un campo U(1) tiene más componentes que un escalar,
+y un SU(2) todavía más. Con el mismo q, la energía puede pasar más rápido y el retroefecto
+llegar antes. No es un defecto de la comparación: es parte de la física que se quiere
+medir.</li>
+<li><strong>Validación contra Dufaux et al.</strong> Antes de las corridas gauge, el control
+con q = 120 debería dar un pico de GWs parecido al suyo. Hay que tener en cuenta que ellos
+usan λ = 10⁻¹⁴ y otro estado inicial: la frecuencia se corre en λ<sup>1/4</sup>, pero la forma
+debería coincidir.</li>
+</ul>
+</div>
+
+<footer>
+Parte del <a href="https://github.com/TomasCiccarella/GWs-IA-Final---CosmoLattice-studies-with-gauge">repositorio
+del proyecto final</a>. Cálculos: <a href="../code/analisis_parametros.py"><code>code/analisis_parametros.py</code></a>
+(<code>python3 code/analisis_parametros.py</code> para todo, <code>--tabla</code> para la tabla y
+<code>--figura</code> para el gráfico). Números y afirmaciones: <code>provenance/</code>.
+Páginas relacionadas: <a href="bitacora.html">bitácora</a>,
+<a href="bases-teoricas-modelos-gauge.html">bases teóricas</a>,
+<a href="what-is-cosmolattice.html">¿Qué es CosmoLattice?</a>.
+</footer>
+
+</body>
+</html>

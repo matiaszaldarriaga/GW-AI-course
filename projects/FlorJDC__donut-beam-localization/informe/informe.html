@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Localización con haces dona</title>
+<style>
+  :root { --ink:#1b1f24; --muted:#5b6470; --rule:#d5d9de; --accent:#0b5cad; --bg:#fff; --box:#f3f6f9; }
+  @page { size: A4; margin: 15mm 16mm 14mm 16mm; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); margin: 0;
+         font: 9.6pt/1.38 "Source Serif 4", Georgia, "Times New Roman", serif; }
+  main { max-width: 178mm; margin: 0 auto; padding: 0 16px; }
+  h1 { font: 700 15pt/1.2 "Helvetica Neue", Arial, sans-serif; margin: 0 0 3px; }
+  h2 { font: 700 11pt/1.25 "Helvetica Neue", Arial, sans-serif; color: var(--accent);
+       margin: 11px 0 4px; border-bottom: 1px solid var(--rule); padding-bottom: 2px; break-after: avoid; }
+  h3 { font: 700 9.8pt/1.25 "Helvetica Neue", Arial, sans-serif; margin: 8px 0 2px; break-after: avoid; }
+  p { margin: 0 0 5px; text-align: justify; hyphens: auto; }
+  .meta { font: 8.8pt/1.35 "Helvetica Neue", Arial, sans-serif; color: var(--muted); margin-bottom: 6px; }
+  .lead { background: var(--box); border-left: 3px solid var(--accent); padding: 6px 9px; margin: 6px 0; }
+  .prob { margin: 0 0 7px; break-inside: avoid; }
+  .prob dl { display: grid; grid-template-columns: 4.6em 1fr; gap: 1px 6px; margin: 0; }
+  .prob dt { font: 700 8.2pt/1.45 "Helvetica Neue", Arial, sans-serif; color: var(--muted); }
+  .prob dd { margin: 0; text-align: justify; hyphens: auto; }
+  .prob dt.q { color: #b3261e; } .prob dt.ok { color: #1c7c3a; }
+  figure { margin: 6px 0 8px; break-inside: avoid; }
+  figure img { width: 100%; display: block; }
+  figcaption { font: 8.2pt/1.32 "Helvetica Neue", Arial, sans-serif; margin-top: 3px; text-align: justify; }
+  figcaption b { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font: 8.1pt/1.3 "Helvetica Neue", Arial, sans-serif; margin: 3px 0 7px; }
+  tr { break-inside: avoid; }
+  th, td { border-bottom: 1px solid var(--rule); padding: 3px 4px; vertical-align: top; text-align: left; }
+  th { background: var(--box); }
+  td.n { white-space: nowrap; font-weight: 700; color: var(--accent); }
+  code { font: 7.9pt "DejaVu Sans Mono", Consolas, monospace; background: var(--box); padding: 0 2px; border-radius: 2px; }
+  .src { font: 6.5pt "Helvetica Neue", Arial, sans-serif; color: #8a929c; white-space: nowrap; }
+  .new { font: 700 6.8pt "Helvetica Neue", Arial, sans-serif; color: #fff; background: #1c7c3a; padding: 0 3px; border-radius: 2px; vertical-align: 1px; }
+  .refs { font-size: 8pt; padding-left: 16px; margin: 0; }
+  @media (max-width: 600px) { body { font-size: 11pt; } table { font-size: 9pt; } .prob dl { grid-template-columns: 1fr; } }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink:#e6e9ed; --muted:#a7b0ba; --rule:#3a414a; --accent:#6fb1ff; --bg:#15181c; --box:#1f242a; }
+  }
+  :root[data-theme="dark"] { --ink:#e6e9ed; --muted:#a7b0ba; --rule:#3a414a; --accent:#6fb1ff; --bg:#15181c; --box:#1f242a; }
+  @media print { :root { --ink:#1b1f24; --muted:#5b6470; --rule:#d5d9de; --accent:#0b5cad; --bg:#fff; --box:#f3f6f9; } main { padding: 0; } }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Localización de emisores individuales con haces dona: qué se hizo, qué se resolvió y cómo seguir hacia p-MINFLUX</h1>
+<div class="meta">flor-choque (FlorJDC) · <code>github.com/FlorJDC/donut-beam-localization</code> · 28/09/2026 ·
+detalle completo en <code>paper/main.pdf</code> (13 pp.)</div>
+
+<div class="lead"><p><b>Resumen.</b> Construimos un estudio de simulación reproducible de la localización con haces
+dona (MINFLUX) y lo usamos para responder qué limita la precisión y qué introduce sesgo. Del trabajo sale un
+paquete Python propio, un script por figura, 254 tests, 276 números con procedencia y un manuscrito de 13 páginas;
+cada resultado lo reprodujo un verificador independiente. Después lo contrastamos con el simulador SimuFLUX
+(Marin &amp; Ries, 2026) y lo llevamos al caso de interés: <b>p-MINFLUX no iterativo</b>, con láser de 20 MHz, 4
+pulsos entrelazados de igual duración y <i>L</i> fijo. El resultado central es que un estimador de máxima
+verosimilitud (MLE) con el modelo correcto alcanza el límite de Cramér–Rao (CRB). Casi todos los sesgos aparecen
+cuando el modelo omite algo: el fondo, la desalineación del patrón o el cruce entre ventanas temporales. Un
+proyecto complementario, <code>pminflux-simulations</code>, revisó el simulador p-MINFLUX anterior e implementó
+ese modelo completo (§3).</p></div>
+
+<h2>1. Qué se hizo y cómo</h2>
+<p><b>Modelo.</b> Un emisor en <i>r</i> se expone sucesivamente a <i>K</i> = 4 haces con un mínimo de intensidad.
+Usamos el patrón triangular (TCP): 3 donas en un círculo de diámetro <i>L</i> más una en el centro. Los fotones de
+cada exposición siguen una multinomial con <i>p<sub>i</sub></i> ∝ <i>I<sub>i</sub></i>(<i>r</i>) + fondo
+(Balzarotti et al. 2017). La dona es Laguerre–Gauss (LG) con fwhm = 300 nm, contrastada con una dona vectorial de
+alta apertura (Richards–Wolf, NA = 1.4). La precisión se mide con el CRB,
+σ = √((Σ<sub>xx</sub>+Σ<sub>yy</sub>)/2), y con Monte Carlo de estimadores. Unidades: nm.</p>
+<p><b>Método de trabajo.</b> El trabajo se organizó en rondas acotadas de agentes (metodología <i>agent-team</i>).
+Cada ronda tiene un planificador, workers que programan con tests y un verificador que reproduce cada número por
+un camino propio sin ver el razonamiento del worker. Un resultado refutado no entra al texto: se corrige o se
+declara abierto. "Terminado" lo define un test de aceptación escrito antes de empezar y protegido por hash. Hubo
+5 rondas para el paquete y el manuscrito, y 1 ronda para este informe. Todo queda registrado en
+<code>equipo/</code>.</p>
+
+<figure>
+<img src="figures/repo_fig1_schematic.png" alt="Perfil de la dona LG y vectorial y patrón TCP">
+<figcaption><b>Figura 1.</b> Modelo del trabajo. Perfil radial de la dona LG (fwhm = 300 nm), de la LG igualada por
+curvatura y de la dona vectorial (a). Curvatura cerca del cero, <i>I</i>/ρ² (b). Patrón TCP: 3 donas en un círculo de
+diámetro <i>L</i> = 100 nm más una en el centro; el mapa muestra la intensidad de una exposición (c).
+<code>scripts/fig_1_schematic.py</code> <span class="src">[src:fig1]</span></figcaption>
+</figure>
+
+<h2>2. Problemas, cómo se encararon y qué se obtuvo</h2>
+
+<div class="prob"><h3>2.1 ¿Qué modelo de dona usar?</h3><dl>
+<dt>Cómo</dt><dd>Implementamos la dona vectorial (máscara de vórtice y polarización circular) y la comparamos con la
+LG, en la forma cerca del cero y en el CRB resultante.</dd>
+<dt class="ok">Resultado</dt><dd>Una LG con la misma curvatura en el cero reproduce el CRB vectorial (diferencia
+&lt; 0.4 %), así que el modelo LG alcanza. Si la polarización tiene la handedness opuesta, el cero se llena hasta
+el 85 % del pico y el CRB crece unas 90 veces. <span class="src">[src:vectorial]</span></dd>
+<dt class="q">Queda</dt><dd>Aberraciones reales (origen físico de un cero imperfecto). El diámetro de la dona
+frente a PyFocus con filling factor 1 no coincide (428 frente a 401 nm).</dd></dl></div>
+
+<div class="prob"><h3>2.2 ¿Cuál es la precisión límite, y qué pasa en el centro del patrón?</h3><dl>
+<dt>Cómo</dt><dd>Calculamos la información de Fisher numéricamente en todo el campo y derivamos formas cerradas para
+el centro.</dd>
+<dt class="ok">Resultado</dt><dd>Sin fondo, el CRB es discontinuo en el centro. El límite <i>r</i>→0 vale 1.61 y el
+valor puntual de Balzarotti (Eq. S27), 1.80 (<i>L</i> = 50, <i>N</i> = 100). La razón es 0.890, cercana a 2/√5, que
+es el valor exacto para un cero cuadrático. Con fondo la discontinuidad desaparece. El CRB escala como
+σ ∝ <i>L</i><sup>1.00</sup><i>N</i><sup>−0.50</sup> para <i>L</i> ≪ fwhm. Bastan 13 fotones para 5 nm, cuando una
+cámara ideal necesita 400. <span class="src">[src:crb_center] [src:scaling]</span></dd></dl></div>
+
+<div class="prob"><h3>2.3 ¿Qué estimador alcanza ese límite?</h3><dl>
+<dt>Cómo</dt><dd>Monte Carlo del MLE frente a los estimadores lineales LMS y mLMS, dentro y fuera del TCP.</dd>
+<dt class="ok">Resultado</dt><dd>Con fondo, el MLE es eficiente: eficiencia 0.991 con SBR = 10. LMS y mLMS se sesgan
+lejos del centro: −14.4 y −5.2 nm a 25 nm, contra 0.7 del MLE. Sin fondo el modelo no es regular en el centro, y
+el MLE queda por debajo del límite (0.84 del CRB) pero sesgado hacia el centro. <span class="src">[src:estimators]</span></dd>
+<dt class="q">Queda</dt><dd>Confirmar la convención SBR = 10 que se usa para medir la eficiencia.</dd></dl></div>
+
+<div class="prob"><h3>2.4 El cero real no es perfecto: ¿conviene achicar <i>L</i>?</h3><dl>
+<dt>Cómo</dt><dd>Barrido del CRB en función de <i>L</i> para distintos ceros residuales
+ε = <i>I</i>(0)/<i>I</i><sub>max</sub>.</dd>
+<dt class="ok">Resultado</dt><dd>No siempre: hay un <i>L</i> óptimo ≈ 0.78·fwhm·√ε para ε ≲ 0.01. Vale 10.5, 23 y
+50 nm para ε = 0.002, 0.01 y 0.05. Es el criterio para elegir el <i>L</i> fijo. <span class="src">[src:zero_depth]</span></dd>
+<dt class="q">Queda</dt><dd>Optimizar <i>L</i> con ε y fondo juntos, usando valores medidos.</dd></dl></div>
+
+<div class="prob"><h3>2.5 Las donas no están donde se cree</h3><dl>
+<dt>Cómo</dt><dd>Perturbamos al azar las posiciones de las donas (δ) y estimamos con el patrón nominal y con el
+verdadero.</dd>
+<dt class="ok">Resultado</dt><dd>Con el patrón nominal, el sesgo en el centro es ≈ 0.78·δ: 7.7 nm con δ = 10.
+Con el patrón verdadero baja a 0.18 nm, así que la solución es calibrar. Para un sesgo menor que 1 nm hace falta
+δ ≲ 1.3 nm (1/0.78). <span class="src">[src:misalignment]</span></dd>
+<dt class="q">Queda</dt><dd>Simular cómo se mide el patrón y con qué error.</dd></dl></div>
+
+<div class="prob"><h3>2.6 Fondo mal modelado <span class="new">nuevo</span></h3><dl>
+<dt>Cómo</dt><dd>SimuFLUX muestra que ignorar el fondo sesga fuertemente el estimador (su Fig. 2d). Hicimos el
+análogo para TCP fijo con MLE: fondo igual en las 4 ventanas, <i>N</i> = 500, y cuatro variantes del estimador (sin
+fondo, fondo exacto, fondo libre, fondo con error de ±30 %). Código en <code>background.py</code>.</dd>
+<dt class="ok">Resultado</dt><dd>Si el MLE ignora el fondo, lee la señal extra de la exposición central como un
+emisor más alejado y sesga la posición hacia afuera: ≈ +5 nm en <i>x</i> y +3 nm en <i>y</i> con SBR = 5, y ≈ +2 nm
+con SBR = 20. Ajustar el fondo como tercer parámetro elimina el sesgo y cuesta poco: el CRB sube 0–4 % hasta 20 nm
+del centro y 20–26 % en <i>r</i> = <i>L</i>/2. Un error de ±30 % en el fondo deja ≤ 1.6 nm (Fig. 3).
+<span class="src">[src:background]</span></dd>
+<dt class="q">Queda</dt><dd>Fondo distinto en cada ventana y cómo medirlo en los datos.</dd></dl></div>
+
+<div class="prob"><h3>2.7 Parpadeo del fluoróforo <span class="new">nuevo</span></h3><dl>
+<dt>Cómo</dt><dd>SimuFLUX muestra que en MINFLUX secuencial el parpadeo suma un error σ<sub>fl</sub> que no depende
+del número de fotones. Simulamos un parpadeo on/off de 100 µs durante 400 µs, con exposiciones en bloques
+(secuencial) o alternadas cada 12.5 ns (p-MINFLUX). Código en <code>pminflux.py</code>.</dd>
+<dt class="ok">Resultado</dt><dd>En el modo secuencial, σ<sub>fl</sub> va de 16 nm (1 pasada del patrón) a 2.2 nm
+(25 pasadas), y se cumple STD² = σ<sub>fl</sub>² + σ², como en SimuFLUX. Con el entrelazado, las 4 exposiciones
+ven el mismo tiempo "on" y σ<sub>fl</sub> ≲ 0.03 nm. Es una ventaja concreta de p-MINFLUX (Fig. 2a).
+<span class="src">[src:pminflux_flicker]</span></dd>
+<dt class="q">Queda</dt><dd>Parpadeo rápido (de ns a µs) y fotoblanqueo: el entrelazado protege solo si el parpadeo
+es mucho más lento que 50 ns.</dd></dl></div>
+
+<div class="prob"><h3>2.8 Cruce entre ventanas por el tiempo de vida <span class="new">nuevo</span></h3><dl>
+<dt>Cómo</dt><dd>Este efecto es propio de la excitación pulsada y SimuFLUX no lo trata. Un fotón excitado por un
+pulso llega con retardo exponencial de tiempo de vida τ y puede caer en la ventana siguiente. Derivamos la
+matriz de mezcla <i>p</i><sup>obs</sup> = <i>M p</i>, con
+<i>M<sub>ij</sub></i> = (1−<i>q</i>)<i>q</i><sup>(<i>s<sub>i</sub></i>−<i>s<sub>j</sub></i>) mod 4</sup>/(1−<i>q</i>⁴)
+y <i>q</i> = e<sup>−<i>T</i>/τ</sup>, y la validamos con Monte Carlo de fotones.</dd>
+<dt class="ok">Resultado</dt><dd>Con τ = 5 ns, un 7.5 % de los fotones cae en la ventana siguiente. Si el
+estimador ignora <i>M</i>, el sesgo es de 3.4 nm (τ = 3 ns) y de 8–13 nm (τ = 5 ns, según el orden de los pulsos).
+Si incluye <i>M</i>, el sesgo desaparece y el CRB sube 4–19 % (τ = 3–5 ns) (Fig. 2b–c). <i>M</i> depende solo de τ
+y <i>T</i>, así que corregirlo no cuesta nada. <span class="src">[src:pminflux_crosstalk]</span></dd>
+<dt class="q">Queda</dt><dd>Todo lo anterior supone ventanas alineadas con el pulso y sin respuesta del instrumento
+(IRF). El simulador de §3 ya generaliza <i>M</i> a IRF y ventanas arbitrarias; falta contrastarla con el histograma
+TCSPC medido.</dd></dl></div>
+
+<figure>
+<img src="figures/fig_pminflux_timing.png" alt="Parpadeo y cruce entre ventanas en p-MINFLUX">
+<figcaption><b>Figura 2.</b> Temporización de p-MINFLUX (<i>L</i> = 100, fwhm = 300, <i>T</i> = 12.5 ns). Error por
+parpadeo: MINFLUX secuencial frente a entrelazado (estrellas) (a). Pérdida de precisión por el cruce entre
+ventanas con <i>M</i> en el modelo (b). Sesgo del MLE que ignora <i>M</i> (<i>N</i> = 500); las × corresponden al MLE
+con <i>M</i> (c). <code>scripts/fig_9_pminflux_timing.py</code> <span class="src">[src:fig9]</span></figcaption>
+</figure>
+<figure>
+<img src="figures/fig_background_bias.png" alt="Sesgo y RMSE del MLE según el tratamiento del fondo">
+<figcaption><b>Figura 3.</b> Fondo igual en las 4 ventanas con TCP fijo (<i>L</i> = 100, <i>N</i> = 500; SBR en el
+centro = 5, trazo lleno, y 20, discontinuo). Sesgo en <i>x</i> del MLE según cómo trata el fondo (a). RMSE frente
+a σ<sub>CRB</sub> (b). <code>scripts/fig_10_background_bias.py</code> <span class="src">[src:fig10]</span></figcaption>
+</figure>
+
+<div class="prob"><h3>2.9 Problemas del propio proceso</h3><dl>
+<dt>Cómo</dt><dd>Cada número del manuscrito es una macro que resuelve contra <code>data/paper_numbers.json</code>, y
+un script (<code>check_provenance.py</code>) rechaza cualquier número sin procedencia. Las figuras y los JSON se
+regeneran byte a byte.</dd>
+<dt class="ok">Resultado</dt><dd>Los verificadores refutaron afirmaciones en varias rondas, y se corrigieron antes
+de entrar al texto. En este informe, por ejemplo, el rango de σ/CRB con fondo exacto (0.97–1.06) y un artefacto de
+malla en el cruce entre ventanas para τ = 1 ns. Un test fallaba con numpy 2 y se arregló. MINFLUX iterativo se
+estudió (0.51 nm con 1000 fotones, frente a 3.16 nm de una cámara ideal), pero no aplica a p-MINFLUX con
+<i>L</i> fijo.</dd>
+<dt class="q">Queda</dt><dd>Los estudios nuevos (§2.6–2.8) todavía no están en el manuscrito ni en
+<code>reproduce.py</code>. Los tests nuevos no se corrieron en el entorno de referencia (Windows, Python 3.8).</dd></dl></div>
+
+<h2>3. Proyecto complementario: <code>pminflux-simulations</code></h2>
+<p>En paralelo, y con la misma metodología (3 rondas de agentes con verificador y revisor de código), se revisó
+críticamente el simulador de p-MINFLUX que se usaba antes y se escribió una versión nueva, <code>pminflux_sim</code> v2
+(<code>github.com/FlorJDC/pminflux-simulations</code>). Mientras este repositorio responde qué limita la precisión,
+aquel responde si las simulaciones previas modelaban bien el instrumento pulsado.</p>
+<div class="prob"><dl>
+<dt>Qué se revisó</dt><dd>El simulador anterior, en 16 hallazgos con un script que demuestra cada uno. Uno es
+conceptual: el modelo de probabilidades suponía fondo 1/<i>K</i> por ventana y ningún cruce entre pulsos, lo que no
+vale para ventanas más cortas que <i>T</i>/<i>K</i> ni con tiempo de vida finito. Nueve son de implementación: el
+TCSPC se quedaba con el fotón equivocado cuando llegaban varios en un ciclo, las ventanas no se plegaban módulo
+el período, el parpadeo se ignoraba en silencio, el emisor y el MLE quedaban atados a la grilla de la PSF, SBR
+infinito daba NaN, entre otros. Seis son de diseño; el más importante es que los estudios apagaban el tiempo de
+vida (τ ≈ 0), de modo que no podían ver el error del modelo.</dd>
+<dt class="ok">Mejoras</dt><dd>Simulador fotón a fotón en tiempo absoluto, con tiempo de vida, IRF, ventanas
+arbitrarias, TCSPC de un fotón por ciclo, tiempo muerto del detector, fondo y parpadeo. Matriz de mezcla
+<i>C</i> (el <i>M</i> de §2.8, generalizada) con IRF y comienzos de ventana arbitrarios. MLE continuo, sin grilla,
+cuya verosimilitud coincide con ese modelo directo, con fondo libre opcional. CRB con cruce y parámetros de
+molestia. Todo con 75 tests y procedencia (semilla y hash del código en cada resultado).</dd>
+<dt class="ok">Resultados</dt><dd>La matriz de mezcla reproduce las fracciones por ventana del simulador anterior
+(χ² = 5.7, p = 0.13), mientras que el modelo sin cruce queda descartado (χ² = 1927). En datos simulados con cruce
+realista, el estimador anterior tiene un sesgo de hasta 3.1 nm y RMSE/CRB = 1.67; el nuevo, 0.12 nm y 1.00. Con el
+patrón desalineado, el estimador ingenuo llega a 8.6 nm y el nuevo queda en 0.09 nm. Un resultado analítico
+verificado: si el tiempo muerto es un múltiplo entero del período (<i>d</i> = <i>n·T</i>), no sesga las fracciones
+por ventana a ninguna tasa. <span class="src">[src:pminflux_simulations]</span></dd>
+<dt class="q">Queda</dt><dd>Validar el modelo directo con datos reales (histograma TCSPC y cruce medido); medir el
+tiempo muerto y la IRF, que hoy son supuestos; rehacer los estudios con PSF medidas; incluir la distorsión de
+tasa finita, que hoy aporta ≤ 0.03 CRB; calibrar aparte las potencias de los haces, porque estimarlas junto con la
+posición introduce un sesgo que no baja con más datos.</dd></dl></div>
+
+<h2>4. Qué falta y cómo proseguir</h2>
+<p>Cada tarea reúne los "Queda" de las secciones 2 y 3, en orden de prioridad. Quedan fuera de alcance, por el
+experimento: MINFLUX iterativo, dwell central distinto y tracking.</p>
+<table>
+<tr><th style="width:3%">#</th><th style="width:21%">Tarea</th><th>Cómo</th><th style="width:28%">Terminado cuando</th></tr>
+<tr><td colspan="4"><b>Prioridad 1 — validar el modelo p-MINFLUX con el instrumento real</b></td></tr>
+<tr><td class="n">1</td><td>Modelo directo contra datos (§2.8, §3)</td><td>Contar los microtiempos medidos con <code>pminflux_sim.count_windows</code> y comparar las fracciones por ventana y el cruce con la matriz <i>C</i>.</td><td>χ² compatible, o desvíos explicados.</td></tr>
+<tr><td class="n">2</td><td>Medir tiempo muerto e IRF (§3)</td><td>Histograma de la IRF y del intervalo entre detecciones del detector.</td><td>Valores medidos reemplazan los supuestos; con <i>d</i> = <i>n·T</i> el sesgo se anula.</td></tr>
+<tr><td class="n">3</td><td>Calibración del patrón y <i>L</i> (§2.4–2.5)</td><td>Medir centros, potencias y ε con <i>N</i> alto, y pasarlos como conocidos; optimizar <i>L</i> con ε y fondo (<code>experiments.optimal_L</code>).</td><td>Tabla <i>L</i><sub>opt</sub>(ε, SBR); tolerancia δ ≲ 1.3 nm.</td></tr>
+<tr><td class="n">4</td><td>PSF medidas y fondo (§2.6, §3)</td><td>Rehacer los estudios con las PSF medidas; fondo distinto por ventana.</td><td>Sesgo &lt; 1 nm y RMSE/CRB ≈ 1 con PSF reales.</td></tr>
+<tr><td colspan="4"><b>Prioridad 2 — efectos que pueden cambiar los números</b></td></tr>
+<tr><td class="n">5</td><td>Parpadeo rápido y blanqueo (§2.7)</td><td>Estados oscuros de ns a µs y fotoblanqueo durante la medición.</td><td>σ<sub>fl</sub> en función del tiempo de parpadeo.</td></tr>
+<tr><td class="n">6</td><td>Aberraciones (§2.1)</td><td>Fases de Zernike y máscara de vórtice desalineada en <code>vectorial.py</code>.</td><td>ε y sesgo en función de la amplitud de la aberración.</td></tr>
+<tr><td class="n">7</td><td>Deriva, vibración, dipolo, 3D</td><td>Emisor en movimiento, excitación según la orientación, emisor fuera del foco.</td><td>Error extra frente a la amplitud o el ángulo.</td></tr>
+<tr><td colspan="4"><b>Prioridad 3 — consolidar el repositorio</b></td></tr>
+<tr><td class="n">8</td><td>Integrar §2.6–2.8 y unificar</td><td>Usar <code>pminflux_sim</code> como modelo p-MINFLUX de referencia y contrastar su CRB con <code>donutloc</code>. Llevar las figuras 9–10 a <code>make_all_figures.py</code>, <code>compute_paper_numbers.py</code>, <code>reproduce.py</code> y <code>paper/main.tex</code>.</td><td><code>check_provenance.py</code> y el test de aceptación pasan.</td></tr>
+<tr><td class="n">9</td><td>Validación cruzada (§2.1, §2.6)</td><td>Comparar con SimuFLUX (Python, código abierto) en un TCP estático con fondo, y con PyFocus para el diámetro de la dona.</td><td>Acuerdo, o diferencias explicadas.</td></tr>
+<tr><td class="n">10</td><td>Pendientes (§2.3, §2.9)</td><td>Confirmar SBR = 10 y la normalización del RMSE frente a Masullo et al. 2022; correr los tests en Python 3.8.</td><td>Puntos cerrados en <code>open_points.tex</code>.</td></tr>
+</table>
+<p><b>Siguiente paso sugerido.</b> Las tareas 1 y 2: el estimador ya existe (§3), y lo que falta es comprobar
+con datos que su modelo describe el instrumento. Todo lo demás se apoya en esa validación.</p>
+
+<h2>5. Reproducir y referencias</h2>
+<p><code>python -m unittest discover -s tests</code> (≈ 30 s). Las figuras nuevas se regeneran con
+<code>python scripts/fig_9_pminflux_timing.py</code> y <code>python scripts/fig_10_background_bias.py</code> (≈ 1 min
+cada una, semilla 42), y el manuscrito con <code>python scripts/reproduce.py</code> (≈ 25 min). Este PDF se genera
+con <code>node informe/build_pdf.js</code>. Las etiquetas <span class="src">[src:…]</span> resuelven en
+<code>equipo/2026-09-28_sintesis-pdf/out/provenance.json</code>.</p>
+<ol class="refs">
+<li>F. Balzarotti et al., <i>Science</i> 355, 606 (2017) — MINFLUX.</li>
+<li>L. A. Masullo et al., <i>Nano Lett.</i> 21, 840 (2021) — Pulsed Interleaved MINFLUX; y <i>Biophys. Rep.</i> 2, 100036 (2022).</li>
+<li>Repositorio complementario: <code>github.com/FlorJDC/pminflux-simulations</code> (reporte en <code>report/index.html</code>).</li>
+<li>Z. Marin, J. Ries, <i>Nat. Commun.</i> 17, 246 (2026) — SimuFLUX; nota en <code>docs/literature/D_simuflux.md</code>.</li>
+</ol>
+
+</main>
+</body>
+</html>

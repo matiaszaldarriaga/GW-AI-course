@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>FPM multiespectral: estado, validaci&oacute;n y l&iacute;mites</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --surface:#fcfcfb; --paper:#f3f1ec; --ink:#0b0b0b; --ink2:#52514e;
+  --muted:#8a8984; --grid:#e4e3df; --blue:#2a78d6; --blue-dk:#184f95;
+  --orange:#eb6834; --rust:#b23c14;
+  --sans:"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","DejaVu Sans",
+         "Liberation Sans",sans-serif;
+  --mono:"DejaVu Sans Mono","Liberation Mono",Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#e6e4de;font-family:var(--sans);color:var(--ink);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#deck{width:1280px;height:720px;position:relative;transform:scale(var(--s,1));
+  transform-origin:center center;box-shadow:0 6px 34px rgba(11,11,11,.22)}
+.slide{position:absolute;inset:0;background:var(--surface);overflow:hidden;
+  padding:26px 52px 38px;display:none;flex-direction:column}
+.slide.active{display:flex}
+
+/* cabeza */
+.kicker{font-size:16px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;margin-bottom:6px}
+h2{font-size:33px;line-height:1.13;font-weight:650;letter-spacing:-.01em;
+  padding-bottom:8px;border-bottom:3px solid var(--blue)}
+
+/* cuerpo */
+.body{display:flex;flex-direction:column;flex:1;min-height:0}
+.body.solo-texto{justify-content:center}
+.body.split{display:grid;grid-template-columns:1fr 1.32fr;gap:30px;align-items:center;margin-top:16px}
+.body.split.texto-ancho{grid-template-columns:1.1fr 1.2fr;gap:26px}
+.fig{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;margin:8px 0 4px}
+.body.split .fig{margin:0;height:100%}
+.fig img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+/* El nombre de archivo queda en el marcado como referencia, pero no se muestra
+   ni en pantalla ni en la impresion: es ruido en una presentacion. */
+.fig figcaption{display:none}
+
+ul{list-style:none}
+li{font-size:24px;line-height:1.3;margin:0 0 8px 0;padding-left:24px;position:relative}
+li:last-child{margin-bottom:0}
+li::before{content:"";position:absolute;left:3px;top:.56em;width:9px;height:9px;
+  border-radius:50%;background:var(--blue)}
+li.warn::before{background:var(--orange)}
+.body.split li{font-size:23px;margin-bottom:10px}
+strong{font-weight:660}
+.n{font-variant-numeric:tabular-nums;font-weight:660;color:var(--blue-dk)}
+.bad{color:var(--rust);font-weight:660}
+code{font-family:var(--mono);font-size:.86em;background:var(--paper);padding:1px 5px;
+  border-radius:4px;color:var(--ink2)}
+
+/* definiciones al pie: texto de apoyo, no cuerpo de la slide */
+.pie{font-size:21px;line-height:1.2;color:var(--ink2);margin-top:6px;padding-left:14px;
+  border-left:3px solid var(--grid)}
+.pie b{color:var(--ink);font-weight:660}
+
+/* tabla de descartes (slide 13) */
+table{border-collapse:collapse;width:100%;margin-top:6px;font-size:21px}
+th{font-size:15px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  font-weight:660;text-align:left;padding:0 14px 5px 0;border-bottom:2px solid var(--blue)}
+td{padding:4px 14px 4px 0;border-bottom:1px solid var(--grid);line-height:1.2;vertical-align:top}
+td.cand{font-weight:660;white-space:nowrap}
+td.ver{color:var(--rust);font-weight:660;white-space:nowrap}
+
+/* portada */
+.cover{justify-content:center;padding:44px 66px 42px}
+.cover h1{font-size:54px;line-height:1.08;font-weight:660;letter-spacing:-.02em}
+.cover .sub{font-size:26px;color:var(--ink2);margin-top:10px}
+.cover .rule{width:120px;height:5px;background:var(--orange);margin:16px 0 14px}
+.cover .meta{font-size:22px;color:var(--ink2);line-height:1.45;margin-bottom:18px}
+.cover .meta b{color:var(--ink);font-weight:660}
+.lead{font-size:17px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;margin-bottom:10px}
+
+/* cierre */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px 26px;flex:1;min-height:0;margin-top:14px}
+.cols .wide{grid-column:1 / -1}
+.card{background:var(--paper);border-left:5px solid var(--blue);padding:11px 18px 10px;border-radius:3px}
+.card.no{border-left-color:var(--orange)}
+.card h3{font-size:17px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);
+  font-weight:660;margin-bottom:7px}
+.card li{font-size:21px;margin-bottom:5px;line-height:1.25}
+.card li::before{width:7px;height:7px;top:.6em}
+.chip{display:inline-block;font-size:14px;letter-spacing:.08em;text-transform:uppercase;
+  font-weight:700;color:#fcfcfb;background:var(--orange);border-radius:3px;padding:1px 7px;
+  vertical-align:.12em;margin-right:6px}
+ol{list-style:none;counter-reset:p}
+ol li{counter-increment:p;padding-left:32px}
+ol li::before{content:counter(p) ".";background:none;color:var(--blue-dk);font-weight:700;
+  font-size:19px;width:auto;height:auto;left:3px;top:.14em;border-radius:0}
+
+/* divisor */
+.divider{justify-content:center;background:var(--paper)}
+.divider h2{border:0;font-size:44px;padding-bottom:0}
+.divider p{font-size:23px;line-height:1.4;color:var(--ink2);max-width:880px;margin-top:16px}
+
+/* pie */
+.hud{position:absolute;right:52px;bottom:14px;font-size:16px;color:var(--muted);
+  font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.tag{position:absolute;left:52px;bottom:14px;font-size:16px;color:var(--muted);letter-spacing:.04em}
+
+/* notas del orador */
+.notes{display:none;position:absolute;left:0;right:0;bottom:0;background:var(--paper);
+  border-top:3px solid var(--orange);padding:14px 52px 16px;font-size:19px;line-height:1.38;
+  color:var(--ink2);max-height:48%;overflow:auto}
+.notes b{color:var(--ink);font-weight:660}
+body.notes-on .slide.active .notes{display:block}
+#hint{position:fixed;left:14px;bottom:9px;font-size:13px;color:#6f6e6a}
+
+@media print{
+  @page{size:1280px 720px;margin:0}   /* 16:9 apaisado a 96 dpi */
+  html,body{background:#fff;height:auto;overflow:visible}
+  #stage{position:static;display:block;overflow:visible}
+  #deck{width:1280px;height:auto;transform:none;box-shadow:none}
+  .slide{position:relative;display:flex !important;width:1280px;height:720px;
+    page-break-after:always;break-after:page;page-break-inside:avoid;break-inside:avoid}
+  .slide:last-child{page-break-after:auto;break-after:auto}
+  .notes,#hint{display:none !important}
+}
+</style>
+</head>
+<body>
+<div id="stage"><div id="deck">
+
+<!-- 1 -->
+<section class="slide cover">
+  <p class="lead">Informe de estado &middot; grupo de investigaci&oacute;n</p>
+  <h1>FPM multiespectral: estado, validaci&oacute;n y l&iacute;mites</h1>
+  <p class="sub">pipeline asistido por agentes</p>
+  <div class="rule"></div>
+  <p class="meta"><b>Lucas Costilla</b> &nbsp;&middot;&nbsp; Departamento de F&iacute;sica, FCEN &ndash; UBA &nbsp;&middot;&nbsp; [fecha]</p>
+  <p class="lead">Tres conclusiones, antes de los detalles</p>
+  <ul>
+    <li>El <strong>pipeline multiespectral completo est&aacute; construido y testeado</strong>: registro RGB en grilla HR com&uacute;n, reconstrucci&oacute;n por canal, desenvolvimiento multi-&lambda;, ajuste de Cauchy y dos agentes.</li>
+    <li>En <strong>sint&eacute;tico funciona y sabemos d&oacute;nde se rompe</strong>: necesita contraste de amplitud (que la muestra aten&uacute;e algo), no recupera fase d&eacute;bil (retardos &le; 0.1&pi; &asymp; 26 nm de camino &oacute;ptico) y el error de posici&oacute;n de los LEDs es la inc&oacute;gnita dominante.</li>
+    <li>En <strong>datos reales hay reconstrucciones, pero ninguna confiable</strong>: las previas eran la imagen inicial disfrazada (solver congelado, ya arreglado), y la corregida ajusta las mediciones sin parecerse a la muestra. Piso de residuo <span class="n">~0.29</span> sin explicar.</li>
+  </ul>
+  <div class="hud">1 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Empiezo por el final para que puedan interrumpirme en cualquier momento. Hay una parte construida y validada, y una parte de datos reales que todav&iacute;a no cierra &mdash; y buena parte del trabajo de las &uacute;ltimas semanas fue justamente descubrir <i>por qu&eacute;</i> no cerraba, incluyendo dos errores nuestros."<br><b>Reparto de tiempo:</b> marco (slides 1-3) 3 min &middot; sint&eacute;tico (4-7) 5 &middot; campa&ntilde;a real (8-10) 5 &middot; estado (11-14) 5 &middot; cierre (15) 2.</aside>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <p class="kicker">Contexto</p>
+  <h2>FPM: resoluci&oacute;n por apertura sint&eacute;tica, y lo que agrega el color</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="esquema_fpm.svg" alt="Esquema de FPM: una captura por LED y sintesis de apertura en el espacio de frecuencias">
+      <figcaption>esquema_fpm.svg</figcaption>
+    </figure>
+    <ul>
+      <li>Resoluci&oacute;n de alta NA con campo de bajo aumento, <strong>y fase cuantitativa</strong>: el n&uacute;mero de cada p&iacute;xel es un retardo en radianes, convertible a camino &oacute;ptico &mdash; no un contraste cualitativo.</li>
+      <li>El hardware del laboratorio es un arreglo <strong>RGB secuencial</strong> (630 / 530 / 470 nm): una captura por posici&oacute;n y por color.</li>
+      <li>La idea propia del proyecto: con tres &phi;(&lambda;) del mismo objeto, desenvolver la fase por longitud de onda de batido y ajustar una curva de dispersi&oacute;n n(&lambda;). Nada en la bibliograf&iacute;a que revisamos (37 papers curados) lo cubre aplicado a FPM.</li>
+    </ul>
+  </div>
+  <div class="hud">2 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "El punto no es hacer FPM a color por est&eacute;tica: teniendo la fase en tres longitudes de onda del mismo objeto, se abre una medici&oacute;n que un solo canal no puede dar."<br>Detalle del esquema: el solapamiento entre pupilas corridas es lo que permite recuperar la fase; el solver es Wirtinger flow (<code>bian2015</code>). Lo m&aacute;s cercano en la literatura es <code>shen2025</code>, que hace el batido con 2 &lambda; en topograf&iacute;a de silicio (reflexi&oacute;n); ac&aacute; est&aacute; adaptado a transmisi&oacute;n y a 3 &lambda;. La lista de 37 papers est&aacute; curada en <code>references/</code>.</aside>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <p class="kicker">Contexto</p>
+  <h2>El pipeline existe de punta a punta, no es un plan</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="diagrama_pipeline.svg" alt="Diagrama de bloques del pipeline multiespectral con los dos agentes">
+      <figcaption>diagrama_pipeline.svg</figcaption>
+    </figure>
+    <ul>
+      <li><strong>Registro geom&eacute;trico</strong>: el sobremuestreo depende de &lambda; y los tres canales no ca&iacute;an en la misma grilla HR. Con un factor compartido (manda el azul) salen apilables sin ning&uacute;n resize.</li>
+      <li><strong>Reconstrucci&oacute;n</strong>: Wirtinger flow por canal, m&aacute;s un solver por descenso de gradiente con p&eacute;rdida de amplitud y k continuo (sin redondeo al bin de FFT).</li>
+      <li><strong>Hallazgo te&oacute;rico propio</strong>: n(&lambda;) y espesor son <strong>degenerados</strong>, s&oacute;lo se miden los productos A&middot;t y B&middot;t. Y dos agentes cierran el lazo: uno reintenta / acepta / abandona, otro hace QC entre canales.</li>
+    </ul>
+    <p class="pie"><b>242 tests autom&aacute;ticos</b>; cada n&uacute;mero publicado con procedencia verificable (<code>check_provenance.py</code>, <code>reproduce.sh</code>).</p>
+  </div>
+  <div class="hud">3 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Todo esto est&aacute; implementado y testeado. Lo que sigue son los resultados de haberlo empujado hasta encontrar d&oacute;nde se rompe."<br>Costo de los agentes: corren <code>claude -p</code> restringido, ~$0.03&ndash;0.04 y ~10&ndash;11 s por decisi&oacute;n (sin restringir: $0.13). Con 3 canales el sistema para (C,D) queda sobre-determinado, pero la degeneraci&oacute;n A/B/t no se rompe sin un dato externo. Los 242 tests son los de <code>pytest --collect-only</code> sobre este &aacute;rbol (2026-09-23); conviene re-correrlo el d&iacute;a de la charla.</aside>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <p class="kicker">Validaci&oacute;n sint&eacute;tica</p>
+  <h2>El solver necesita contraste de amplitud, y las muestras que nos interesan no lo tienen</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig01_contraste_amplitud.png" alt="Correlacion de fase contra contraste de amplitud">
+      <figcaption>fig01_contraste_amplitud.png</figcaption>
+    </figure>
+    <ul>
+      <li>Con fase fija 0.3&pi;, la correlaci&oacute;n de fase cae con el contraste: 20% &rarr; <span class="n">0.75</span>, 10% &rarr; <span class="n">0.58</span>, 5% &rarr; <span class="n">0.42</span>, 2% &rarr; <span class="n">0.15</span>.</li>
+      <li>En contraste cero (fase pura) se vuelve <span class="bad">negativo, &minus;0.24</span>. El &oacute;ptimo est&aacute; bien: el problema es <strong>desde d&oacute;nde arranca</strong> &mdash; arrancando en la verdad converge a 0.91.</li>
+      <li>Se arregla inicializando con la fase de TIE: <span class="n">0.39 &rarr; 0.99</span>. Es un l&iacute;mite de <strong>estos</strong> solvers en <strong>este</strong> r&eacute;gimen, no de FPM; y las muestras que queremos mirar est&aacute;n justo ah&iacute;.</li>
+    </ul>
+    <p class="pie"><b>contraste</b> = 1 &minus; m&iacute;n|A|, con el m&aacute;ximo normalizado a 1.</p>
+  </div>
+  <div class="hud">4 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Este es el l&iacute;mite m&aacute;s inc&oacute;modo del m&eacute;todo para lo que queremos mirar. La serie gris de la izquierda es Wirtinger flow con el paso congelado &mdash; no la lean como 'el algoritmo', ya vamos a llegar a eso."<br>N&uacute;meros con GD-amplitud, pico 1000. Arrancar en la verdad converge a 0.913 &plusmn; 0.000; con la init por defecto &minus;0.338 &plusmn; 0.165; perturbar con fase aleatoria chica no rescata nada (0.032). La TIE necesita una captura desenfocada extra. La literatura reporta el mismo fen&oacute;meno de bajo contraste.<br><b>Bloque:</b> validaci&oacute;n sint&eacute;tica (slides 4-7), 5 min.</aside>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <p class="kicker">Validaci&oacute;n sint&eacute;tica</p>
+  <h2>Fase d&eacute;bil no se recupera, y por encima de &pi; la m&eacute;trica deja de medir</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig04_fase_debil_y_techo.png" alt="Fase debil y techo de pi">
+      <figcaption>fig04_fase_debil_y_techo.png</figcaption>
+    </figure>
+    <ul>
+      <li>Con &phi;<sub>max</sub> &le; 0.1&pi; ning&uacute;n solver pasa de <span class="n">~0.25</span> de correlaci&oacute;n, en ning&uacute;n objeto ni nivel de fotones.</li>
+      <li>La correlaci&oacute;n <strong>sobrestima</strong>: a 0.05&pi; el RMSE del resultado (0.097) es peor que el de poner <strong>fase cero en todos los p&iacute;xeles</strong> (0.022).</li>
+      <li class="warn"><strong>El aporte novedoso vive arriba de &pi; y el solver no llega ah&iacute;</strong>: por eso el desenvolvimiento multi-&lambda; se valida con fase inyectada, aparte del solver, y se dice expl&iacute;citamente.</li>
+    </ul>
+    <p class="pie"><b>&phi;<sub>max</sub></b> = retardo m&aacute;ximo del objeto; 0.1&pi; &asymp; 26 nm de camino &oacute;ptico a 530 nm.</p>
+  </div>
+  <div class="hud">5 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Este es el punto que ordena todo el proyecto: la parte novedosa necesita un r&eacute;gimen de fase que el solver de hoy no alcanza. Por eso separamos los tests en vez de fingir un end-to-end."<br>Por encima de ~&pi; rad de fase absoluta la m&eacute;trica de este repo deja de puntuar bien (artefacto de envolvimiento) y ning&uacute;n solver probado reconstruye de forma &uacute;til ah&iacute;: son dos problemas superpuestos.</aside>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <p class="kicker">Validaci&oacute;n sint&eacute;tica</p>
+  <h2>La posici&oacute;n de los LEDs es la inc&oacute;gnita dominante con hardware real</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig03_error_posicion_leds.png" alt="Error de posicion de los LEDs">
+      <figcaption>fig03_error_posicion_leds.png</figcaption>
+    </figure>
+    <ul>
+      <li>Barrido sint&eacute;tico de geometr&iacute;a (jitter, offset global, error de z) con calibraci&oacute;n nominal / r&iacute;gida / per-LED / <strong>or&aacute;culo</strong> (= reconstruir con las posiciones verdaderas: el techo alcanzable).</li>
+      <li>Jitter 0.2 mm: s&oacute;lo per-LED rescata algo (<span class="n">0.32 &plusmn; 0.05</span> contra 0.16&ndash;0.19; or&aacute;culo 0.51). Offset 0.5 mm: la r&iacute;gida baja el error de k pero <strong>no</strong> recupera la fase (0.10 contra 0.52).</li>
+      <li>Redondear k al bin de FFT baja la correlaci&oacute;n de 0.75 a <span class="bad">0.08</span>: la posici&oacute;n manda m&aacute;s que el operador. <strong>En sint&eacute;tico la geometr&iacute;a manda &mdash; en los datos reales (slide 14) no se va a sentir.</strong></li>
+    </ul>
+    <p class="pie">N&uacute;meros de <b>GD-amplitud</b>, no de WF: la columna WF est&aacute; excluida por el paso congelado (slide 10). <b>1 bin de error de k</b> = un paso de la grilla de frecuencias; el acantilado cae entre 0.4 y 0.8 bins.</p>
+  </div>
+  <div class="hud">6 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Cuando despu&eacute;s no nos cierre nada en datos reales, esta es la primera sospechosa que hay que descartar &mdash; y es lo que hicimos."<br>Jitter 0.2 mm = 0.27 bins de error en k; or&aacute;culo 0.51 &plusmn; 0.02; en offset global el or&aacute;culo da 0.52 &plusmn; 0.03. Cuatro semillas. La auditor&iacute;a del redondeo de k usa un modelo directo que no comparte discretizaci&oacute;n con ning&uacute;n solver. Traducci&oacute;n a hardware: paso, altura y centrado del arreglo son datos a medir, no a asumir.</aside>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <p class="kicker">Validaci&oacute;n sint&eacute;tica</p>
+  <h2>Acoplar los tres canales s&iacute; gana, pero s&oacute;lo si se filtran los envolvimientos espurios</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig02_cadena_acoplada.png" alt="Cadena acoplada: acoplado, ingenuo y enmascarado">
+      <figcaption>fig02_cadena_acoplada.png</figcaption>
+    </figure>
+    <ul>
+      <li>Cadena acoplada completa de punta a punta con el solver real, 4 semillas.</li>
+      <li>Sin filtrar, acoplar pierde contra el baseline ingenuo (0.11/0.30/0.35 contra 0.66/0.82/0.89 en escalas 1/2/4): un pu&ntilde;ado de p&iacute;xeles con envolvimiento espurio domina el Pearson.</li>
+      <li>Filtrando esos p&iacute;xeles (&le;20% de la imagen) acoplar <strong>gana limpio</strong>: <span class="n">0.80 / 0.88 / 0.93</span>. Y <code>pair_disagreement</code> ya se calcula como confianza por p&iacute;xel y nadie lo usa.</li>
+    </ul>
+    <p class="pie">Se mide la <b>correlaci&oacute;n del mapa de espesor</b> con el verdadero, no fase ni resoluci&oacute;n. <b>Escala del espesor</b> = cu&aacute;ntas veces se agranda la se&ntilde;al de OPL; a escala 8 enmascarar ya tira se&ntilde;al real. El <b>183x</b> del informe es reducci&oacute;n de <i>error</i> de espesor con fase inyectada, y el Pearson es insensible a escala y offset.</p>
+  </div>
+  <div class="hud">7 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Este es el patr&oacute;n que se repiti&oacute; todo el proyecto: el primer resultado sorprendente ('acoplar empeora') no sobrevivi&oacute; al control. Y el arreglo ya estaba escrito en el c&oacute;digo, sin usar."<br>A partir de escala 8 la fracci&oacute;n filtrada salta a 68&ndash;93%: el filtro ya descarta se&ntilde;al real, no outliers. Fuente: <code>data/coupled_opl_ceiling_sweep_masked.json</code>. Usar <code>pair_disagreement</code> para ponderar el acople es la mejora m&aacute;s barata identificada.</aside>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <p class="kicker">Campa&ntilde;a real &middot; los dos errores de m&eacute;todo</p>
+  <h2>Datos reales: la referencia con la que med&iacute;amos calidad no pod&iacute;a validar nada</h2>
+  <div class="body split texto-ancho">
+    <ul>
+      <li>Sin ground truth valid&aacute;bamos contra una imagen "de alta resoluci&oacute;n": es un tile <strong>Zeiss 2.5x/0.075, 2.344 &micro;m/px</strong>.</li>
+      <li>La captura FPM mantiene se&ntilde;al hasta el <strong>Nyquist LR</strong> &mdash; la m&aacute;xima frecuencia que la grilla de la c&aacute;mara puede representar &mdash; con &minus;27 dB en el borde; la referencia toca un piso de &minus;43 dB desde ~0.7 de ese l&iacute;mite.</li>
+      <li>O sea: <span class="bad">no puede validar superresoluci&oacute;n</span>, ni la resoluci&oacute;n LR completa. La "mejor reconstrucci&oacute;n" (0.727) era la foto LR sobremuestreada.</li>
+      <li class="warn"><strong>Segundo error</strong>: el objetivo estaba mal en todas las corridas reales (2.5x/0.07 en vez de <strong>2x/NA 0.10</strong>). Corregido, y casi no cambi&oacute; nada.</li>
+    </ul>
+    <figure class="fig">
+      <img src="../figures/fig06_espectro_referencia.png" alt="Espectro de potencia radial de la referencia">
+      <figcaption>fig06_espectro_referencia.png</figcaption>
+    </figure>
+  </div>
+  <div class="hud">8 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Dos errores nuestros en una slide. El segundo, el objetivo, lo corregimos y la curva no se movi&oacute;: siendo real, no explicaba nada. El primero s&iacute; invalidaba la m&eacute;trica de calidad entera."<br>Primera captura real: dic-2025, 9&times;9 LEDs, 3 canales, crop 400. La referencia est&aacute; registrada sobre la grilla de la c&aacute;mara FPM con NCC 0.896, escala 0.745, columnas invertidas y ~2&deg; de rotaci&oacute;n. La captura cruda contra la referencia da 0.706. La referencia tiene menos alta frecuencia que una sola captura LR. Si preguntan c&oacute;mo sabemos que el aumento estaba mal: <code>fig07</code>, en las figuras de respaldo.<br><b>Bloque:</b> campa&ntilde;a real (slides 8-10), 5 min.</aside>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <p class="kicker">Campa&ntilde;a real &middot; los dos errores de m&eacute;todo</p>
+  <h2>La curva "m&aacute;s iteraciones, peor resultado" no med&iacute;a el solver</h2>
+  <div class="body split">
+    <ul>
+      <li>Curva reproducible en 4 puntos: la correlaci&oacute;n contra la referencia bajaba mon&oacute;tonamente con las iteraciones (<span class="n">0.725 &rarr; 0.721 &rarr; 0.697 &rarr; 0.602</span>) mientras el residuo interno segu&iacute;a mejorando.</li>
+      <li>Primera lectura: <strong>semi-convergencia</strong> &mdash; fen&oacute;meno real en problemas inversos mal condicionados: primero mejora y despu&eacute;s empeora.</li>
+      <li>Pero un barrido fino puso el m&aacute;ximo en la <strong>iteraci&oacute;n 0</strong>, antes de cualquier paso del solver: es deriva de un solver congelado medida contra una referencia ciega.</li>
+      <li>Lo que s&iacute; se sostiene: <code>convergence_summary</code> <strong>no es un proxy confiable</strong> de precisi&oacute;n real sobre datos reales.</li>
+    </ul>
+    <figure class="fig">
+      <img src="../figures/fig13_correlacion_vs_iteraciones.png" alt="Correlacion contra la referencia en funcion de las iteraciones">
+      <figcaption>fig13_correlacion_vs_iteraciones.png</figcaption>
+    </figure>
+  </div>
+  <div class="hud">9 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "La incluyo como figura hist&oacute;rica y como advertencia metodol&oacute;gica: ten&iacute;amos una explicaci&oacute;n elegante y con nombre propio en la literatura, y era la explicaci&oacute;n equivocada."<br><b>Candidata a recortar</b> si la charla va con el tiempo justo: es la &uacute;nica slide que no aporta un resultado, sino una advertencia de m&eacute;todo.<br>Puntos a 20/50/200/600 iteraciones. Barrido fino: m&aacute;ximo 0.7268 en la iteraci&oacute;n 0 (la imagen del LED central sobremuestreada), 0.7225 a 40 it. Las dos causas &mdash; referencia ciega y solver congelado &mdash; son las dos slides vecinas.</aside>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <p class="kicker">Campa&ntilde;a real &middot; los dos errores de m&eacute;todo</p>
+  <h2>El solver estaba congelado: paso efectivo ~1/8000 del paso ePIE</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig05_bug_del_paso.png" alt="Bug del paso: calidad contra tamano de recorte">
+      <figcaption>fig05_bug_del_paso.png</figcaption>
+    </figure>
+    <ul>
+      <li><code>reconstruct</code> divide el gradiente espectral por el n&uacute;mero de p&iacute;xeles LR y usa <code>step_max = 20</code> fijo: el paso efectivo escala como <strong>20/recorte&sup2;</strong> del de ePIE &mdash; 0.078 a recorte 16, 0.0012 a 128, <span class="bad">~1/8000</span> a los 400 px de los datos reales.</li>
+      <li><strong>C&oacute;mo se encontr&oacute;</strong>: con un control sint&eacute;tico del mismo solver a distintos recortes. Con el paso por defecto la calidad se degrada con el recorte (0.53 / 0.17 / 0.23 a 16/64/128); con paso relativo a ePIE (0.3) es independiente del recorte: <span class="n">0.93 / 0.94 / 0.95</span>.</li>
+      <li class="warn"><strong>Qu&eacute; se cae</strong>: las corridas reales previas y las columnas WF a recorte &ge; 32. <strong>Qu&eacute; queda en pie</strong>: todo lo sint&eacute;tico a recortes 16&ndash;32, donde el paso por defecto todav&iacute;a era razonable, y todo lo de GD-amplitud.</li>
+    </ul>
+  </div>
+  <div class="hud">10 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Este es el hallazgo m&aacute;s importante de la campa&ntilde;a de datos reales, y es un bug nuestro. Todo lo que hab&iacute;amos medido sobre datos reales med&iacute;a la estimaci&oacute;n inicial, no el solver."<br>Nunca se vio porque todos los hitos sint&eacute;ticos y los tests usan recortes de 16&ndash;32 px. Dos causas m&aacute;s, independientes: las capturas no se normalizaban por tiempo de exposici&oacute;n (3 a 1000 ms seg&uacute;n el LED, nivel de oscuro ~188 cuentas) y la estimaci&oacute;n inicial estaba fuera de escala por factor&sup2; (residuo inicial 24.3 contra 0.24 corregido).</aside>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <p class="kicker">Estado real</p>
+  <h2>Con todo corregido, en sint&eacute;tico con la geometr&iacute;a real, el solver s&iacute; funciona</h2>
+  <div class="body split">
+    <ul>
+      <li>Sint&eacute;tico con la geometr&iacute;a de la captura real (2x/NA 0.10, z = 76 mm, 9&times;9, verde, p&iacute;xel HR 0.32 &micro;m) y ruido tipo captura, paso ePIE 0.3.</li>
+      <li>Llega al <strong>piso de ruido</strong> &mdash; el residuo que queda cuando el &uacute;nico error restante es el ruido de la c&aacute;mara &mdash; en ~50 iteraciones: residuo 0.035 y correlaci&oacute;n de fase <span class="n">0.93</span>.</li>
+      <li>Control: generar con el centro estimado (17.45, 14.65) y reconstruir con el nominal (17, 15) &mdash; <strong>medio LED</strong> &mdash; lleva el residuo a <span class="bad">0.22</span> y la fase a ruido (&minus;0.003, std 1.80 rad).</li>
+      <li>En sint&eacute;tico <strong>los datos s&iacute; discriminan geometr&iacute;a</strong>, y la firma de un error de geometr&iacute;a es la que vemos en los datos reales.</li>
+    </ul>
+    <figure class="fig">
+      <img src="../figures/fig08_sintetico_geometria_real.png" alt="Sintetico con la geometria real y control de geometria">
+      <figcaption>fig08_sintetico_geometria_real.png</figcaption>
+    </figure>
+  </div>
+  <div class="hud">11 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Cada fila tiene su propia escala de fase; lo que se compara es cada fila consigo misma. La columna de la derecha es el control de geometr&iacute;a, y es la que hay que tener en la cabeza para la slide que viene."<br>Sin ruido el residuo baja a 0.002. Repetido a recorte 400 con el ruido medido de la c&aacute;mara: residuo 0.128 contra un piso de ruido de 0.142, correlaci&oacute;n de fase 0.96. En el objeto disperso la correlaci&oacute;n de fase satura en ~0.69 por envolvimiento: la cifra limpia es la de lena/mapa.<br><b>Bloque:</b> estado real (slides 11-14), 5 min.</aside>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <p class="kicker">Estado real</p>
+  <h2>En la muestra real, el solver descongelado da fase tipo ruido</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig09_reales_congelada_descongelada.png" alt="Reconstruccion real congelada contra descongelada">
+      <figcaption>fig09_reales_congelada_descongelada.png</figcaption>
+    </figure>
+    <ul>
+      <li>Congelada: fase con std 0.0075 rad. Descongelada: <span class="n">~1.6 rad</span> &mdash; una fase uniforme aleatoria tiene 1.81 rad. <span class="bad">Es ruido, no una reconstrucci&oacute;n.</span></li>
+      <li>Los LEDs de campo oscuro pasan a ajustar (0.97 &rarr; 0.28), as&iacute; que el solver resuelve algo; pero la amplitud sale como <i>speckle</i> (granulado de interferencia) de ~2 &micro;m, y s&oacute;lo el 23% de su energ&iacute;a cae dentro de NA 0.10.</li>
+      <li class="warn">Im&aacute;genes de la muestra <strong>s&iacute; hay</strong>: el primer panel es la captura LR y el objeto se ve. Lo que no est&aacute; demostrado es el <strong>valor agregado de FPM</strong>.</li>
+    </ul>
+  </div>
+  <div class="hud">12 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Este es el estado real hoy. No es que tengamos una reconstrucci&oacute;n mediocre: no tenemos una reconstrucci&oacute;n confiable, y lo decimos as&iacute;."<br>Misma captura, crop 400, exposici&oacute;n normalizada, centro estimado, paso ePIE 0.3, 100 iteraciones. Aun filtrada a la banda de NA 0.10, la fase tiene std 1.27 rad. La ca&iacute;da de correlaci&oacute;n contra la referencia (0.72 &rarr; 0.30) no dice nada sobre superresoluci&oacute;n &mdash; la referencia es ciega &mdash; pero s&iacute; es coherente con una reconstrucci&oacute;n dominada por artefactos.</aside>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <p class="kicker">Estado real</p>
+  <h2>El piso de residuo ~0.29 no es ruido, ni paso, ni pupila, ni brillo por LED</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig10_residuo_por_led.png" alt="Residuo por LED contra la prediccion del ruido medido">
+      <figcaption>fig10_residuo_por_led.png</figcaption>
+    </figure>
+    <p class="pie"><b>Residuo</b> = media sobre LEDs de &#8214;estimado &minus; medido&#8214; / &#8214;medido&#8214; en amplitud. Medido: <b>0.295</b>.</p>
+    <table>
+      <tr><th>Candidato</th><th>Qu&eacute; se midi&oacute;</th><th>Veredicto</th></tr>
+      <tr><td class="cand">Ruido de la c&aacute;mara</td><td>ganancia 0.30 ADU/e&#8315;, lectura 7.2 ADU&sup2;, 12 bits &rarr; predice 0.02&ndash;0.03</td><td class="ver">descartado (~11&times;)</td></tr>
+      <tr><td class="cand">Paso del solver</td><td>ePIE 0.3 / 0.1 / 0.03 &rarr; 0.295 / 0.311 / 0.335</td><td class="ver">descartado</td></tr>
+      <tr><td class="cand">Campo oscuro</td><td>s&oacute;lo los 9 LEDs internos &rarr; 0.267</td><td class="ver">descartado</td></tr>
+      <tr><td class="cand">Brillo por LED</td><td>escala medida/modelo 0.83&ndash;0.94, corregida &rarr; 0.3098 &rarr; 0.3086</td><td class="ver">descartado</td></tr>
+      <tr><td class="cand">Pupila</td><td>EPRY, 30 it &rarr; RMS interno &minus;2%</td><td class="ver">descartado</td></tr>
+    </table>
+    <ul style="margin-top:8px">
+      <li>Queda un <strong>desajuste modelo&ndash;muestra no identificado</strong>: muestra gruesa o con dispersi&oacute;n m&uacute;ltiple, un error de geometr&iacute;a fuera de lo probado, o el redondeo de k al bin de FFT a recorte 400.</li>
+    </ul>
+  </div>
+  <div class="hud">13 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "Descartamos una por una las explicaciones baratas. Lo que queda es f&iacute;sica de la muestra o del modelo directo, y eso no se arregla ajustando un hiperpar&aacute;metro."<br><b>Los dos "0.29" no son el mismo n&uacute;mero</b>: el piso de residuo de esta slide es a crop 400 (0.295) y el 0.29 de la slide 14 es el residuo de <i>entrenamiento</i> del barrido a crop 96. Son corridas distintas, consistentes entre s&iacute;.<br>Saturaci&oacute;n &lt;0.04%; la predicci&oacute;n del ruido llega a 0.046 como m&aacute;ximo si se agrega patr&oacute;n fijo. La fase ya es ruido en la iteraci&oacute;n 10 con cualquiera de los tres pasos. "Muestra gruesa" es el candidato principal, pero est&aacute; marcado como compatible, no probado.</aside>
+</section>
+
+<!-- 14 -->
+<section class="slide">
+  <p class="kicker">Estado real</p>
+  <h2>Los datos reales no distinguen la geometr&iacute;a, y la reconstrucci&oacute;n no generaliza</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig12_sobreajuste_leds_excluidos.png" alt="Sobreajuste: residuo de entrenamiento contra LEDs excluidos">
+      <figcaption>fig12_sobreajuste_leds_excluidos.png</figcaption>
+    </figure>
+    <ul>
+      <li>Barrido ancho de geometr&iacute;a (169 offsets de centro, rotaci&oacute;n &plusmn;5&deg;, z de 40 a 120 mm) puntuado por <strong>validaci&oacute;n cruzada</strong>: se reconstruye sin 20 de los 81 LEDs y se mide el residuo justo sobre esos 20 &mdash; separa "ajusta los datos" de "reconstruye el objeto".</li>
+      <li>Dentro de &plusmn;1.5 LED y &plusmn;5&deg; el residuo de entrenamiento se mueve ~0.006, <strong>sin m&iacute;nimo</strong> (en sint&eacute;tico medio LED lo lleva de 0.035 a 0.22); el control con LEDs al azar s&iacute; se separa (0.36&ndash;0.39 contra 0.68&ndash;1.00).</li>
+      <li><strong>Sobreajuste fuerte</strong>: <span class="n">0.29</span> en entrenamiento contra <span class="bad">0.50</span> en los LEDs excluidos. Algo que no es geometr&iacute;a domina el residuo real y tapa la sensibilidad a la geometr&iacute;a.</li>
+    </ul>
+  </div>
+  <div class="hud">14 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "La validaci&oacute;n cruzada sobre LEDs excluidos es, creo, el diagn&oacute;stico m&aacute;s &uacute;til que construimos: separa 'ajusta los datos' de 'reconstruye el objeto', y ac&aacute; dice claramente que no."<br>Ninguna geometr&iacute;a razonable baja el residuo de los excluidos. z no es calibrable as&iacute;: entrenamiento y validaci&oacute;n se mueven en sentidos opuestos (0.232&rarr;0.329 contra 0.554&rarr;0.438); queda la medici&oacute;n f&iacute;sica de 76 mm. Este 0.29 es a crop 96 y el piso de la slide 13 es a crop 400: dos mediciones consistentes, no la misma. Si preguntan por el paisaje plano: <code>fig11</code>, en respaldo.</aside>
+</section>
+
+<!-- 15 -->
+<section class="slide">
+  <p class="kicker">Qu&eacute; sigue</p>
+  <h2>Estado y qu&eacute; sigue</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>Lo que ya est&aacute; firme</h3>
+      <ul>
+        <li>Pipeline multiespectral completo, testeado, con procedencia de n&uacute;meros.</li>
+        <li>Validaci&oacute;n sint&eacute;tica con l&iacute;mites cuantificados: contraste, fase d&eacute;bil, techo de &pi;, posici&oacute;n de LEDs.</li>
+        <li>Solver descongelado y validado contra la geometr&iacute;a real de la captura.</li>
+        <li>Metrolog&iacute;a: procedencia de la referencia, objetivo real, ruido de c&aacute;mara medido.</li>
+      </ul>
+    </div>
+    <div class="card no">
+      <h3>Lo que todav&iacute;a NO tenemos</h3>
+      <ul>
+        <li><strong>No</strong> hay reconstrucci&oacute;n confiable de la muestra real: piso de residuo <span class="n">~0.29</span> sin explicar.</li>
+        <li><strong>No</strong> llegamos al r&eacute;gimen del aporte novedoso: la dispersi&oacute;n n(&lambda;) necesita fase &gt; &pi;.</li>
+      </ul>
+    </div>
+    <div class="card wide">
+      <h3>Pr&oacute;ximos pasos &mdash; los dos primeros son un pedido al grupo</h3>
+      <ol>
+        <li><span class="chip">pedido</span><strong>Captura FPM de un target USAF</strong> (muestra fina, poco dispersiva): separa "muestra gruesa" de "geometr&iacute;a/modelo" y calibra NA, aumento y centro del arreglo de una sola vez.</li>
+        <li><span class="chip">pedido</span><strong>Mosaico Zeiss 10x/0.25</strong> (~0.59 &micro;m/px) del mismo campo: la referencia genuina que hoy no tenemos, para poder medir superresoluci&oacute;n.</li>
+        <li>Confirmar con el laboratorio paso, altura y centrado del arreglo LED.</li>
+        <li>Usar <code>pair_disagreement</code> para filtrar/ponderar el acople (ya calculado, sin usar).</li>
+        <li>Decidir el default del paso ePIE (hoy opt-in, a prop&oacute;sito).</li>
+      </ol>
+    </div>
+  </div>
+  <div class="hud">15 / 15</div>
+  <aside class="notes"><b>Qu&eacute; decir:</b> "El punto 1 es el que desbloquea todo lo dem&aacute;s, y es una captura, no meses de c&oacute;digo. Si sale de ac&aacute; una sola decisi&oacute;n, me gustar&iacute;a que sea &eacute;sa."<br><b>Bloque:</b> cierre (slide 15), 2 min, y despu&eacute;s preguntas.</aside>
+</section>
+
+<!-- respaldo: divisor -->
+<section class="slide divider">
+  <p class="kicker">Material de respaldo</p>
+  <h2>Figuras de respaldo</h2>
+  <p>Dos figuras que no van en el cuerpo de la charla, para contestar preguntas puntuales: c&oacute;mo sabemos que el objetivo estaba mal (slide 8) y si se prob&oacute; mover la geometr&iacute;a (slide 14).</p>
+  <div class="tag">Respaldo</div>
+</section>
+
+<!-- respaldo 1 -->
+<section class="slide">
+  <p class="kicker">Respaldo &middot; "&iquest;c&oacute;mo saben que el objetivo estaba mal?"</p>
+  <h2>Aumento efectivo y NA&middot;px medidos contra cada hip&oacute;tesis</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig07_aumento_efectivo.png" alt="Aumento efectivo y NA por pixel medido">
+      <figcaption>fig07_aumento_efectivo.png</figcaption>
+    </figure>
+    <ul>
+      <li>D&oacute;nde cae la referencia dentro del tile Zeiss, y el NA&middot;px medido contra cada hip&oacute;tesis de aumento / NA.</li>
+      <li>Corte del espectro de intensidad en rojo: r<sub>c</sub> = 690 px &rarr; <strong>NA&middot;px = 0.194 &plusmn; 0.003 &micro;m</strong>; la lectura m&aacute;s consistente es aumento ~1.83x con NA ~0.11.</li>
+    </ul>
+  </div>
+  <div class="tag">Respaldo</div>
+  <aside class="notes">Complemento de la slide 8. El objetivo declarado en las corridas previas era 2.5x/0.07; el real de la captura 2025-12-12 es 2x/NA 0.10, con p&iacute;xel de c&aacute;mara de 3.2 &micro;m. Corregirlo casi no movi&oacute; la curva: es un error real, pero no es la causa del comportamiento de los datos reales.</aside>
+</section>
+
+<!-- respaldo 2 -->
+<section class="slide">
+  <p class="kicker">Respaldo &middot; "&iquest;probaron mover la geometr&iacute;a?"</p>
+  <h2>El paisaje de geometr&iacute;a es plano en todo el rango razonable</h2>
+  <div class="body">
+    <figure class="fig">
+      <img src="../figures/fig11_paisaje_geometria.png" alt="Paisaje de residuo contra offset de centro, rotacion y z">
+      <figcaption>fig11_paisaje_geometria.png</figcaption>
+    </figure>
+    <ul>
+      <li>Residuo contra offset de centro, rotaci&oacute;n y z, con el control aleatorio marcado en la barra de color.</li>
+      <li>Offset de centro &plusmn;1.5 pasos (169 puntos): entrenamiento 0.310&ndash;0.316, plano. Rotaci&oacute;n &plusmn;5&deg;: 0.287&ndash;0.288. Centro nominal / estimado: 0.287 / 0.292.</li>
+    </ul>
+  </div>
+  <div class="tag">Respaldo</div>
+  <aside class="notes">Alternativa a <code>fig12</code> en la slide 14: &eacute;sta muestra el paisaje plano, <code>fig12</code> muestra el sobreajuste. Si el director es de los que quiere ver el paisaje, intercambiarlas.</aside>
+</section>
+
+</div></div>
+<div id="hint">&larr; &rarr; espacio / PageUp / PageDown &middot; tecla <b>n</b>: notas del orador &middot; Ctrl+P: imprimir a PDF</div>
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var deck = document.getElementById('deck');
+  var i = 0;
+  function show(k) {
+    i = Math.max(0, Math.min(slides.length - 1, k));
+    slides.forEach(function (s, j) { s.classList.toggle('active', j === i); });
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
+  }
+  function fit() {
+    deck.style.setProperty('--s', Math.min(window.innerWidth / 1280, window.innerHeight / 720));
+  }
+  document.addEventListener('keydown', function (e) {
+    var k = e.key;
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Spacebar') { show(i + 1); e.preventDefault(); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') { show(i - 1); e.preventDefault(); }
+    else if (k === 'Home') { show(0); e.preventDefault(); }
+    else if (k === 'End') { show(slides.length - 1); e.preventDefault(); }
+    else if (k === 'n' || k === 'N') { document.body.classList.toggle('notes-on'); }
+  });
+  window.addEventListener('resize', fit);
+  var start = parseInt((location.hash || '').slice(1), 10);
+  fit();
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>

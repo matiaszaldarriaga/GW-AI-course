@@ -1,0 +1,33 @@
+{
+  "videos": 21,
+  "frames": 15710,
+  "duration_s": 732.2081833333334,
+  "fps_mean": 21.462542543560765,
+  "fps_sd": 0.02072247276741428,
+  "rf_null_px_global_diagnostic": [
+    291.9280757706397,
+    331.2912783979608
+  ],
+  "rf_null_line_median_residual_px_global": 51.30752688060556,
+  "rf_null_line_median_residual_px_between_videos": 44.630521090907976,
+  "q_trace": {
+    "median": 0.19978052964404536,
+    "ci95_low": 0.19291256224127015,
+    "ci95_high": 0.23522218196342387,
+    "n_videos": 21,
+    "n_detections": 42089
+  },
+  "charge_to_mass_C_per_kg": {
+    "estimate": 0.0006646072224782615,
+    "ci95_low": 0.0006417596469524464,
+    "ci95_high": 0.0007825104943836399
+  },
+  "predicted_secular_frequency_hz": 3.5316541815086135,
+  "minor_width_px": {
+    "median": 8.509318752758093,
+    "ci95_low": 8.362418747754733,
+    "ci95_high": 8.847559349892077
+  },
+  "nominal_scale_um_per_px": 3.525546623844149,
+  "frequency_tracks": 80
+}

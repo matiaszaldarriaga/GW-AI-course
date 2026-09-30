@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chameleon Bigravity Spin-2</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root { --bg:#fdfcfa; --fg:#1d1d1f; --muted:#5f6368; --line:#e3e0da; --accent:#c8702a;
+        --claude:#e8a05c; --codex:#3b6ea8; --me:#333; --ok:#1a7a2a; --warn:#a36d00; --bad:#b03030;
+        --card:#ffffff; --code:#f3f1ed; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg:#17181a; --fg:#e8e6e3; --muted:#a0a4a8; --line:#34363a; --card:#1f2124; --code:#2a2c30;
+  --me:#cfcfcf; --ok:#5fc46f; --warn:#e0b040; --bad:#f07070; } }
+:root[data-theme="dark"] { --bg:#17181a; --fg:#e8e6e3; --muted:#a0a4a8; --line:#34363a; --card:#1f2124;
+  --code:#2a2c30; --me:#cfcfcf; --ok:#5fc46f; --warn:#e0b040; --bad:#f07070; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--fg);
+       font: 16px/1.6 "Iowan Old Style", "Palatino Linotype", Georgia, serif; }
+main { max-width: 920px; margin: 0 auto; padding: 2.5rem 16px 4rem; }
+h1 { font-size: 2rem; line-height:1.2; margin: 0 0 .3rem; }
+.sub { color: var(--muted); margin: 0 0 1.5rem; font-size: 1.05rem; }
+h2 { font-size: 1.3rem; margin: 2.6rem 0 .8rem; padding-bottom:.3rem; border-bottom: 2px solid var(--accent); }
+p, li { max-width: 72ch; }
+a { color: var(--accent); }
+code { font-family: ui-monospace, Consolas, monospace; font-size: .85em; background: var(--code);
+       padding: .05em .35em; border-radius: 3px; word-break: break-word; }
+pre { background: var(--code); padding: .9rem 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; }
+.links { display:flex; flex-wrap:wrap; gap:.6rem; margin: 1rem 0 0; }
+.links a { border:1px solid var(--line); background:var(--card); padding:.4rem .8rem; border-radius: 6px;
+           text-decoration:none; font-family: system-ui, sans-serif; font-size:.9rem; }
+.lead { font-size: 1.08rem; }
+.flow { display:grid; grid-template-columns: repeat(3, 1fr); gap: .7rem; margin: 1rem 0; font-family: system-ui, sans-serif; font-size:.86rem; }
+.flow div { background: var(--card); border:1px solid var(--line); border-left: 4px solid var(--me); border-radius:6px; padding:.55rem .7rem; }
+.flow .c { border-left-color: var(--claude); } .flow .x { border-left-color: var(--codex); } .flow .v { border-left-color: var(--ok); }
+.flow b { display:block; }
+figure { margin: 1.4rem 0; } figure img { width:100%; height:auto; background:#fff; border-radius:6px; border:1px solid var(--line); }
+figcaption { color: var(--muted); font-size: .9rem; margin-top:.4rem; }
+.table-wrap { overflow-x:auto; }
+table { border-collapse: collapse; width:100%; font-family: system-ui, sans-serif; font-size: .86rem; }
+th, td { border-bottom:1px solid var(--line); padding:.5rem .45rem; text-align:left; vertical-align:top; }
+th { font-weight:600; color: var(--muted); }
+.st { font-weight:700; white-space:nowrap; } .ok { color:var(--ok); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+.eq { background: var(--card); border:1px solid var(--line); border-radius: 6px; padding:.3rem 1rem; margin: 1rem 0; overflow-x:auto; }
+.two { display:grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; align-items:start; }
+footer { color:var(--muted); font-size:.85rem; margin-top:3rem; border-top:1px solid var(--line); padding-top:1rem; }
+@media (max-width: 700px) { .flow, .two { grid-template-columns: 1fr; } h1 { font-size:1.6rem; } }
+</style>
+<body>
+<main>
+<p class="sub" style="text-align:right;margin:0"><a href="index_es.html">Versión en castellano</a></p>
+<h1>Chameleon bigravity and spin-2 dark matter</h1>
+<p class="sub">Final project, AI-assisted research (Claude Code + Codex) · Guadalupe Ahumada Acuña, DF–FCEN–UBA · September 2026</p>
+
+<p class="lead">Can the massless gravitons of the metric \(g\) mix with those of a second dynamical metric \(f\) and produce massive spin-2 particles that behave as dark matter? I took my own bigravity calculation and used two agents to extend it to the <em>chameleon</em> case, \(\beta_n\to\beta_n(\phi)\), with a general relative lapse \(c(t)\) and background ratio \(\xi(t)\). For every result I recorded where it comes from and checked it along a path that shares no code with the one that produced it.</p>
+
+<div class="links">
+  <a href="informe/informe_proyecto_final.pdf">Report (PDF, in Spanish)</a>
+  <a href="PROVENANCE.md">Provenance</a>
+  <a href="AGENTS.md">How to reproduce it with an agent</a>
+  <a href="verificaciones/">Checks</a>
+  <a href="codigo/">My notebook (clean run)</a>
+  <a href="material/">All material</a>
+</div>
+
+<h2>The model</h2>
+<div class="eq">\[
+S=\frac{M_g^2}{2}\!\int\!\sqrt{-g}R[g]+\frac{M_f^2}{2}\!\int\!\sqrt{-f}R[f]+M_g^2m^2\!\int\!\sqrt{-g}\sum_{n=0}^{4}\beta_n(\phi)\,e_n\!\big(\sqrt{g^{-1}f}\big)-\tfrac12\!\int\!\sqrt{-g}(\partial\phi)^2+S_m\!\left[A^2(\phi)g\right]
+\]</div>
+<p>The backgrounds are \(ds_g^2=-dt^2+a^2d\vec x^2\) and \(ds_f^2=\xi^2(t)\,[-c^2(t)dt^2+a^2d\vec x^2]\). My starting notes cover standard bigravity with \(c=1\) and constant \(\xi\). The goal is the stress-energy tensor at second order in perturbations.</p>
+
+<h2>How the work was done</h2>
+<div class="flow">
+  <div><b>My notes</b>standard theory + <em>Next steps</em></div>
+  <div class="c"><b>Claude</b>writes Secs. 7–11 of the notes and 55 sympy checks</div>
+  <div class="x"><b>Codex</b>audits the notes 4 times (11 → 16 → 20 → 17 issues)</div>
+  <div><b>My model code</b>xPand, \(c=1\), constant \(\xi\)</div>
+  <div class="c"><b>A/B</b>same prompt to both agents: rules for \(R_{\mu\nu}[f]\)</div>
+  <div class="x"><b>Codex</b>re-derives 1711.04655 and audits my notebook</div>
+  <div><b>My general code</b><code>codigo/Perturbaciones_Chameleon.nb</code></div>
+  <div class="v"><b>Independent checks</b><code>verificaciones/run_all.sh</code></div>
+  <div class="c"><b>Claude</b>sign fix, \(c(t)\), tensors with \(c\neq1\), clean run of my notebook</div>
+</div>
+<figure>
+  <img src="informe/figs/timeline.png" alt="Timeline of the work by lane: me, Claude, Codex">
+  <figcaption>Timeline, reconstructed from file modification dates.</figcaption>
+</figure>
+
+<h2>Results, and how much I trust each one</h2>
+<p>Notation: \(J=\beta_1+2\beta_2\xi+\beta_3\xi^2\), \(Z=\beta_1+(1+c)\beta_2\xi+c\beta_3\xi^2\), \(\kappa=M_f^2/M_g^2\), \(\Delta=H-\xi H_f\).</p>
+<div class="table-wrap"><table>
+<tr><th>Result</th><th>Who produced it</th><th>Independent check</th><th>Status</th></tr>
+<tr><td>Backgrounds of \(g\) and \(f\), Klein–Gordon, conservation</td><td>me (xPand), with the \(f\) geometry designed with the agents</td><td>re-derived from the action in components; with the old sign of \(\dot\rho\) the constraint fails (negative control)</td><td class="st ok">verified</td></tr>
+<tr><td>Generalised Bianchi constraint</td><td>me · Claude's notes · 1702.04490</td><td>the three forms are identical (sympy, 7/7 PASS)</td><td class="st ok">verified</td></tr>
+<tr><td>\(c(t)\)</td><td>me · Claude's notes</td><td>from the action (Mathematica, no xAct) and inside my notebook (residual 0)</td><td class="st ok">verified</td></tr>
+<tr><td>Linear tensor sector with \(c\neq1\), \(\xi(t)\), and \(m_{\rm M}^2\)</td><td>me (<code>EqTg</code>) + component block in my notebook</td><td><code>derivacion_TT_general.m</code>: 10 PASS; matches <code>EqTg</code> and the notes' mass</td><td class="st ok">verified</td></tr>
+<tr><td>Vectors, scalar no-ghost</td><td>Claude's notes; Codex re-derived 1711.04655</td><td>171 checks by Codex; Claude <em>copied</em> \(\kappa_1,\Sigma\) from the paper</td><td class="st warn">partial</td></tr>
+<tr><td>Dark matter from \(\mathcal G\to\mathcal M\) conversion</td><td>only Claude's notes</td><td>4 audits, 7 issues still open</td><td class="st bad">not verified</td></tr>
+</table></div>
+
+<p><b>Constraint.</b> With \(\beta_n(\phi)\), the branch dichotomy \(J(H-\xi H_f)=0\) of standard bigravity is replaced by an inhomogeneous constraint. The Hubble-rate mismatch is driven by the rolling chameleon, not by matter:</p>
+<div class="eq">\[
+J\,(H-\xi H_f)=-\tfrac13\,\dot\phi\,\big(\beta_1'+3\beta_2'\xi+3\beta_3'\xi^2+\beta_4'\xi^3\big),\qquad
+c-1=\frac{\mathcal P-\Delta\,\xi H_f}{\widetilde W}
+\]</div>
+<p><b>Tensor sector for general \(c(t)\), \(\xi(t)\).</b> The \(f\)-graviton propagates on the light cone of \(f\), and the mass terms close on \(h-\gamma\):</p>
+<div class="eq">\[
+\ddot\gamma+\Big(3H+2\tfrac{\dot\xi}{\xi}-\tfrac{\dot c}{c}\Big)\dot\gamma+c^2\tfrac{k^2}{a^2}\gamma+m_\gamma^2(\gamma-h)=0,\qquad
+m_{\rm M}^2=m_h^2+m_\gamma^2=-\frac{m^2Z\,(c+\kappa\xi^2)}{\kappa\xi}
+\]</div>
+<p>For \(c\neq1\) the gradient matrix \(\mathrm{diag}(1,c^2)\) does not commute with the mass matrix. So no constant basis decouples \(\mathcal G\) and \(\mathcal M\): there is a mixing channel \(\propto k^2(c^2-1)\) on top of the one driven by \(\dot\theta\). This is the starting point of the second-order calculation.</p>
+
+<h2>What I learned about the agents</h2>
+<div class="two">
+<figure>
+  <img src="informe/figs/auditorias.png" alt="Issues per audit and per topic">
+  <figcaption>Background issues disappear over the audits. The total does not go down: the issues migrate to phenomenology.</figcaption>
+</figure>
+<ul>
+  <li><b>Cross-auditing helps but does not converge by itself.</b> Every fix brings new claims.</li>
+  <li><b>Copying instead of deriving:</b> one of Claude's notebooks loads formulas from the paper and then "checks" against them.</li>
+  <li><b>Numerics where they do not belong:</b> checks on a single numerical curve; a plot of two trivial straight lines.</li>
+  <li><b>Invented references</b> in the derivation guide.</li>
+  <li><b>Silent failures:</b> a patch by Codex failed its own checks and still wrote the file.</li>
+  <li><b>What worked:</b> giving the agents my own code as the model; A/B with the same prompt; exact zeros from a clean kernel plus negative controls; re-deriving the key results along a path that shares no code; running the whole notebook from scratch, which exposed three latent bugs.</li>
+</ul>
+</div>
+
+<h2>Reproduce</h2>
+<pre>git clone &lt;this repo&gt; &amp;&amp; cd &lt;repo&gt;/verificaciones
+bash run_all.sh      # ~3 min: 7/7 + 6/6 + 21/21 + 34/34 + 17/17 PASS, and the c=1 tensor sector closes</pre>
+<p>Environment: Python 3.12 (sympy 1.12, numpy, scipy, mpmath); Mathematica 12.1.1 for the two component derivations, with no xAct needed. The notebooks use xAct (xTensor 1.2.0, xPert 1.0.6, xPand 0.4.3).</p>
+
+<h2>Next steps</h2>
+<ol>
+  <li>Vector and scalar sectors in my notebook, with the exact \(\delta\sqrt{g^{-1}f}\) (Sylvester equation).</li>
+  <li>\(T_{\mu\nu}\) at second order on top of the verified tensor equations.</li>
+  <li>Only then, conversion and relic abundance for a concrete \(\beta_n(\phi)=\bar\beta_n e^{-\lambda\phi}\).</li>
+</ol>
+
+<footer>
+References: De Felice, Mukohyama, Uzan, arXiv:1702.04490 · De Felice, Mukohyama, Oliosi, Watanabe, arXiv:1711.04655 · Dimastrogiovanni, Fasiello, Gümrükçüoğlu, arXiv:2108.06722 · Marzola, Raidal, Urban, arXiv:1708.04253.
+</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piloto del control</title>
+<script>
+MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+:root {
+  --fondo: #ffffff; --texto: #1a1a1a; --suave: #666; --linea: #e3e3e3;
+  --acento: #e8a05c; --enlace: #a5651e; --caja: #fafafa;
+  --verde: #2f6b3c; --verde-fondo: #f3f9f4; --rojo: #c0504d; --rojo-fondo: #fcf5f5;
+}
+body { font: 16px/1.7 -apple-system, "Helvetica Neue", sans-serif;
+       max-width: 900px; margin: 2rem auto; padding: 0 16px;
+       color: var(--texto); background: var(--fondo); }
+h1 { font-size: 1.65rem; margin-bottom: .2rem; }
+.subtitulo { color: var(--suave); margin-top: 0; }
+h2 { font-size: 1.28rem; margin-top: 2.6rem; border-bottom: 2px solid var(--acento);
+     padding-bottom: .2rem; }
+h3 { font-size: 1.05rem; margin-top: 1.7rem; }
+a { color: var(--enlace); }
+code { background: #f2f2f2; padding: .05em .3em; font-size: .84em; border-radius: 3px; }
+.simple { border-left: 4px solid var(--acento); background: var(--caja);
+          padding: .7rem 1.1rem; margin: 1.1rem 0; }
+.simple::before { content: "En palabras simples"; display: block; font-weight: 600;
+                  font-size: .78rem; text-transform: uppercase; letter-spacing: .04em;
+                  color: var(--enlace); margin-bottom: .2rem; }
+.conclusion { border-left: 4px solid var(--verde); background: var(--verde-fondo);
+              padding: .7rem 1.1rem; margin: 1.1rem 0; }
+.conclusion::before { content: "Conclusión"; display: block; font-weight: 600;
+                      font-size: .78rem; text-transform: uppercase; letter-spacing: .04em;
+                      color: var(--verde); margin-bottom: .2rem; }
+.abierto { border-left: 4px solid var(--rojo); background: var(--rojo-fondo);
+           padding: .7rem 1.1rem; margin: 1.1rem 0; }
+.tabla { overflow-x: auto; margin: 1rem 0; }
+table { border-collapse: collapse; width: 100%; font-size: .86rem; }
+th, td { border: 1px solid var(--linea); padding: .4rem .55rem; text-align: left; vertical-align: top; }
+th { background: var(--caja); }
+td.num { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .82rem; white-space: nowrap; }
+tr.grupo td { background: #f5f3ee; font-weight: 600; }
+.cite { color: #888; font-size: .8rem; }
+.small { font-size: .86rem; color: #444; }
+figure { margin: 1.2rem 0; }
+figure img { width: 100%; height: auto; border: 1px solid var(--linea); border-radius: 4px; }
+figcaption { font-size: .86rem; color: #444; margin-top: .4rem; }
+nav.indice { background: var(--caja); border: 1px solid var(--linea); padding: .8rem 1.2rem;
+             border-radius: 6px; font-size: .93rem; }
+nav.indice ol { margin: .3rem 0 0; padding-left: 1.3rem; }
+ul, ol { padding-left: 1.3rem; }
+li { margin: .25rem 0; }
+footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--linea);
+         color: var(--suave); font-size: .82rem; }
+/* texto justificado (con guiones, en castellano) */
+p, li, dd, figcaption, blockquote { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+</style>
+</head>
+
+<body>
+
+<h1>El piloto del control: λφ⁴ con q = 120</h1>
+<p class="subtitulo">Primera simulación del proyecto: qué se corrió, qué salió, cómo se compara con
+Dufaux et al. (2007) y qué implica para las corridas con campos de gauge.</p>
+
+<p class="small">¿No sos de física? La <a href="bitacora.html">bitácora</a> explica el
+proyecto desde cero (sección 3.1 para esta corrida). Todos los números y figuras de esta página
+salen del notebook <a href="../code/analisis_corridas.py"><code>code/analisis_corridas.py</code></a>
+y están registrados en <code>provenance/</code>.</p>
+
+<nav class="indice">
+<strong>Contenido</strong>
+<ol>
+<li><a href="#resumen">Resumen y conclusiones</a></li>
+<li><a href="#corrida">Qué se corrió</a></li>
+<li><a href="#calidad">¿Es confiable la simulación?</a></li>
+<li><a href="#resonancia">La resonancia: teoría de Floquet contra simulación</a></li>
+<li><a href="#gws">Las ondas gravitacionales: cuándo y dónde se producen</a></li>
+<li><a href="#dufaux">Comparación con Dufaux et al. (2007)</a></li>
+<li><a href="#implicancias">Qué implica para el resto del proyecto</a></li>
+<li><a href="#abierto">Qué queda abierto</a></li>
+</ol>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="resumen">1. Resumen y conclusiones</h2>
+
+<div class="simple">
+Antes de agregar campos de gauge hacía falta comprobar que sabemos simular el caso sin gauge
+y que el resultado coincide con lo publicado. Esta corrida lo confirma. El campo que recibe
+la energía crece donde y a la velocidad que dice la teoría. Las ondas gravitacionales se
+producen cuando lo dice la teoría. Y el espectro final coincide con el de Dufaux y
+colaboradores dentro de lo que se puede pedir. También aparecieron dos cosas que hay que
+tener en cuenta en las corridas siguientes: la amplitud real del inflatón y la resolución
+de la red.
+</div>
+
+<div class="conclusion">
+<ol>
+<li><strong>El control está validado.</strong>
+  <ul>
+  <li>Pico de h²Ω_GW hoy: 3,8×10⁻¹¹ a 9,7×10⁷ Hz. Dufaux da ∼3×10⁻¹¹ a ∼1,2×10⁸ Hz, ya llevado a
+  nuestro λ.</li>
+  <li>Cola infrarroja: ∝ f<sup>0,96</sup>, contra ∝ f en Dufaux.</li>
+  <li>Etapas en el tiempo: la resonancia termina en x ≈ 95 (Dufaux: 90) y el espectro alcanza
+  su nivel alto en x ≈ 150 (igual que en Dufaux).</li>
+  </ul></li>
+<li><strong>La teoría de Floquet funciona al 0,4 %</strong>, siempre que se use la amplitud
+<em>real</em> del inflatón. Durante el primer instante, cuando la expansión todavía no se comporta
+como radiación, el inflatón gana energía conforme: su amplitud conforme pasa de 1 a
+<strong>A = 1,138</strong>. Con esa amplitud, Floquet da μ_max = 0,199 en k ≈ 1,42 y se mide 0,200.
+Con amplitud 1 daría 0,175, un 14 % de diferencia que parecía un error y no lo es.</li>
+<li><strong>Las GWs siguen a los gradientes.</strong>
+  <ul>
+  <li>Durante la resonancia ρ_GW crece como e<sup>4μτ</sup>: se mide 0,76, contra 4μ = 0,80.</li>
+  <li>La producción deja de ser exponencial cuando la energía de gradiente llega al 1 % del total
+  (τ ≈ 84). La estimación a mano del fin de la resonancia da τ ≈ 77.</li>
+  <li>La mitad de las GWs finales ya está hecha en τ ≈ 130. El resto sale de la fase turbulenta,
+  sobre todo a escalas cada vez más chicas.</li>
+  </ul></li>
+<li><strong>N = 128 no alcanza para el ultravioleta.</strong> La red llega hasta K ≈ 24 (en
+unidades de la amplitud conforme). El espectro de Dufaux recién cae en K ≈ 50. La parte UV del
+espectro (y el 22 % que el pico sigue creciendo al final) depende de la resolución. El pico,
+la cola IR y los tiempos no dependen de ella.</li>
+</ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="corrida">2. Qué se corrió</h2>
+
+<p>El modelo <code>lphi4</code> de CosmoLattice 2.0, V = λφ⁴/4 + g²φ²χ²/2, con los parámetros
+acordados en <a href="analisis-parametros.html#tabla">Parámetros comparables</a>, salvo el
+tamaño de la red:</p>
+
+<div class="tabla"><table>
+<tr><th>parámetro</th><th>valor</th><th>comentario</th></tr>
+<tr><td>λ, q = g²/λ</td><td class="num">9×10⁻¹⁴, 120</td><td>q = 120 es el caso de referencia de Dufaux et al.</td></tr>
+<tr><td>φ inicial, φ̇ inicial</td><td class="num">5,6964×10¹⁸ GeV, −4,86735×10³⁰ GeV²</td><td>fin de la inflación (ε = 1)</td></tr>
+<tr><td>N, kIR</td><td class="num">128, 0,25</td><td>la corrida final prevista es N = 256 con la misma kIR (misma caja)</td></tr>
+<tr><td>kCutOff, dt, tMax</td><td class="num">4, 0,01, 300</td><td>unidades de programa (ω★ = √λ f★)</td></tr>
+<tr><td>GWs, semilla</td><td class="num">sí (proyector 1), 1234</td><td>semilla fija: la corrida se puede repetir exacta</td></tr>
+</table></div>
+
+<p>Duró <strong>1 h 17 min</strong> usando los 8 núcleos de la máquina (el build usa OpenMP; 795 % de CPU) y usó
+<strong>318 MB</strong> de memoria. Archivo de entrada:
+<a href="../code/lphi4_piloto_N128.in"><code>code/lphi4_piloto_N128.in</code></a>; salidas:
+<code>data/lphi4_piloto_N128/</code>.</p>
+
+<p><strong>Unidades.</strong> Todo está en unidades de programa: los campos en unidades de f★ (el φ
+inicial), el tiempo τ es el tiempo conforme por ω★ = √λ f★, y k es el número de onda comóvil en
+unidades de ω★. Como en este modelo el código usa tiempo conforme (α = 1), la variable natural es
+el campo conforme a·χ.</p>
+
+<!-- ============================================================ -->
+<h2 id="calidad">3. ¿Es confiable la simulación?</h2>
+
+<figure>
+<img src="../figures/lphi4_piloto_N128/fondo.png" alt="Factor de escala, a', ecuación de estado y error de Friedmann">
+<figcaption>Factor de escala, su derivada, ecuación de estado w y error relativo del vínculo de
+Friedmann.</figcaption>
+</figure>
+
+<ul>
+<li><strong>Conservación de la energía:</strong> el error relativo del vínculo de Friedmann nunca
+superó 2,1×10⁻⁴ y al final vale 3×10⁻⁵. Es el control estándar de que el integrador funciona.</li>
+<li><strong>Expansión de radiación:</strong> a crece linealmente en tiempo conforme y el promedio
+de w tiende a 1/3, como tiene que pasar para un inflatón cuártico.</li>
+<li><strong>Un transitorio inicial:</strong> en los primeros τ ≈ 10, a′ oscila fuerte y ρa⁴ pasa
+de 0,375 a 0,418 y ahí se queda. Es el efecto del término a″/a, que Dufaux et al. mencionan en su
+nota 7: al principio el universo todavía no se expande como radiación. Este detalle resulta
+importante en la sección siguiente.</li>
+</ul>
+
+<figure>
+<img src="../figures/lphi4_piloto_N128/energia.png" alt="Reparto de la energía entre términos y rho a^4">
+<figcaption>Izquierda: fracción de la energía en cada término, promediada sobre una oscilación.
+Derecha: ρa⁴, constante después del transitorio.</figcaption>
+</figure>
+
+<p>El reparto de la energía muestra las tres etapas del precalentamiento:</p>
+<ul>
+<li>hasta τ ≈ 60, toda la energía está en el inflatón homogéneo;</li>
+<li>entre τ ≈ 60 y 100 aparecen de golpe la interacción y los gradientes;</li>
+<li>después se estabiliza, con ≈ 20 % en gradientes de cada campo.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="resonancia">4. La resonancia: teoría de Floquet contra simulación</h2>
+
+<p>Mientras χ es chico, cada modo del campo conforme X_k = a·χ_k obedece la ecuación de Lamé
+(Greene et al. 1997; Dufaux et al. 2007, ec. 68):</p>
+\[ X_k'' + \left[\kappa^2 + q\,A^2\,\mathrm{cn}^2(A\tau;\,1/\sqrt2)\right] X_k = 0 , \]
+<p>donde A es la amplitud conforme del inflatón. Las soluciones crecen como e<sup>μ_k τ</sup>. El
+exponente de Floquet μ_k se calcula numéricamente en el notebook. Si se cambia A, se reescalan a
+la vez el tiempo y el momento: μ_A(κ) = A·μ₁(κ/A).</p>
+
+<p><strong>El hallazgo.</strong> Suponiendo A = 1 (el valor de partida), Floquet predice
+μ_max = 0,175. En la simulación el modo más rápido crece con μ = 0,200, un 14 % más rápido. La
+explicación es el transitorio de la sección 3. Después de él, la energía conforme del inflatón
+es ρa⁴ = A⁴/4 = 0,418, o sea <strong>A = 1,138</strong>. Con esa amplitud:</p>
+
+<div class="tabla"><table>
+<tr><th></th><th>Floquet, A = 1</th><th>Floquet, A = 1,138</th><th>simulación (τ entre 20 y 55)</th></tr>
+<tr><td>μ máximo</td><td class="num">0,175</td><td class="num">0,199</td><td class="num">0,200</td></tr>
+<tr><td>dónde (k)</td><td class="num">1,24</td><td class="num">1,42</td><td class="num">1,25–1,5 (bins de 0,25)</td></tr>
+<tr><td>borde superior de la banda</td><td class="num">≈ 1,8</td><td class="num">≈ 2,05</td><td class="num">entre 2,0 y 2,25</td></tr>
+</table></div>
+
+<figure>
+<img src="../figures/lphi4_piloto_N128/mu_por_modo.png" alt="Exponente de crecimiento por modo, teoría contra simulación">
+<figcaption>Exponente de crecimiento de cada modo de χ, medido como la pendiente de
+½ ln(a²Δ_χ) entre τ = 20 y 55 (puntos), contra Floquet con amplitud 1 (punteado) y con la
+amplitud medida (línea). La curva reescalada reproduce el pico, el borde de la banda y hasta la
+segunda banda angosta en k ≈ 3,8.</figcaption>
+</figure>
+
+<p>Hay dos desvíos:</p>
+<ul>
+<li><strong>Modos con k ≲ 0,75</strong> crecen más rápido que lo que predice Floquet. Son pocos
+vectores de onda (la caja tiene pocos modos largos) y la causa no está identificada (ver
+<a href="#abierto">abierto</a>).</li>
+<li><strong>Modos con k ≳ 4</strong> crecen aunque están fuera de la banda. Arrancan casi de cero,
+porque las fluctuaciones iniciales se cortan en kCutOff = 4, y crecen alimentados por los modos
+resonantes: eso es re-dispersión no lineal.</li>
+</ul>
+
+<figure>
+<img src="../figures/lphi4_piloto_N128/campos.png" alt="Inflatón conforme y crecimiento de las fluctuaciones">
+<figcaption>Izquierda: el inflatón conforme a·⟨φ⟩ oscila con amplitud ≈ 1,14 hasta τ ≈ 80 y
+después pierde amplitud porque le cede energía a χ. Derecha: dispersión conforme de χ y de δφ. δφ
+arranca más tarde y crece más rápido, porque lo genera χ².</figcaption>
+</figure>
+
+<figure>
+<img src="../figures/lphi4_piloto_N128/espectros_campos.png" alt="Espectros de potencia de phi y chi en el tiempo">
+<figcaption>Espectros de potencia conformes a²Δ(k) de δφ y χ, de claro (temprano) a oscuro (tarde).
+En χ, la franja gris es la banda de Floquet con la amplitud medida. El pico nace ahí y después el
+espectro se ensancha hacia k grandes.</figcaption>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="gws">5. Las ondas gravitacionales: cuándo y dónde se producen</h2>
+
+<p>La fuente de las GWs es la parte transversa y sin traza de ∂_iφ∂_jφ + ∂_iχ∂_jχ: sin gradientes
+no hay ondas. Por eso la pregunta "¿cuándo se producen las GWs?" equivale a "¿cuándo se vuelven
+importantes los gradientes?".</p>
+
+<figure>
+<img src="../figures/lphi4_piloto_N128/tiempos_gws.png" alt="Crecimiento de chi, gradientes y GWs normalizados">
+<figcaption>(a·rms χ)², fracción de energía en gradientes y ρ_GW/ρ, cada una dividida por su
+máximo. Las líneas verticales marcan los momentos de la tabla.</figcaption>
+</figure>
+
+<div class="tabla"><table>
+<tr><th>momento</th><th>τ</th><th>x = Aτ</th><th>definición</th></tr>
+<tr><td>inicio de la resonancia</td><td class="num">≈ 8</td><td class="num">≈ 9</td><td>el modo del centro de la banda crece ×10</td></tr>
+<tr><td>fin de la resonancia, estimado</td><td class="num">≈ 77</td><td class="num">≈ 87</td><td>(1/2μ) ln[1/(q⟨X²⟩_banda)], con el ruido inicial en la banda</td></tr>
+<tr><td>gradientes &gt; 1 % de la energía</td><td class="num">84</td><td class="num">95</td><td>medido</td></tr>
+<tr><td>50 % de las GWs finales</td><td class="num">130</td><td class="num">148</td><td>medido</td></tr>
+<tr><td>90 % de las GWs finales</td><td class="num">203</td><td class="num">231</td><td>medido</td></tr>
+</table></div>
+
+<ul>
+<li><strong>Fase lineal.</strong> Durante la resonancia ρ_GW/ρ crece con tasa 0,757, contra
+4μ = 0,80. El factor 4 es el esperado: la fuente es cuadrática en χ, así que h ∝ e<sup>2μτ</sup>
+y ρ_GW ∝ h′² ∝ e<sup>4μτ</sup>. Dufaux et al. lo formulan como ρ_gw ∝ n², con n el número de
+partículas.</li>
+<li><strong>Fin de la resonancia.</strong> La estimación a mano (τ ≈ 77) y el momento en que los
+gradientes llegan al 1 % (τ ≈ 84) coinciden a menos de 10 %. Eso da una regla práctica para
+anticipar cuándo empieza la producción importante de GWs en los otros modelos: depende del
+ruido inicial en la banda, de q y de μ.</li>
+<li><strong>Después de la resonancia.</strong> La mayor parte de las GWs <em>no</em> se hace
+durante la resonancia exponencial, sino en la fase no lineal que sigue: la mitad recién está en
+τ ≈ 130. Lo mismo dicen Dufaux et al., que la atribuyen a la fragmentación de las burbujas de
+campo.</li>
+</ul>
+
+<figure>
+<img src="../figures/lphi4_piloto_N128/mapa_gws.png" alt="Mapa del espectro de GWs en tiempo y escala">
+<figcaption>dΩ_GW/d ln k en el plano (τ, k). Los puntos marcan cuándo cada escala alcanzó la mitad
+de su valor final: las escalas cercanas al pico se llenan en τ ≈ 120–130 y las más chicas bastante
+después (cascada hacia el UV). Línea punteada vertical: gradientes &gt; 1 %.</figcaption>
+</figure>
+
+<p><strong>Propagación y horizonte.</strong> El horizonte comóvil k_H = a′/a vale 0,83 en τ = 0 y
+cae por debajo del modo más largo de la caja (kIR = 0,25) antes de τ ≈ 3. Toda la producción
+ocurre en modos que están muy adentro del horizonte, es decir, en ondas que se propagan
+libremente.</p>
+
+<!-- ============================================================ -->
+<h2 id="dufaux">6. Comparación con Dufaux et al. (2007)</h2>
+
+<p>Dufaux, Bergman, Felder, Kofman y Uzan (<span class="cite">arXiv:0707.0875, §VI.B</span>)
+simularon este mismo modelo con q = 120, pero con λ = 10⁻¹⁴, en una red de 256³ y hasta x = 240.
+Para comparar hay que traducir tres cosas:</p>
+<ul>
+<li><strong>Tiempo y momento.</strong> Ellos usan x = √λ φ₀ τ y K = k/(√λ φ₀). Lo que fija la
+dinámica es la amplitud conforme después del transitorio: la de ellos es 1,15<sup>1/4</sup> φ₀
+≈ 1,036 φ₀ (su a⁴ρ ≃ 1,15 λφ₀⁴/4) y la nuestra 1,138 f★. Se compara en x = Aτ y K = k/A; el
+3,6 % de ellos se ignora.</li>
+<li><strong>Frecuencia.</strong> A igual K, f ∝ λ<sup>1/4</sup> (su ec. 72), así que su pico se
+corre de 7×10⁷ Hz a 7×10⁷ × 9<sup>1/4</sup> ≈ 1,2×10⁸ Hz.</li>
+<li><strong>Amplitud.</strong> (Ω_gw)_p ∼ α(aH/k★)² ∝ 1/(a_p² K★²) (su ec. 73) no depende de λ
+directamente: solo importa cuándo se alcanza el pico. Con λ nueve veces mayor, el ruido inicial es
+tres veces mayor y la resonancia termina unas 6 unidades de x antes. El efecto sobre la amplitud es
+del orden del 10 %. Para pasar a hoy se usa su convención (ec. 47, h²Ω = 9,3×10⁻⁶ (Ω_gw)_p).</li>
+</ul>
+
+<figure>
+<img src="../figures/lphi4_piloto_N128/comparacion_dufaux.png" alt="Comparación con las figuras 4, 5 y 6 de Dufaux et al.">
+<figcaption>Izquierda: el espectro acumulado de x = 90 a 240 cada 10, como la fig. 6 de Dufaux
+(línea naranja: su máximo; zona gris: momentos que esta red no tiene). Centro: el espectro hoy con
+su convención; el cuadrado es su pico y el rombo el mismo pico llevado a nuestro λ. Derecha: ρ_GW/ρ
+contra x, como su fig. 5.</figcaption>
+</figure>
+
+<div class="tabla"><table>
+<tr><th>qué</th><th>este piloto</th><th>Dufaux et al.</th><th>veredicto</th></tr>
+<tr><td>pico hoy</td><td class="num">3,8×10⁻¹¹ en 9,7×10⁷ Hz</td><td class="num">∼3×10⁻¹¹ en ∼7×10⁷ Hz<br>(→ 1,2×10⁸ Hz con λ = 9×10⁻¹⁴)</td><td>coincide: 25 % en amplitud, 20 % en frecuencia, con un espectro muy plano cerca del pico</td></tr>
+<tr><td>cola IR al final</td><td class="num">∝ f<sup>0,96</sup></td><td class="num">∝ f</td><td>coincide</td></tr>
+<tr><td>fin de la resonancia</td><td class="num">x ≈ 95 (gradientes 1 %)</td><td class="num">x ≃ 90</td><td>coincide; lo esperado es que el nuestro termine ~6 antes por el λ mayor, dentro de la imprecisión de ambas definiciones</td></tr>
+<tr><td>(Ω_gw)_p en el pico, x ≈ 90</td><td class="num">6,8×10⁻⁹</td><td class="num">∼10⁻⁹</td><td>compatible: en ese momento crece ×2 por unidad de x, y el nuestro va unas unidades de x adelantado</td></tr>
+<tr><td>(Ω_gw)_p en el pico, x ≈ 150</td><td class="num">2,8×10⁻⁶</td><td class="num">∼5×10⁻⁶</td><td>mismo orden (factor 1,8)</td></tr>
+<tr><td>(Ω_gw)_p en el pico, al final</td><td class="num">4,1×10⁻⁶ (x = 336)</td><td class="num">el pico no cambia después de x ∼ 150</td><td><strong>difiere</strong>: el nuestro crece 22 % entre x ≈ 170 y el final, y el pico se corre de K ≈ 2 a K ≈ 3</td></tr>
+<tr><td>ρ_GW en x = 150</td><td class="num">52 % del final</td><td class="num">"aumenta levemente" después</td><td>el nuestro sigue creciendo más; ver la fila anterior</td></tr>
+<tr><td>K máximo de la red</td><td class="num">24</td><td class="num">el espectro cae en K ≈ 50</td><td><strong>a N = 128 falta resolución UV</strong></td></tr>
+</table></div>
+
+<p><strong>Lectura.</strong> Todo lo que depende de la física de la resonancia coincide: la
+amplitud y la frecuencia del pico, la cola IR, los tiempos y la tasa de crecimiento. Lo único que
+no coincide es lo que pasa en el UV al final: el espectro sigue creciendo y el pico se corre. Nuestra
+red corta en K ≈ 24, cuando el espectro de Dufaux recién cae en K ≈ 50. Con ese corte, la cascada
+hacia el UV se acumula en los últimos modos de la red en lugar de seguir de largo. Es el
+comportamiento típico de una red sin resolución suficiente, y se confirma o descarta con N = 256.</p>
+
+<!-- ============================================================ -->
+<h2 id="implicancias">7. Qué implica para el resto del proyecto</h2>
+
+<ol>
+<li><strong>El control sirve como referencia.</strong> El resultado reproduce la literatura, así
+que cualquier diferencia que aparezca en <code>lphi4U1</code> y <code>lphi4SU2U1</code> se puede
+atribuir al modelo y no a cómo corremos el código.</li>
+<li><strong>Medir A en cada modelo.</strong> El emparejamiento de los modelos gauge supone que el
+inflatón arranca en el mismo estado. Si es así, el transitorio y A = 1,138 deberían salir
+iguales en los tres. Hay que medirlo en cada corrida: si A difiere, las bandas se corren y los μ
+cambian, y la comparación deja de ser justa. El notebook ya calcula A para cualquier corrida.</li>
+<li><strong>Las bandas de referencia son las reescaladas.</strong> Para el chequeo de SU(2)×U(1)
+(en qué k crecen los campos gauge), hay que comparar con Floquet reescalado por A:
+κ★ ≈ 1,42 y no 1,24. Si la hipótesis q_eff = q_A + q_B es correcta, los campos gauge deberían
+crecer en k ≈ 1,42·√2 en las unidades de esos modelos. Esa traducción hay que rehacerla con A antes
+de la corrida.</li>
+<li><strong>Resolución: N = 128 alcanza para el pico, no para el UV.</strong>
+  <ul>
+  <li>Para el pico, la cola IR y los tiempos, N = 128 con kIR = 0,25 alcanza.</li>
+  <li>Para el UV hace falta k_max ≳ 55, es decir N = 256 con la misma kIR. Eso es ≈ 2,5 GB para
+  <code>lphi4</code> (8 veces los 318 MB de hoy) y más para los modelos gauge. Con los ≈ 3 GB de
+  esta máquina no entra.</li>
+  <li>Una alternativa barata: N = 128 con kIR = 0,5. Llega al UV pero pierde la mitad de la
+  cola IR, y la banda resonante (0,5–2) queda en el borde de la caja.</li>
+  </ul></li>
+<li><strong>Duración.</strong> El 90 % de las GWs está hecho en τ ≈ 200, así que tMax = 300 (y su
+traducción para los modelos gauge, tMax ≈ 212 en sus unidades) alcanza para el pico. Una corrida N = 256
+tardaría del orden de 8 veces más (≈ 10 h para <code>lphi4</code>, con los mismos 8 núcleos, que ya
+se usan todos). Acelerarla requiere más núcleos, por ejemplo con MPI en otra máquina.</li>
+<li><strong>Frecuencia hoy ≈ 10⁸ Hz.</strong> Como ya se sabía para este modelo, la señal está
+muy por encima de las bandas de LIGO y LISA. Para el proyecto importa la comparación entre
+modelos, no la detectabilidad.</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="abierto">8. Qué queda abierto</h2>
+
+<div class="abierto">
+<ul>
+<li><strong>El UV al final de la corrida:</strong> ¿el crecimiento del 22 % del pico y su
+corrimiento a K ≈ 3 son físicos o un artefacto de la red? Se contesta con N = 256, o comparando con
+N = 64 para ver la tendencia.</li>
+<li><strong>Los modos más largos (k ≲ 0,75)</strong> crecen más rápido que lo que predice Floquet
+durante la fase lineal. Puede ser un efecto de pocos modos, un acople no lineal temprano o un
+resto del transitorio. No afecta los resultados principales, pero conviene entenderlo antes de
+comparar la parte IR de los espectros entre modelos.</li>
+<li><strong>Una sola realización:</strong> con una sola semilla no hay estimación de la varianza
+estadística. Repetir el piloto con dos o tres semillas (cada una tarda ≈ 1 h 20 min) da barras
+de error para los números de la tabla de Dufaux.</li>
+</ul>
+</div>
+
+<footer>
+Parte del <a href="https://github.com/TomasCiccarella/GWs-IA-Final---CosmoLattice-studies-with-gauge">repositorio
+del proyecto final</a>. Análisis: <a href="../code/analisis_corridas.py"><code>code/analisis_corridas.py</code></a>
+(<code>marimo edit code/analisis_corridas.py</code>; al ejecutarse guarda las figuras en
+<code>figures/lphi4_piloto_N128/</code>). Entrada: <a href="../code/lphi4_piloto_N128.in"><code>code/lphi4_piloto_N128.in</code></a>.
+Números y afirmaciones: <code>provenance/</code>. Referencia: J. F. Dufaux, A. Bergman, G. Felder,
+L. Kofman y J.-P. Uzan, <em>Theory and numerics of gravitational waves from preheating after
+inflation</em>, Phys. Rev. D 76, 123517 (2007), arXiv:0707.0875.
+Páginas relacionadas: <a href="bitacora.html">bitácora</a>,
+<a href="analisis-parametros.html">parámetros comparables</a>,
+<a href="bases-teoricas-modelos-gauge.html">bases teóricas</a>.
+</footer>
+
+</body>
+</html>

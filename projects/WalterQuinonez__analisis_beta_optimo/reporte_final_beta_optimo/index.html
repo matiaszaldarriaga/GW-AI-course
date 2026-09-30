@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fórmula de β óptimo — síntesis del proyecto</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --fg:#20201d; --muted:#5a564c; --line:#e4ded0;
+    --accent:#8a4b2e; --accent-soft:#f2e3d5; --card:#ffffff; --code-bg:#f1ede2;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#17140f; --fg:#ece7dc; --muted:#a89f8c; --line:#3a352a;
+      --accent:#e0a374; --accent-soft:#2e2013; --card:#1f1b14; --code-bg:#241f17;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--fg); margin:0; padding:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:840px; margin:0 auto; padding:2.5rem 1.25rem 5rem;}
+  header.hero{padding-block:1rem 2rem; border-bottom:1px solid var(--line); margin-bottom:2rem;}
+  h1{font-size:1.9rem; margin:0 0 .4rem; letter-spacing:-.01em;}
+  .subtitle{color:var(--muted); font-size:1.05rem; margin:0 0 1rem;}
+  .byline{color:var(--muted); font-size:.85rem;}
+  .tldr{
+    background:var(--accent-soft); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.25rem; margin-top:1.25rem; font-size:.98rem;
+  }
+  .tldr b{color:var(--accent)}
+  h2{
+    font-size:1.3rem; margin-top:3rem; padding-top:.75rem; border-top:1px solid var(--line);
+    scroll-margin-top:1rem;
+  }
+  h3{font-size:1.05rem; color:var(--muted); margin-top:1.75rem;}
+  p{margin:.75rem 0;}
+  code{
+    background:var(--code-bg); padding:.1em .4em; border-radius:5px; font-size:.9em;
+    word-break:break-word;
+  }
+  a{color:var(--accent);}
+  .figure{margin:1.5rem 0;}
+  .figure img{max-width:100%; border-radius:8px; border:1px solid var(--line); display:block;}
+  .figure figcaption{font-size:.85rem; color:var(--muted); margin-top:.5rem;}
+  .fig-row{display:flex; gap:1rem; flex-wrap:wrap;}
+  .fig-row .figure{flex:1 1 260px; margin:1rem 0;}
+  table{border-collapse:collapse; width:100%; margin:1rem 0; font-size:.92rem;}
+  caption{caption-side:bottom; text-align:left; color:var(--muted); font-size:.82rem; margin-top:.4rem;}
+  th,td{border-bottom:1px solid var(--line); padding:.5rem .6rem; text-align:right;}
+  th:first-child,td:first-child{text-align:left;}
+  th{color:var(--muted); font-weight:600; font-size:.82rem; text-transform:uppercase; letter-spacing:.02em;}
+  tr:last-child td{border-bottom:none;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:1rem 1.25rem; margin:1rem 0;
+  }
+  .prov{font-size:.85rem; color:var(--muted); background:var(--code-bg); border-radius:8px; padding:.6rem .9rem; margin:.75rem 0;}
+  .prov b{color:var(--fg)}
+  .limits li{margin:.4rem 0;}
+  .eq{
+    font-family:"Cambria Math",Cambria,Georgia,serif; font-size:1.15rem; text-align:center;
+    background:var(--code-bg); border-radius:8px; padding:1rem; margin:1.25rem 0;
+  }
+  footer{color:var(--muted); font-size:.85rem; margin-top:4rem; border-top:1px solid var(--line); padding-top:1.5rem;}
+  .toc{columns:2; gap:2rem; font-size:.92rem;}
+  .toc a{display:block; padding:.15rem 0;}
+  @media (max-width:520px){ .toc{columns:1} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Una fórmula barata para el β óptimo de una crossbar memristiva</h1>
+  <p class="subtitle">Síntesis del hilo de trabajo — de la idea original a un reemplazo validado del grid-search</p>
+  <p class="byline">Walter Quiñonez · trabajo realizado con Claude Code · proyecto final del curso</p>
+  <div class="tldr">
+    <b>En una frase:</b> el softmax de una crossbar memristiva es <code>softmax(β·I)</code>,
+    y elegir β por grid-search+K-fold es caro. Este proyecto encuentra una fórmula de dos
+    factores (<code>σ_W</code>, dispersión de pesos; <code>paso_medio</code>, granularidad de
+    la curva potenciación/depresión) que predice el β óptimo <b>antes de entrenar</b>, la
+    valida contra 30 grid-searches reales completos (R²=0.930), y la usa para reemplazar la
+    grilla ciega de <code>search_best_beta()</code> por una búsqueda angosta centrada en la
+    predicción — bajando el <em>regret</em> medido de 10.19 puntos porcentuales a 0.08.
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#motivacion">1. El problema</a>
+  <a href="#teoria">2. Punto de partida teórico</a>
+  <a href="#sesgos">3. Idea original y sus sesgos</a>
+  <a href="#validacion6">4. Primera validación (6 curvas)</a>
+  <a href="#formula">5. La fórmula combinada</a>
+  <a href="#escala">6. Reconfirmación a escala (18→30 curvas)</a>
+  <a href="#payoff">7. Payoff práctico: búsqueda mejorada</a>
+  <a href="#produccion">8. Integración a producción</a>
+  <a href="#robustez">9. Chequeos de robustez adicionales</a>
+  <a href="#sintesis">10. Síntesis cuantitativa</a>
+  <a href="#limitaciones">11. Limitaciones honestas</a>
+  <a href="#conclusion">12. Conclusión y recomendación</a>
+  <a href="#procedencia">13. Registro de procedencia</a>
+</nav>
+
+<h2 id="motivacion">1. El problema</h2>
+<p>
+En una red neuronal implementada sobre una crossbar memristiva, cada corriente de salida
+<code>I_i = Σ_j (G⁺_ij − G⁻_ij)·V_j</code> pasa por una no linealidad
+<code>O_i = f(β·I_i)</code> (softmax o tanh, según la capa). El valor de β determina si esa
+no linealidad satura o queda demasiado chata, y el accuracy final de la red depende
+fuertemente de él. El único método disponible en el código base para elegirlo,
+<code>search_best_beta()</code>, es un grid-search con K-fold: cientos de entrenamientos
+cortos por cada β candidato. La pregunta de este proyecto: <b>¿se puede estimar un β cercano
+al óptimo sin entrenar nada</b>, usando solo propiedades de la curva de
+potenciación/depresión (P/D) del dispositivo memristivo?
+</p>
+
+<h2 id="teoria">2. Punto de partida teórico</h2>
+<p>
+<a href="../papers/Reporte_beta_optimo_analitico.pdf">Reporte_beta_optimo_analitico.pdf</a>
+(reporte previo del proyecto) deriva una fórmula candidata modelando la corriente como una
+suma de <code>N</code> términos aproximadamente independientes (Teorema Central del Límite),
+siguiendo el mismo esquema <code>I=ΣW_ij·V_j</code>, <code>f=tanh(β·I)</code> que
+Prezioso&nbsp;et&nbsp;al. (<i>Nature</i> 521, 61, 2015) atribuyen a la recomendación de
+LeCun&nbsp;et&nbsp;al. (<i>Efficient Backprop</i>, 1998):
+</p>
+<div class="eq">σ_I = √N · σ_W · V_rms &nbsp;&nbsp;→&nbsp;&nbsp; β_óptimo ≈ κ / (√N · σ_W · V_rms)</div>
+<p>
+con <code>σ_W</code> el desvío estándar de los pesos <code>W=G⁺−G⁻</code> bajo la
+inicialización aleatoria del código, <code>V_rms</code> el RMS de los voltajes de entrada
+(píxeles de MNIST), y <code>κ</code> una constante <code>O(1–10)</code>. Prezioso et al. no
+publican la fórmula concreta que usaron; esta es una reconstrucción razonada del mismo
+argumento.
+</p>
+
+<h2 id="sesgos">3. Idea original y sus sesgos</h2>
+<p>
+<code>analisis_beta_optimo.py</code> (raíz del repo) fue el primer intento de poner a prueba
+esta idea con un Monte Carlo de pesos y corrientes. <a href="../analisis_corrientes_beta_optimo/reporte_correlacion_corrientes_beta.pdf">analisis_corrientes_beta_optimo/</a>
+encontró que ese script tenía dos sesgos que rompían la premisa <code>E[I]≈0</code> que
+asume la fórmula: armaba los pesos como una matriz combinatoria <code>pot[i]−dep[j]</code> en
+vez de sortear <code>G⁺</code> y <code>G⁻</code> independientemente (como hace la red real vía
+<code>G0_initialization</code>), y muestreaba los voltajes de los valores únicos de píxel en
+vez de respetar que el 81&nbsp;% de los píxeles reales de MNIST son exactamente 0.
+</p>
+<div class="figure">
+  <img src="../analisis_corrientes_beta_optimo/corrientes_antes_despues_beta.png" alt="Corrientes antes/después de corregir los sesgos del Monte Carlo">
+  <figcaption>Distribución de corriente Monte Carlo antes y después de corregir los dos sesgos identificados.</figcaption>
+</div>
+
+<h2 id="validacion6">4. Primera validación (6 curvas reales)</h2>
+<p>
+<a href="../validacion_formula_beta_optimo/reporte_validacion_beta_optimo.pdf">validacion_formula_beta_optimo/</a>
+puso la fórmula (κ=1) a prueba contra <b>6 grid-searches reales completos</b> (100 épocas, 20
+series, 5 folds cada uno) — no una búsqueda reducida. Resultado: <b>acierta el orden de
+magnitud</b> (κ implicado ≈0.97, dentro de <code>O(1–10)</code>) y <b>la dirección entre
+ventanas de conductancia distintas</b> (σ_W más grande ⇒ β óptimo más chico), pero
+<b>no explica</b> la dependencia con el número de pulsos <code>p</code> de la curva P/D a INL
+nominal fijo: β óptimo sube claramente con <code>p</code> mientras σ_W se mantiene casi
+constante por diseño del experimento.
+</p>
+<div class="fig-row">
+  <div class="figure">
+    <img src="../validacion_formula_beta_optimo/beta_pred_vs_empirico.png" alt="beta predicho vs empirico">
+    <figcaption>β predicho (κ=1) vs. β óptimo empírico, 6 curvas.</figcaption>
+  </div>
+  <div class="figure">
+    <img src="../validacion_formula_beta_optimo/beta_pred_vs_sigmaW.png" alt="beta optimo vs sigma_W">
+    <figcaption>β óptimo empírico vs. σ_W — acierta la dirección entre grupos de INL, no dentro de un grupo.</figcaption>
+  </div>
+</div>
+
+<h2 id="formula">5. La fórmula combinada</h2>
+<p>
+<a href="../formula_beta_optimo_propuesta/reporte_formula_beta_optimo_propuesta.pdf">formula_beta_optimo_propuesta/</a>
+combina <code>σ_W</code> (predice la dirección entre ventanas de conductancia) con el
+<b>paso medio</b> de la curva de potenciación, <code>mean(|pot[i+1]−pot[i]|)</code> (predice
+la dirección con <code>p</code>), usando el Monte Carlo ya corregido:
+</p>
+<div class="eq">β_óptimo ≈ 1.12×10⁻¹¹ · σ_W^(−3.02) · paso_medio^(−0.64)</div>
+<table>
+  <caption>Regresión log-log sobre los mismos 6 puntos de la Sección 4.</caption>
+  <thead><tr><th>Modelo</th><th>R²</th></tr></thead>
+  <tbody>
+    <tr><td>solo σ_W</td><td>0.678</td></tr>
+    <tr><td>solo paso_medio</td><td>0.273</td></tr>
+    <tr><td><b>combinado</b></td><td><b>0.947</b></td></tr>
+  </tbody>
+</table>
+<div class="fig-row">
+  <div class="figure">
+    <img src="../formula_beta_optimo_propuesta/comparacion_R2_v2.png" alt="comparacion R2 modelos">
+    <figcaption>R² de cada modelo (solo σ_W, solo paso medio, combinado).</figcaption>
+  </div>
+  <div class="figure">
+    <img src="../formula_beta_optimo_propuesta/beta_pred_combinada_vs_empirico_v2.png" alt="beta predicho combinado vs empirico">
+    <figcaption>β predicho por la ecuación combinada vs. β óptimo empírico.</figcaption>
+  </div>
+</div>
+<p>
+El propio reporte es explícito sobre el riesgo de sobreajuste con solo 6 puntos y 2 valores
+de INL — motivo por el cual el siguiente paso fue escalar la muestra.
+</p>
+
+<h2 id="escala">6. Reconfirmación a escala (18 → 30 curvas)</h2>
+<p>
+<a href="../reconstruccion_beta_optimo_18curvas/reporte_reconstruccion_beta_optimo.pdf">reconstruccion_beta_optimo_18curvas/</a>
+y luego
+<a href="../reconstruccion_beta_optimo_30curvas/reporte_formula_beta_optimo_30curvas.pdf">reconstruccion_beta_optimo_30curvas/</a>
+repiten el mismo método (sin reentrenar nada — Monte Carlo barato + reconstrucción
+determinista de logits ya guardados) sobre 18 y luego 30 curvas P/D reales (10 valores de INL
+nominal × 3 recuentos de pulsos). Los coeficientes se mantienen prácticamente idénticos al
+triplicar-y-medio la muestra:
+</p>
+<table>
+  <thead><tr><th></th><th>6 curvas</th><th>18 curvas</th><th>30 curvas</th></tr></thead>
+  <tbody>
+    <tr><td>exponente de σ_I</td><td>−3.02</td><td>−3.06</td><td>−3.00</td></tr>
+    <tr><td>exponente de paso_medio</td><td>−0.64</td><td>−0.61</td><td>−0.62</td></tr>
+    <tr><td>R² (log-log)</td><td>0.947</td><td>0.938</td><td>0.930</td></tr>
+  </tbody>
+</table>
+<div class="fig-row">
+  <div class="figure">
+    <img src="../reconstruccion_beta_optimo_30curvas/comparacion_R2_todos_los_modelos_30curvas.png" alt="comparacion R2 30 curvas">
+    <figcaption>La forma literal de Prezioso/LeCun (exponente fijo en −1) da R²=0.276; dejar el exponente libre + paso_medio da R²=0.930.</figcaption>
+  </div>
+  <div class="figure">
+    <img src="../reconstruccion_beta_optimo_30curvas/ecuacion_final_vs_empirico_30curvas.png" alt="ecuacion final vs empirico 30 curvas">
+    <figcaption>β predicho por la ecuación final vs. β óptimo empírico, 30 curvas.</figcaption>
+  </div>
+</div>
+<p>
+Más importante que el R²: para cada una de las 30 curvas se buscó, en la <b>grilla real de 40
+β</b> ya corrida, el punto más cercano a la predicción de la fórmula, y se comparó su accuracy
+contra el pico real de esa curva completa. <b>Las 30 de 30 curvas alcanzan ≥99&nbsp;% de su
+accuracy pico</b> (media 99.95&nbsp;%, mínimo 99.38&nbsp;%) usando la β predicha, sin ninguna
+búsqueda — a pesar de que el error puntual de la predicción llega hasta ±32&nbsp;% en algunas
+curvas, porque el pico accuracy-vs-β es ancho (meseta) cerca del óptimo.
+</p>
+<div class="figure">
+  <img src="../reconstruccion_beta_optimo_30curvas/formula_vs_grilla_real.png" alt="formula vs grilla real">
+  <figcaption>β predicho (línea) contra el punto de la grilla real de 40 β más cercano, para las 30 curvas.</figcaption>
+</div>
+
+<h2 id="payoff">7. Payoff práctico: una búsqueda mejorada</h2>
+<p>
+<a href="../mejora_search_best_beta/informe_mejora_search_best_beta.pdf">mejora_search_best_beta/</a>
+usa este resultado para reemplazar la grilla ciega de <code>search_best_beta()</code>
+(en producción: solo 2 puntos, β∈{1,300}) por una grilla log-espaciada angosta, centrada en
+la predicción de la fórmula, con expansión automática si el óptimo cae en el borde. Validación
+empírica (10 corridas por método, 2 combos representativos, midiendo <i>regret</i> real contra
+el ground truth de 100 épocas ya guardado):
+</p>
+<table>
+  <thead><tr><th>Método</th><th>regret medio</th><th>regret mediana</th><th>regret peor caso</th><th>tiempo</th></tr></thead>
+  <tbody>
+    <tr><td>(a) original, como se usa hoy</td><td>10.19 pp</td><td>10.19 pp</td><td>20.30 pp</td><td>11.8 s</td></tr>
+    <tr><td>(b) original, defaults de fábrica</td><td>0.24 pp</td><td>0.03 pp</td><td>2.16 pp</td><td>118.2 s</td></tr>
+    <tr><td><b>(c) mejorado (fórmula + semillas controladas)</b></td><td><b>0.08 pp</b></td><td><b>0.04 pp</b></td><td><b>0.45 pp</b></td><td>218.2 s</td></tr>
+  </tbody>
+</table>
+<p>
+El método (a) —el que corre hoy en <code>Crossbar_train_experimento_beta_por_capa.py</code>—
+elige β=1 en el combo más no lineal probado, perdiendo ~20 puntos porcentuales de accuracy
+frente al óptimo real. Validado además contra los 30 combos completos (no solo los 2 de la
+tabla): la fórmula predice el β óptimo real dentro de un factor 1.26× en el peor de los 30
+casos (mediana del cociente predicho/real: 0.948; 100&nbsp;% de los casos dentro de un factor
+2×).
+</p>
+
+<h2 id="produccion">8. Integración a producción</h2>
+<p>
+Los pasos 3–7 documentan la fórmula validándose contra evidencia real, siempre como código
+nuevo que importa la clase base sin tocarla (ver Sección 13). Una vez validada la mejora de la
+Sección 7 como un parche aparte (subclase <code>MemDNNMejorado</code> en
+<code>mejora_search_best_beta/search_best_beta_mejorado.py</code>), se integró directamente en
+la clase base <code>MemDNN</code> (<code>MemCrossbarClass_beta_por_capa.py</code>): un método
+nuevo <code>search_best_beta_mejorado()</code> con las mismas fórmulas y correcciones (common
+random numbers, grilla log-espaciada centrada en <code>beta_pred_formula()</code>, meseta
+1-SE), y <code>Crossbar_train_experimento_beta_por_capa.py</code> ya lo usa por defecto cuando
+<code>optimize_beta=True</code>, en vez del <code>search_best_beta()</code> original (que
+queda en el archivo, sin uso por defecto). Es la <b>única</b> modificación al código base de
+todo este hilo, y es posterior —y consecuencia directa— de la validación de las Secciones 4 a
+7, no una premisa de ellas.
+</p>
+
+<h2 id="robustez">9. Chequeos de robustez adicionales</h2>
+<p>
+Tres estudios adicionales pusieron a prueba los bordes del resultado anterior:
+<a href="../validacion_rango_conductancia/informe_validacion_rango_conductancia.pdf">validacion_rango_conductancia/</a>
+(sensibilidad al ratio Gmax/Gmin),
+<a href="../mejora_estimacion_beta_INL_2e1_a_1e3/informe_estimacion_beta_INL.pdf">mejora_estimacion_beta_INL_2e1_a_1e3/</a>
+(reestimación en la zona de transición de INL) y
+<a href="../reconstruccion_logits_val_INL_1e-2_p_100_beta1/">reconstruccion_logits_val_INL_1e-2_p_100_beta1/</a>
+(sanity check: los logits reconstruidos por Monte Carlo coinciden con los logits reales
+guardados del entrenamiento). Ver el reporte de cada carpeta para el detalle — no se repiten
+aquí para no duplicar contenido que ya está documentado con su propia procedencia.
+</p>
+
+<h2 id="sintesis">10. Síntesis cuantitativa del hilo completo</h2>
+<p>Progresión del ajuste a medida que creció la muestra y se corrigió el método:</p>
+<table>
+  <thead><tr><th>Paso</th><th>n curvas</th><th>Modelo</th><th>R² (log-log)</th></tr></thead>
+  <tbody>
+    <tr><td>Validación fórmula analítica (solo σ_W)</td><td>6</td><td>β=κ/σ_W</td><td>0.678</td></tr>
+    <tr><td>Fórmula propuesta (σ_W + paso medio)</td><td>6</td><td>2 factores</td><td>0.947</td></tr>
+    <tr><td>Reconstrucción, escala 3×</td><td>18</td><td>2 factores</td><td>0.938</td></tr>
+    <tr><td>Reconstrucción, escala 5×</td><td>30</td><td>2 factores</td><td>0.930</td></tr>
+  </tbody>
+  <caption>Los coeficientes del modelo de 2 factores casi no cambian entre 6, 18 y 30 curvas — la señal más fuerte de que no es un sobreajuste a la muestra chica inicial.</caption>
+</table>
+
+<h2 id="limitaciones">11. Limitaciones honestas</h2>
+<ul class="limits">
+  <li><b>N fijo.</b> Las 30 curvas comparten <code>N=784</code> (fan-in de MNIST); el
+  exponente teórico de N (<code>N^(−1/2)</code>) no se vuelve a poner a prueba con esta data.</li>
+  <li><b>Un solo dataset.</b> Fashion-MNIST está disponible pero no se usó en este hilo.</li>
+  <li><b>Ajuste in-sample.</b> Los R² se calculan sobre las mismas curvas usadas para ajustar
+  los coeficientes; no hay un conjunto de validación separado — la estabilidad de los
+  coeficientes al escalar 6→18→30 es la evidencia disponible en su lugar, no un reemplazo
+  formal de un held-out set.</li>
+  <li><b>Grilla de β de 40 puntos, espaciados de a 50.</b> El β óptimo empírico contra el que
+  se ajusta y valida tiene ese error de resolución incorporado.</li>
+  <li><b>Solo β global.</b> Ni la fórmula ni la búsqueda mejorada optimizan β distinto por
+  capa (eso es un hilo de trabajo separado, <code>exploracion_beta_capa_oculta_100/</code>,
+  fuera del alcance de esta entrega).</li>
+  <li><b>Errores puntuales de hasta ±32%.</b> Se traducen en pérdida de accuracy despreciable
+  (≤1%) porque el pico accuracy-vs-β es ancho, pero eso no es lo mismo que decir que la
+  fórmula es precisa en β — es precisa en el resultado práctico que importa.</li>
+</ul>
+
+<h2 id="conclusion">12. Conclusión y recomendación</h2>
+<p>
+La fórmula <code>β_óptimo ≈ C · σ_I^(−3) · paso_medio^(−0.6)</code> (constante y exponentes
+según la Sección 6) predice, sin entrenar nada, un β que alcanza ≥99&nbsp;% del accuracy pico
+en las 30 configuraciones reales disponibles, y usada para centrar <code>search_best_beta()</code>
+baja el regret medio de 10.19pp a 0.08pp con un costo de cómputo despreciable frente a un
+entrenamiento completo. <b>Recomendación:</b> usarla como pre-filtro barato antes de una
+búsqueda angosta de verificación — no como reemplazo de la búsqueda en un solo paso sin
+verificar, dado que sigue siendo evidencia sobre un único régimen (arquitectura SP, N=784,
+MNIST, ratio Gmax/Gmin=10).
+</p>
+
+<h2 id="procedencia">13. Registro de procedencia</h2>
+<p>
+Cada carpeta del hilo (Secciones 3–7 y 9) tiene, en su propio reporte, una tabla
+"registro de códigos usados" con: qué script es nuevo, qué función se importó sin modificar y
+de qué archivo, y qué dato de entrada se usó. Esta página enlaza esas tablas en vez de
+repetirlas. El código base (<code>MemCrossbarClass_beta_por_capa.py</code>,
+<code>Crossbar_train_experimento_beta_por_capa.py</code>) no fue modificado por ninguno de
+esos reportes de validación — la única modificación es la integración a producción descripta
+en la Sección 8, posterior a toda la validación.
+</p>
+<div class="prov">
+  Mapa completo del repositorio, entorno y cómo reproducir cada paso:
+  <a href="../README.md"><b>README.md</b></a> (raíz del repositorio).
+</div>
+
+<footer>
+  Generado a partir de reportes ya existentes y verificados de este mismo proyecto; no se
+  corrió ningún entrenamiento ni Monte Carlo nuevo para armar esta síntesis. Ver
+  <a href="reporte_final_beta_optimo.pdf">reporte_final_beta_optimo.pdf</a> para la versión
+  en PDF de esta misma página.
+</footer>
+
+</div>
+</body>
+</html>

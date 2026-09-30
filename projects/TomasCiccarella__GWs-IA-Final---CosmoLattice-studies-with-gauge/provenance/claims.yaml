@@ -1,0 +1,809 @@
+claims:
+- id: complejo-guarda-re-im
+  statement: 'En CosmoLattice las dos componentes de un escalar complejo son Re(phi) e Im(phi) (no phi_0,
+    phi_1 = sqrt(2) Re, sqrt(2) Im), y |phi| = norm(fldCS). Con eso la normalizacion del codigo es consistente
+    con el Art I y no hay un factor sqrt(2) perdido en lphi4U1.h.
+
+    '
+  verificacion: 'Cálculo simbólico (sympy) que rehace el kernel y la energía cinética del código y los compara con Art I ecs. 9 y 280; además, la corrida U(1) con q = 120 reproduce el μ de Floquet del control (0.20-0.23), lo que no pasaría con un √2 perdido.'
+  evidence:
+  - code/verificar_variables_de_programa.py::check (bloque 7, kernel y energia cinetica)
+  - CosmoLattice/include/CosmoInterface/definitions/energies.h::kineticCS (norm2(pi)*a^-6, sin 1/2)
+  - CosmoLattice/include/CosmoInterface/evolvers/kernels/complexscalarkernels.h::get (-a^(3+alpha)/2 *
+    derivCS)
+  - Figueroa et al. 2006.15122 (Art I), ecs. 9 y 280
+  numbers: []
+- id: defaults-no-comparables
+  statement: 'Los .in por defecto de lphi4 y lphi4U1 no son una comparacion controlada: lphi4U1 arranca
+    con 4 veces la densidad de energia homogenea de lphi4 (su inflaton equivale a un singlete sqrt(2)
+    veces mas grande) y con q_A* ~ 1370 contra q = 300. Para aislar el efecto del campo gauge hay que
+    dividir cmplx_field_initial_norm y cmplx_momentum_initial_norm por sqrt(2) y elegir gU1s = sqrt(q
+    lambda).
+
+    '
+  verificacion: 'Recalculado desde los .in por defecto con code/verificar_variables_de_programa.py::comparar_defaults (energía homogénea y q_A* a partir de los parámetros), contra Art I ecs. 463 y 476.'
+  evidence:
+  - code/verificar_variables_de_programa.py::comparar_defaults
+  - Figueroa et al. 2006.15122 (Art I), ec. 476 y ec. 463
+  numbers:
+  - qA_lphi4U1_default
+  - rho_ratio_U1_over_lphi4_default
+  - cmplx_norm_matched
+  - cmplx_momentum_matched
+  - gU1s_matched_q300
+- id: su2u1-defaults-qA-igual-qB
+  statement: 'Los defaults de lphi4SU2U1 (gSU2s = 2 gU1s) implementan q_A* = q_B*, la eleccion del Art
+    I sec. 8.3, con q ~ 1370.
+
+    '
+  verificacion: 'Mismo script: q_A* y q_B* calculados de gU1s y gSU2s del .in por defecto, contra Art I sec. 8.3.'
+  evidence:
+  - code/verificar_variables_de_programa.py::comparar_defaults
+  - Figueroa et al. 2006.15122 (Art I), ec. 476 y sec. 8.3
+  numbers:
+  - qA_lphi4SU2U1_default
+  - qB_lphi4SU2U1_default
+- id: gauss-inicial-por-construccion
+  statement: 'La condicion inicial de u1initializer.h (pi_i = conj(k_eff_i)/|k_eff|^2 j_0) satisface la
+    ley de Gauss discreta exactamente, modo a modo.
+
+    '
+  verificacion: 'Demostración simbólica modo a modo (bloque 6 del script) y, en las corridas, violación relativa medida de la ley de Gauss en t = 0: 1e-11 (U(1)) y 1e-10 con vacío transversal.'
+  evidence:
+  - code/verificar_variables_de_programa.py::check (bloque 6)
+  - Figueroa et al. 2006.15122 (Art I), ecs. 298 y 455
+  numbers: []
+- id: su2-carga-inicial-nula
+  statement: La construccion de fluctuaciones de su2initializer.h (amplitudes iguales para ondas izquierda
+    y derecha, fases derechas fijadas por las demas, una frecuencia comun omega0) anula exactamente, modo
+    a modo, las cuatro cargas iniciales (U(1) y SU(2) a = 1,2,3). Con una frecuencia distinta por componente,
+    como escribe la ec. 442, no se anulan.
+  verificacion: 'Demostración simbólica de que las cuatro cargas se anulan (bloque 8) y contraejemplo explícito con frecuencias distintas por componente (ec. 442).'
+  evidence:
+  - code/verificar_variables_de_programa.py::modo_cero (bloque 8)
+  - CosmoLattice/include/CosmoInterface/initializers/su2initializer.h::addFluctuationsSU2DoubletFromPhases
+  - Figueroa et al. 2006.15122 (Art I), ecs. 447-453
+  numbers: []
+- id: su2-gauss-inicial-consistente
+  statement: En t = 0 los enlaces SU(2) son la identidad, la ley de Gauss no abeliana (ec. 388) se reduce
+    por color a la divergencia hacia atras de U(1), y su2initializer.h la resuelve igual que u1initializer.h.
+    El inicializador impone exactamente lo que mide gausslaws.h::checkSU2 despues del fix upstream f6b9c267
+    (un dx de mas en el medidor, que reportaba una violacion espuria).
+  verificacion: 'Álgebra simbólica (bloques 6 y 8) y medición: violación de Gauss SU(2) en t = 0 de 4e-10 (prueba de costo) y 1.5e-9 (prueba N = 64), a precisión de máquina tras el fix f6b9c267.'
+  evidence:
+  - code/verificar_variables_de_programa.py::check (bloques 6 y 8)
+  - CosmoLattice/include/CosmoInterface/initializers/su2initializer.h::initializeSU2
+  - CosmoLattice/include/CosmoInterface/definitions/gausslaws.h::checkSU2
+  - upstream cosmolattice commit f6b9c267 (2026-08-03)
+  - Figueroa et al. 2006.15122 (Art I), ecs. 388 y 455
+  numbers: []
+- id: su2u1-emparejado-con-control
+  statement: 'lphi4SU2U1 contiene al control lphi4: con SU2Doublet_initial_norm = 5.6964e18/sqrt(2), SU2Doublet_initial_momenta_norm
+    = -4.86735e30/sqrt(2) y qG = q, el modulo del doblete y el hijo singlete reproducen el inflaton y
+    el hijo chi de lphi4. Los defaults no: arrancan con 2.48 veces la energia del control.'
+  verificacion: 'Recalculado con comparar_defaults: energía homogénea y masas del doblete emparejado contra las del control; en las corridas, el inflatón de los tres modelos arranca con la misma energía (E_tot = 1.5 en unidades de programa).'
+  evidence:
+  - code/verificar_variables_de_programa.py::comparar_defaults
+  - Figueroa et al. 2006.15122 (Art I), ecs. 474-476; Manual ec. 90
+  numbers:
+  - rho_ratio_SU2U1_over_lphi4_default
+  - cmplx_norm_matched
+  - cmplx_momentum_matched
+  - gSU2s_matched_q300
+  - qG_matched
+  - gU1s_matched_q300
+- id: lphi4-in-es-fin-de-inflacion
+  statement: Los valores iniciales de lphi4.in v2.0 (5.6964e18 GeV, -4.86735e30 GeV^2) son exactamente
+    el estado de lambda*phi^4/4 con lambda = 9e-14 en el momento en que termina la inflacion (eps_H =
+    1). Los del Manual v1, iguales al doblete de lphi4SU2U1.in x sqrt(2), son de antes (eps_H = 0.67).
+  verificacion: 'Integración numérica independiente de la ecuación de fondo de λφ⁴/4 hasta ε_H = 1 (fin_inflacion_lphi4), comparada con los valores del .in a 5 cifras.'
+  evidence:
+  - code/analisis_parametros.py::fin_inflacion_lphi4
+  - CosmoLattice/models/parameter-files/lphi4.in
+  - Manual 2102.01031, listado de lphi4.in (lineas 25-26)
+  numbers:
+  - u_star_fin_inflacion
+  - uprime_star_fin_inflacion
+  - epsH_manual_v1
+- id: lambda-phi4-puro-excluido
+  statement: lambda*phi^4 puro normalizado al CMB da lambda ~ 1.4-2.3e-13, pero esta excluido por Planck
+    y BICEP/Keck (n_s ~ 0.946, r ~ 0.29). En el completamiento viable que usan el Art I y el Art II (T-model
+    con M <= 8.5 m_p) la lambda efectiva del minimo es ~1-3e-12.
+  verificacion: 'Cálculo de slow-roll (n_s, r) a N e-folds comparado con los límites publicados de Planck y BICEP/Keck citados en Art II sec. 7.2.'
+  evidence:
+  - code/analisis_parametros.py::lphi4_puro
+  - code/analisis_parametros.py::t_model
+  - 'Art II (2512.15627) sec. 7.2: r < 0.036 => M <~ 8.5 m_p'
+  numbers:
+  - lambda_lphi4_puro_N50
+  - lambda_lphi4_puro_N60
+  - ns_lphi4_puro_N55
+  - r_lphi4_puro_N55
+  - lambda_eff_Tmodel_M8p5_N60
+  - lambda_eff_Tmodel_M5_N60
+  - Lambda4_validacion_ArtII
+- id: q300-resonancia-debil
+  statement: q = 300 (lphi4.in por defecto) cae en el borde de una banda y da una resonancia debil y angosta
+    (mu = 0.082); q = 120, el caso principal de Dufaux et al. 2007, da mu = 0.175 con el pico en K ~ 1.24.
+  verificacion: 'Floquet de la ecuación de Lamé integrado numéricamente (RK4), contra la carta de estabilidad y los números de Dufaux et al. 2007 para q = 120 (ecs. 68-70).'
+  evidence:
+  - code/analisis_parametros.py::banda_principal
+  - Dufaux et al. 0707.0875, ecs. 68-70 y sec. VI B
+  numbers:
+  - floquet_q300
+  - floquet_q120
+  - bandas_K0_bordes
+- id: su2u1-qA-igual-qB-cambia-banda
+  statement: 'Si en SU(2)xU(1) se toma q_A = q_B = q como en el Art I, la resonancia gauge efectiva q_eff
+    = q_A + q_B = 2q cae en otra banda (para q = 120: q_eff = 240, crecimiento en K = 0). Para que sea
+    comparable con el control hay que tomar q_A = q_B = q/2. Esto depende de la afirmacion del Art I de
+    que ambos sectores resuenan juntos con q_eff, que el paper anuncia pero no demuestra.'
+  verificacion: 'Mismo cálculo de Floquet. La premisa del Art I (q_eff = q_A + q_B) quedó confirmada por la matriz de masas medida por el parche SU(2): la Z tiene m² = 240, es decir q = 120 = q_A + q_B (bitácora 3.5).'
+  evidence:
+  - code/analisis_parametros.py::banda_principal
+  - Art I (2006.15122), discusion posterior a la tabla 1
+  numbers:
+  - floquet_q240
+  - floquet_q60
+- id: parametros-comparables
+  statement: Con lambda = 9e-14, el inflaton en el estado de fin de inflacion, un unico canal resonante
+    con q = 120 en cada modelo y la red de lphi4 traducida por sqrt(2) a los modelos gauge, los tres modelos
+    arrancan igual y resuenan igual durante la fase lineal; las diferencias en el espectro de GWs deberian
+    venir del tipo de campo hijo.
+  verificacion: 'Confirmado en las corridas: el campo hijo o gauge que resuena llega al 1 % de la energía en τ = 68.1-68.4 en los tres modelos y crece con el mismo μ (0.20-0.21), con tres semillas en control y U(1).'
+  evidence:
+  - code/analisis_parametros.py::recomendacion
+  - code/analisis_parametros.py::traducir
+  - code/verificar_variables_de_programa.py::comparar_defaults
+  numbers:
+  - gU1s_rec_U1
+  - gU1s_rec_SU2U1
+  - gSU2s_rec_SU2U1
+  - kIR_gauge_rec
+  - tMax_gauge_rec
+  - dt_gauge_rec
+  - omegaStar_gauge_rec
+  - floquet_q120
+- id: piloto-lphi4-GWs-siguen-gradientes
+  statement: En el piloto las GWs crecen como e^(4 mu tau) durante la resonancia (tasa 0.76 contra 4mu
+    = 0.80) y dejan de crecer exponencialmente cuando la energia de gradiente llega al ~1 % (tau ~ 84),
+    cerca de la estimacion analitica del fin de la resonancia (tau ~ 77); la mitad de las GWs finales
+    esta hecha en tau ~ 130 y el 90 % en tau ~ 203.
+  verificacion: 'Pendiente medida de ρ_GW contra 4μ de Floquet (0.76 contra 0.80) y fin de la resonancia contra la estimación analítica (τ 84 contra 77).'
+  evidence:
+  - code/analisis_corridas.py::celdas de la seccion 5
+  numbers:
+  - piloto_tasa_GW_lineal
+  - piloto_t_grad_1pc
+  - piloto_t_nl_estimado
+  - piloto_t_GW_50
+  - piloto_t_GW_90
+  - piloto_rhoGW_final
+  - piloto_t_res
+- id: piloto-lphi4-resonancia-floquet
+  statement: En el piloto lphi4 (N=128, q=120) el campo hijo crece segun la teoria de Floquet (ecuacion
+    de Lame) al 0.4 % en el maximo, siempre que se use la amplitud conforme real del inflaton, A = 1.138,
+    que resulta del transitorio inicial en que a''/a no es despreciable; con amplitud 1 la diferencia
+    seria del 14 %.
+  verificacion: 'μ por modo medido en el espectro de χ contra Floquet con la amplitud conforme medida (acuerdo 0.4 %) y chequeo cruzado con dos implementaciones de Floquet (vectorizada y RK4).'
+  evidence:
+  - code/analisis_corridas.py::floquet_mu_vec
+  - code/analisis_parametros.py::floquet_mu (chequeo cruzado con amplitud 1)
+  - Dufaux et al. 2007 (arXiv:0707.0875), ec. 68 y nota 7
+  numbers:
+  - piloto_mu_medido_banda
+  - piloto_A_conforme
+  - piloto_mu_floquet_A
+- id: piloto-lphi4-valida-dufaux
+  statement: 'El piloto reproduce los resultados de Dufaux et al. 2007 para q = 120 en todo lo que depende
+    de la resonancia: pico hoy (3.8e-11 contra ~3e-11, frecuencia a 20 % tras escalar lambda^(1/4)), cola
+    IR ∝ f, fin de la resonancia en x ~ 90-95 y amplitud del pico en x ~ 150 del mismo orden.'
+  verificacion: 'Comparación cuantitativa con Dufaux et al. 2007 (sec. VI.B, figs. 4-6): altura y frecuencia del pico hoy, cola IR, fin de la resonancia. Es la validación externa del control.'
+  evidence:
+  - code/analisis_corridas.py::celdas de la seccion 6
+  - Dufaux et al. 2007 (arXiv:0707.0875), sec. VI.B, figs. 4, 5 y 6, ecs. 47, 72 y 73
+  numbers:
+  - piloto_h2Omega_pico_convDufaux
+  - piloto_f_pico_convDufaux
+  - dufaux_f_pico_reescalado
+  - piloto_pendiente_IR
+  - piloto_t_grad_1pc
+  - piloto_Omega_p_x90
+  - piloto_Omega_p_x150
+- id: piloto-N128-sin-resolucion-UV
+  statement: Con N = 128 y kIR = 0.25 la red llega solo a K ~ 24, cuando el espectro de Dufaux cae en
+    K ~ 50; el crecimiento del pico despues de x ~ 170 (22 %), que Dufaux no ve, probablemente es un efecto
+    de esa falta de resolucion y se confirma o descarta con N = 256.
+  verificacion: 'Comparación con el k de corte de Dufaux y prueba de convergencia posterior (bitácora 3.3): N = 128 con kIR = 0.5 cambia ρ_GW en −16 %, confirmando que el UV no está resuelto.'
+  evidence:
+  - code/analisis_corridas.py::celdas de la seccion 6
+  - Dufaux et al. 2007, fig. 6 y texto (el pico no cambia despues de x ~ 150)
+  numbers:
+  - piloto_K_max_red
+  - piloto_crec_pico_x170_fin
+  - piloto_Omega_p_fin
+  - piloto_rhoGW_x150_frac
+  - memoria_N256_estimada_GB
+  - piloto_memoria_MB
+  - piloto_runtime_min
+- id: integrador-lf-vv2-equivalentes
+  statement: Cambiar el integrador de LF a VV2 en el control lphi4 N=128 (misma semilla) no cambia la
+    resonancia ni los tiempos (< 0.1 %) y cambia el espectro de GWs entre 0.4 % (energia total) y 5 %
+    (pico en x ~ 150), diferencias propias de la fase turbulenta; el error de Friedmann con VV2 crece
+    lentamente hasta 7.7e-4.
+  verificacion: 'Dos corridas idénticas salvo el integrador, comparadas bin a bin y en el tiempo; error de Friedmann monitoreado en ambas.'
+  evidence:
+  - code/analisis_corridas.py::(ejecutado con CORRIDA=lphi4_piloto_N128 y CORRIDA=lphi4_control_N128_VV2)
+  - CosmoLattice include/CosmoInterface/evolvers/evolver.h:79 (LF prohibido con U(1) y GWs)
+  numbers:
+  - vv2_runtime_min
+  - vv2_friedmann_max
+  - vv2_mu_medido
+  - vv2_rhoGW_final
+  - vv2_h2Omega_pico_hoy
+  - vv2_Omega_p_x150
+  - vv2_crec_pico_x170_fin
+  - vv2_t_GW_90
+  - piloto_mu_medido_banda
+  - piloto_rhoGW_final
+  - piloto_Omega_p_x150
+  - piloto_crec_pico_x170_fin
+  - piloto_t_GW_90
+  - piloto_err_friedmann_max
+- id: convergencia-kmax-no-N
+  statement: 'En lphi4 VV2 (q = 120) lo que controla el espectro de GWs es el k maximo de la red, no N.
+    Con la caja fija (kIR = 0.25), bajar N por debajo de 128 corta la meseta del espectro (que llega a
+    k ~ 15-20) y la energia se apila en el borde UV: rho_GW sale x6.0 (N = 32), x2.5 (48), x1.75 (64),
+    x1.21 (96). Con N = 64 y kIR = 0.5 (mismo k maximo que N = 128) el espectro de GWs coincide dentro de
+    ~9 % rms y rho_GW a 0.3 %, 8.5 veces mas barato; se pierde el IR (chi ~25 % mas bajo en k < 1, sin el
+    modo k = 0.25). La resonancia arranca en tau = 88.5 en todos los casos. N = 128, kIR = 0.25 no esta
+    convergido en el UV: con kIR = 0.5 (k max 55) el espectro coincide a ~12 % en k 0.5-4 pero la meseta
+    k 5-20 baja un factor 1.1-3 y rho_GW un 16 %. Lo robusto es el pico y el IR (k <~ 4).
+
+    '
+  verificacion: 'Seis corridas del control con distinta N y kIR comparadas contra N = 128 (espectro rms y ρ_GW), más N = 128 con kIR = 0.5 como prueba de la zona UV.'
+  evidence:
+  - code/convergencia_N.py::main
+  - data/convergencia_N/resumen.json
+  numbers:
+  - conv_N32_rhoGW_rel
+  - conv_N48_rhoGW_rel
+  - conv_N64_rhoGW_rel
+  - conv_N96_rhoGW_rel
+  - conv_N64_kIR05_rhoGW_rel
+  - conv_N64_kIR05_gw_banda_rms
+  - conv_N64_kIR05_minutos
+  - conv_tau_res
+  - conv_N128_kIR05_rhoGW_rel
+  - conv_N128_kIR05_cociente_k05a4
+  - conv_N128_kIR05_cociente_k5a20
+- id: U1-semilla-transversal
+  statement: 'CosmoLattice (RandomWithMatter) arranca el U(1) con A = 0 y solo E longitudinal de Gauss;
+    los modos transversales se siembran a segundo orden. Con eso la resonancia gauge llega al 1 % en tau = 105
+    contra 68 del control. Agregando vacio transversal (parche u1_vacio_transversal) llega en 68, igual que
+    chi. En ambas corridas el campo magnetico crece a la tasa de Floquet q = 120 en k = 0.5-2: la diferencia es
+    solo la amplitud de la semilla.
+
+    '
+  verificacion: 'Parche validado antes de usarlo (Gauss en t = 0, ruido del inflatón idéntico, energía agregada contra la analítica) y μ por modo del espectro magnético contra Floquet q = 120 en las dos condiciones iniciales.'
+  evidence:
+  - CosmoLattice/include/CosmoInterface/initializers/u1initializer.h::initializeRandomWithMatterU1
+  - Figueroa et al. 2102.01031, ecs. 97-102
+  - code/comparar_modelos.py::main
+  - code/crecimiento_por_modo_U1.py::main
+  numbers:
+  - U1_def_tau_1pc
+  - U1_vT_tau_1pc
+  - control_N64_kIR05_tau_1pc
+  - U1_mu_B_banda
+  - U1_vT_masa2
+- id: U1-vT-espectro-GW
+  statement: 'Con vacio transversal y la misma red (N = 64, kIR = 0.5, una semilla), el espectro de GWs de
+    lphi4U1 en la parte convergida (k = 0.5-2.5) es 0.61-0.69 veces el del control; con la condicion de
+    CosmoLattice, 0.28-0.42. rho_GW total: +53 % (vacio transversal) y -29 % (CosmoLattice), dominado por
+    k > 4 no convergido. Falta variar la semilla.
+
+    '
+  verificacion: 'Repetido con tres semillas (claim U1-semillas): el cociente se sostiene (0.56-0.79). ρ_GW total marcado como no confiable por la prueba de convergencia.'
+  evidence:
+  - code/comparar_modelos.py::main
+  - data/comparacion_modelos.json
+  numbers:
+  - U1_vT_gw_cociente_k05a25
+  - U1_def_gw_cociente_k05a25
+  - U1_vT_rhoGW_rel
+  - U1_def_rhoGW_rel
+- id: SU2-vacio-transversal-mezcla
+  statement: 'CosmoLattice arranca SU(2) con los links en la identidad y solo E longitudinal (como U(1)).
+    El parche su2_vacio_transversal agrega vacio transversal. Con el doblete de fondo, A y el color B1 se
+    mezclan (tipo Z/foton): autoestados foton (m2 = 0), Z (m2 = 240) y dos W (m2 = 120). Generar cada campo
+    con su masa diagonal (v1) da un vacio que chapotea (B_U1 x3.6 en t = 0.7); con autoestados queda
+    estacionario como la referencia lphi4U1. Energia en t = 0 igual a la analitica (B 1.03, E 0.90).
+
+    '
+  verificacion: 'Dos pruebas cortas con la misma semilla (defecto y vacío transversal): ruido del doblete idéntico (2e-15), energía agregada contra la analítica (B 1.03), matriz de masas simétrica verificada por el programa, estacionariedad contra la referencia lphi4U1 y prueba ×1000 para salir del piso de redondeo (code/validar_vacio_su2.py).'
+  evidence:
+  - CosmoLattice/include/CosmoInterface/initializers/su2initializer.h::initializeSU2
+  - CosmoLattice/include/CosmoInterface/definitions/mattercurrents.h
+  - code/parches/su2_vacio_transversal.patch
+  - code/validar_vacio_su2.py::main
+  - data/prueba_su2_vacioT/validacion.json
+  numbers:
+  - SU2U1_matriz_masas
+  - SU2U1_autoestados_masa2
+  - SU2_vT_energia_t0_cociente
+  - SU2_vT_gauss
+  - SU2_vT_doblete_identico
+  - SU2_vT_estacionariedad
+- id: U1-semillas
+  statement: 'Con tres semillas (1234, 2345, 3456) el espectro de GWs de U(1) con vacio transversal en k = 0.5-2.5
+    es 0.66, 0.67 y 0.72 veces el del control (promedios: 0.56-0.79, medio 0.68). El tiempo de la resonancia
+    no depende de la semilla (desvio < 0.1). El espectro por bin varia hasta 34 % entre semillas del control.
+
+    '
+  verificacion: 'Tres semillas por modelo; la dispersión entre semillas del control (hasta 34 % por bin) se usa como barra de error.'
+  evidence:
+  - code/semillas_U1.py::main
+  - data/semillas/resumen.json
+  numbers:
+  - U1_vT_gw_cociente_3semillas
+  - semillas_dispersion
+- id: SU2U1-resultados
+  statement: 'En SU(2)xU(1) con vacio transversal (N = 64, una semilla) la combinacion Z + foton resuena como chi y
+    como A de U(1) (1 % en tau = 68, mu 0.225 por modo, Floquet q = 120). Las W crecen lento en la fase lineal
+    (mu de la energia 0.07, Floquet q = 60 da 0.12) y se disparan despues (1 % en tau = 117, mu 0.18 en tau 100-125),
+    cuando la Z ya es no lineal. Al final los gauge tienen 64 % de la energia (chi 48 %, A de U(1) 40 %), mitad
+    Z + foton y mitad W. Espectro de GWs en k = 0.5-2.5: 1.11 veces el control en promedio (0.64-1.92), 1.68 veces
+    U(1); rho_GW total 0.71 veces el control, dominado por k > 4 no convergido.
+
+    '
+  verificacion: 'Calidad numérica monitoreada (Gauss SU(2) ≤ 1.2e-6, U(1) ≤ 1.1e-9, Friedmann ≤ 4e-4); μ de la Z contra Floquet q = 120 y contra A de lphi4U1; separación Z/W con su término cruzado medido (≤ 0.1 %) y piso de redondeo acotado. Una sola semilla: el exceso de GWs se compara con la dispersión entre semillas del control.'
+  evidence:
+  - code/analisis_SU2U1.py::main
+  - code/crecimiento_por_modo_U1.py::main
+  - data/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/analisis.json
+  numbers:
+  - SU2U1_tau_1pc
+  - SU2U1_tau_10pc
+  - SU2U1_fraccion_final
+  - SU2U1_mu_energia
+  - SU2U1_floquet
+  - SU2U1_mu_Z_por_modo
+  - SU2U1_cruzado_y_piso
+  - SU2U1_gw
+  - SU2U1_gw_cocientes
+  - SU2U1_calidad
+  - SU2U1_costo
+- id: GWs-produccion
+  statement: 'En los tres modelos la energia en GWs crece en la fase lineal como el cuadrado de la del campo
+    (pendiente 1.76-1.88 veces la del campo; se espera 2). SU(2)xU(1) produce sus ondas antes: 25 % del final
+    (k <= 4) ya en tau = 100 y 80 % en tau = 120, cuando las W recien empiezan; el control 3 % y 48 %, U(1) 2 % y
+    35 %. El exceso cerca del pico no viene de las W. Normalizando por la energia transferida al cuadrado, U(1)
+    es 0.94 veces tan eficiente como el control (tiene menos ondas porque recibe menos energia) y SU(2)xU(1) 1.31.
+    Hoy el pico queda en h2 Omega ~ 1e-10 a ~6e7 Hz. Una semilla.
+
+    '
+  verificacion: 'Pendiente de ρ_GW contra la del campo (se espera 2, se mide 1.76-1.88 en los tres); épocas medidas con el espectro cada 5 τ usando que Ω_GW no cambia sin fuente; conversión a hoy con la misma función validada contra Dufaux en el piloto. Una semilla.'
+  evidence:
+  - code/produccion_gws.py::main
+  - data/produccion_gws.json
+  numbers:
+  - gws_fraccion_antes_tau100
+  - gws_tau_mitad
+  - gws_rho_tau60_75
+  - gws_SU2U1_sobre_otros
+  - gws_ritmo
+  - gws_eficiencia
+  - gws_hoy
+- id: forma-espectro
+  statement: 'La forma del espectro de GWs en la parte convergida (k <= 4) cambia con el campo gauge: el control
+    tiene una meseta de k = 2 a 4 (pendiente 0.09 +- 0.12), U(1) sube hacia el UV (0.55 +- 0.12) con el maximo en el
+    borde de lo convergido, y SU(2)xU(1) tiene un pico en k = 2, 1.7 veces la meseta del control, que cae con pendiente
+    -1.8. Del lado IR las pendientes son compatibles entre si (~1). La posicion del maximo no se puede comparar en
+    control y U(1) porque es una meseta o esta en el borde.
+
+    '
+  verificacion: 'Pendientes medidas en las tres semillas del control y de U(1): la dispersion entre semillas es la barra
+    de error. SU(2)xU(1) tiene una sola semilla, pero su pico (6.6e-6) esta 60 % por encima del maximo de las seis
+    corridas de control y U(1) (3.9-4.3e-6). Pendiente IR del control compatible con el piloto N = 128 (f^0.96).'
+  evidence:
+  - code/pendientes_espectro.py::main
+  - data/pendientes_espectro.json
+  numbers:
+  - forma_espectro
+figures:
+- file: informes/informe-definitivo.pdf
+  produced_by: code/generar_pdf.py::__main__ (desde paginas/informe-definitivo.html)
+  shows: El informe final pedido (5 paginas maximo, lo verifica el script) con texto y cinco figuras ya registradas
+    (figures/comparacion_modelos/control_vs_U1.png, figures/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/transferencia_energia.png
+    y ondas_gravitacionales.png, figures/produccion_gws/epocas_de_produccion.png, figures/pendientes_espectro.png).
+  from_scratch: Texto de resumen escrito para este informe con los numeros de provenance/numbers.json; hoja de estilo
+    de impresion.
+  from_library: weasyprint 70.0 (con pango y harfbuzz del sistema)
+  choices:
+  - Informe breve aparte en lugar de recortar la pagina completa, que no entra en 5 paginas.
+  supports:
+  - forma-espectro
+  - SU2U1-resultados
+  - GWs-produccion
+  - U1-semillas
+  - SU2-vacio-transversal-mezcla
+  - U1-semilla-transversal
+- file: informes/informe-extendido.pdf
+  produced_by: code/generar_pdf.py::__main__ (desde paginas/final-project.html)
+  shows: La pagina paginas/final-project.html en PDF (A4), con las mismas figuras, tablas y conclusiones.
+  from_scratch: Hoja de estilo de impresion (margenes, pie con numero de pagina, cortes de pagina).
+  from_library: weasyprint 70.0 (con pango y harfbuzz del sistema)
+  choices:
+  - Generado desde el HTML en lugar de escribirse aparte, para que las dos versiones no diverjan.
+  supports:
+  - forma-espectro
+  - SU2U1-resultados
+  - GWs-produccion
+  - U1-semillas
+- file: figures/pendientes_espectro.png
+  produced_by: code/pendientes_espectro.py::main
+  shows: Espectro final de GWs en k <= 4 de las siete corridas (control y U(1) con tres semillas, SU(2)xU(1) con una),
+    con las zonas del ajuste IR y UV.
+  from_scratch: Ajuste de pendientes en log-log.
+  from_library: matplotlib, numpy
+  choices:
+  - Color por modelo, estilo de linea por semilla.
+  supports:
+  - forma-espectro
+- file: figures/produccion_gws/espectros_en_el_tiempo.png
+  produced_by: code/produccion_gws.py::main
+  shows: dOmega_GW/dlnk en tau = 70-295 para los tres modelos (color = tiempo).
+  from_scratch: Ver docstring de code/produccion_gws.py.
+  from_library: matplotlib, numpy
+  choices:
+  - Rampa viridis secuencial para el tiempo.
+  supports:
+  - GWs-produccion
+- file: figures/produccion_gws/epocas_de_produccion.png
+  produced_by: code/produccion_gws.py::main
+  shows: Fraccion de Omega_GW final ya producida en tau = 100 por bin, y Omega_GW(k <= 4) acumulado contra tau con la zona del disparo de las W.
+  from_scratch: Ver docstring de code/produccion_gws.py.
+  from_library: matplotlib, numpy
+  choices:
+  - Color por modelo.
+  supports:
+  - GWs-produccion
+- file: figures/produccion_gws/ritmo_gws_vs_campo.png
+  produced_by: code/produccion_gws.py::main
+  shows: rho_GW/rho y (rho_campo/rho)^2 contra tau en la fase lineal, con los cocientes de pendientes.
+  from_scratch: Ver docstring de code/produccion_gws.py.
+  from_library: matplotlib, numpy
+  choices:
+  - Mismo color por modelo; el cuadrado del campo en linea fina.
+  supports:
+  - GWs-produccion
+- file: figures/produccion_gws/espectro_hoy.png
+  produced_by: code/produccion_gws.py::main
+  shows: h2 Omega_GW hoy contra f (g* = 100) para los tres modelos.
+  from_scratch: Ver docstring de code/produccion_gws.py.
+  from_library: matplotlib, numpy
+  choices:
+  - Zona k > 4 sombreada como no convergida.
+  supports:
+  - GWs-produccion
+- file: figures/semillas/U1_vs_control_semillas.png
+  produced_by: code/semillas_U1.py::main
+  shows: Espectro final de GWs del control y de U(1) con vacio transversal para tres semillas, y el cociente
+    U(1)/control en k = 0.5-2.5 por semilla y entre promedios.
+  from_scratch: Reusa comparar_modelos.cargar; cociente bin a bin.
+  from_library: matplotlib, numpy
+  choices:
+  - Color por modelo, estilo de linea por semilla.
+  supports:
+  - U1-semillas
+- file: figures/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/transferencia_energia.png
+  produced_by: code/analisis_SU2U1.py::main
+  shows: Fraccion de la energia en chi (control), A (U(1)) y en los gauge de SU(2)xU(1), separados en Z + foton
+    (2 rho_U1) y W (rho_SU2 - rho_U1), en escala logaritmica y lineal.
+  from_scratch: Separacion por autoestados de masa; piso de redondeo y zona del termino cruzado marcados.
+  from_library: matplotlib, numpy
+  choices:
+  - Mismo color por modelo (naranja SU(2)xU(1)), estilo de linea por componente.
+  supports:
+  - SU2U1-resultados
+- file: figures/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/crecimiento_energia.png
+  produced_by: code/analisis_SU2U1.py::main
+  shows: ½ ln de la energia (magnetica para los gauge) contra tau, con pendientes de Floquet q = 120 y 60.
+  from_scratch: Floquet de la ecuacion de Lame con A = 1.138.
+  from_library: matplotlib, numpy, scipy.special
+  choices:
+  - Magnetico porque el electrico incluye la parte longitudinal de Gauss.
+  supports:
+  - SU2U1-resultados
+- file: figures/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/ondas_gravitacionales.png
+  produced_by: code/analisis_SU2U1.py::main
+  shows: rho_GW/rho contra tau, espectro final de GWs y cocientes SU(2)xU(1)/control, SU(2)xU(1)/U(1) y
+    U(1)/control en k = 0.5-2.5 (una semilla).
+  from_scratch: Cociente bin a bin.
+  from_library: matplotlib, numpy
+  choices:
+  - Zona k > 4 sombreada como no convergida.
+  supports:
+  - SU2U1-resultados
+- file: figures/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/mu_por_modo_vs_control.png
+  produced_by: code/crecimiento_por_modo_U1.py::main
+  shows: mu por modo del espectro magnetico U(1) de SU(2)xU(1) (mitad Z + foton) y de chi del control, contra
+    Floquet q = 60, 120, 240.
+  from_scratch: Ajuste lineal de ½ ln(Delta) en cada ventana.
+  from_library: matplotlib, numpy, scipy.special
+  choices:
+  - Espectro magnetico (transversal).
+  supports:
+  - SU2U1-resultados
+- file: figures/bandas_resonancia_q.png
+  produced_by: code/analisis_parametros.py::figura_bandas
+  shows: Ritmo de crecimiento mu del campo hijo en funcion del momento K para q = 120, 100, 240 y 300.
+    Se ve que q = 120 tiene un pico alto en K ~ 1.24, que q = 100 y 240 crecen mas rapido pero en K =
+    0 (la escala de la caja), y que q = 300 resuena poco y en una banda angosta.
+  from_scratch: El calculo del exponente de Floquet y el grafico.
+  from_library: scipy.special (funciones elipticas), matplotlib
+  choices:
+  - Mostrar solo cuatro q (los de la literatura, el default y el q_eff de la alternativa del paper) para
+    que se lea.
+  - mu < 0 recortado a 0 (fuera de banda no hay crecimiento).
+  supports:
+  - q300-resonancia-debil
+  - su2u1-qA-igual-qB-cambia-banda
+  - parametros-comparables
+- file: figures/lphi4_piloto_N128/fondo.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 1 (guardar 'fondo')
+  shows: 'a(tau), a'', w instantanea y promediada, y error relativo de Friedmann del piloto: expansion
+    de radiacion y energia conservada a 2e-4.'
+  from_scratch: Ecuacion de estado a partir de las energias; promedio movil.
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id001
+  - Promedio movil de ~2 oscilaciones para w.
+  supports:
+  - piloto-lphi4-resonancia-floquet
+- file: figures/lphi4_piloto_N128/energia.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 1 (guardar 'energia')
+  shows: 'Fraccion de la energia en cada termino (promediada sobre una oscilacion) y rho a^4: el transitorio
+    inicial y la aparicion de gradientes en tau ~ 60-100.'
+  from_scratch: Promedio sobre una oscilacion.
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id002
+  - Promediar sobre ~7.4 en tau para leer tendencias.
+  supports:
+  - piloto-lphi4-resonancia-floquet
+  - piloto-lphi4-GWs-siguen-gradientes
+- file: figures/lphi4_piloto_N128/campos.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 2 (guardar 'campos')
+  shows: Inflaton conforme a<phi> y dispersiones conformes de chi y delta phi, con el ajuste exponencial
+    en tau entre 20 y 55.
+  from_scratch: Ajuste exponencial.
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id003
+  - Ventana de ajuste 20-55.
+  supports:
+  - piloto-lphi4-resonancia-floquet
+- file: figures/lphi4_piloto_N128/mu_por_modo.png
+  produced_by: code/analisis_corridas.py::celda 'Exponente medido por modo' (guardar 'mu_por_modo')
+  shows: 'Exponente de crecimiento de cada modo de chi contra Floquet con amplitud 1 y con la amplitud
+    medida A = 1.138: la curva reescalada reproduce el pico, el borde y la segunda banda.'
+  from_scratch: Floquet vectorizado y ajuste por modo.
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id004
+  - Ventana de ajuste 20-55.
+  supports:
+  - piloto-lphi4-resonancia-floquet
+- file: figures/lphi4_piloto_N128/espectros_campos.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 3 (guardar 'espectros_campos')
+  shows: Espectros conformes a^2 Delta(k) de delta phi y chi en todos los tiempos, con la banda de Floquet
+    reescalada.
+  from_scratch: Nada mas que el grafico.
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id005
+  - Graficar a^2 Delta (conforme) para que no tape la dilucion.
+  supports:
+  - piloto-lphi4-resonancia-floquet
+- file: figures/lphi4_piloto_N128/mapa_chi.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 3 (guardar 'mapa_chi')
+  shows: 'a^2 Delta_chi en el plano (tau, k): la resonancia en la banda y la cascada a k grandes.'
+  from_scratch: Nada mas que el grafico.
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id006
+  - Escala log con 14 decadas.
+  supports:
+  - piloto-lphi4-resonancia-floquet
+- file: figures/lphi4_piloto_N128/gws.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 4 (guardar 'gws')
+  shows: rho_GW/rho(tau), dOmega_GW/dlnk en el tiempo y el espectro hoy con g* = 100.
+  from_scratch: Traslado a hoy (gws_hoy).
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id007
+  - g* = 100.
+  supports:
+  - piloto-lphi4-GWs-siguen-gradientes
+- file: figures/lphi4_piloto_N128/tiempos_gws.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 5 (guardar 'tiempos_gws')
+  shows: (a rms chi)^2, energia de gradiente y rho_GW/rho normalizadas a su maximo, con los tiempos de
+    inicio y fin de la resonancia y de 90 % de las GWs.
+  from_scratch: Tiempos caracteristicos.
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id008
+  - Normalizar cada curva por su maximo para un solo eje.
+  supports:
+  - piloto-lphi4-GWs-siguen-gradientes
+- file: figures/lphi4_piloto_N128/mapa_gws.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 5 (guardar 'mapa_gws')
+  shows: 'dOmega_GW/dlnk en el plano (tau, k) y el tiempo en que cada k llega al 50 % de su valor final:
+    el pico se llena en tau ~ 120-130 y el UV despues.'
+  from_scratch: t_mitad_k.
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id009 []
+  supports:
+  - piloto-lphi4-GWs-siguen-gradientes
+  - piloto-N128-sin-resolucion-UV
+- file: figures/lphi4_piloto_N128/comparacion_dufaux.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 6 (guardar 'comparacion_dufaux')
+  shows: 'El piloto en las variables de las figs. 4, 5 y 6 de Dufaux et al. 2007: espectro acumulado de
+    x = 90 a 240, espectro hoy con su convencion y su pico (original y llevado a lambda = 9e-14), y rho_GW/rho
+    contra x.'
+  from_scratch: Traduccion x = A tau, K = k/A y traslado a hoy con su ec. 47.
+  from_library: matplotlib, numpy, scipy.special
+  choices: &id010
+  - Mostrar el pico de Dufaux como un punto (no se digitalizo su curva).
+  - Ignorar el 3.6 % de diferencia entre su amplitud conforme y su phi_0.
+  supports:
+  - piloto-lphi4-valida-dufaux
+  - piloto-N128-sin-resolucion-UV
+- file: figures/lphi4_control_N128_VV2/fondo.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 1 (guardar 'fondo')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/fondo.png, para el control con VV2: a(tau), a'', w instantanea
+    y promediada, y error relativo de Friedmann del piloto: expansion de radiacion y energia conservada
+    a 2e-4.'
+  from_scratch: Ecuacion de estado a partir de las energias; promedio movil.
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id001
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/lphi4_control_N128_VV2/energia.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 1 (guardar 'energia')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/energia.png, para el control con VV2: Fraccion de la
+    energia en cada termino (promediada sobre una oscilacion) y rho a^4: el transitorio inicial y la aparicion
+    de gradientes en tau ~ 60-100.'
+  from_scratch: Promedio sobre una oscilacion.
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id002
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/lphi4_control_N128_VV2/campos.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 2 (guardar 'campos')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/campos.png, para el control con VV2: Inflaton conforme
+    a<phi> y dispersiones conformes de chi y delta phi, con el ajuste exponencial en tau entre 20 y 55.'
+  from_scratch: Ajuste exponencial.
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id003
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/lphi4_control_N128_VV2/mu_por_modo.png
+  produced_by: code/analisis_corridas.py::celda 'Exponente medido por modo' (guardar 'mu_por_modo')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/mu_por_modo.png, para el control con VV2: Exponente de
+    crecimiento de cada modo de chi contra Floquet con amplitud 1 y con la amplitud medida A = 1.138:
+    la curva reescalada reproduce el pico, el borde y la segunda banda.'
+  from_scratch: Floquet vectorizado y ajuste por modo.
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id004
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/lphi4_control_N128_VV2/espectros_campos.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 3 (guardar 'espectros_campos')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/espectros_campos.png, para el control con VV2: Espectros
+    conformes a^2 Delta(k) de delta phi y chi en todos los tiempos, con la banda de Floquet reescalada.'
+  from_scratch: Nada mas que el grafico.
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id005
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/lphi4_control_N128_VV2/mapa_chi.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 3 (guardar 'mapa_chi')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/mapa_chi.png, para el control con VV2: a^2 Delta_chi
+    en el plano (tau, k): la resonancia en la banda y la cascada a k grandes.'
+  from_scratch: Nada mas que el grafico.
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id006
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/lphi4_control_N128_VV2/gws.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 4 (guardar 'gws')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/gws.png, para el control con VV2: rho_GW/rho(tau), dOmega_GW/dlnk
+    en el tiempo y el espectro hoy con g* = 100.'
+  from_scratch: Traslado a hoy (gws_hoy).
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id007
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/lphi4_control_N128_VV2/tiempos_gws.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 5 (guardar 'tiempos_gws')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/tiempos_gws.png, para el control con VV2: (a rms chi)^2,
+    energia de gradiente y rho_GW/rho normalizadas a su maximo, con los tiempos de inicio y fin de la
+    resonancia y de 90 % de las GWs.'
+  from_scratch: Tiempos caracteristicos.
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id008
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/lphi4_control_N128_VV2/mapa_gws.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 5 (guardar 'mapa_gws')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/mapa_gws.png, para el control con VV2: dOmega_GW/dlnk
+    en el plano (tau, k) y el tiempo en que cada k llega al 50 % de su valor final: el pico se llena en
+    tau ~ 120-130 y el UV despues.'
+  from_scratch: t_mitad_k.
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id009
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/lphi4_control_N128_VV2/comparacion_dufaux.png
+  produced_by: code/analisis_corridas.py::celda de la seccion 6 (guardar 'comparacion_dufaux')
+  shows: 'Lo mismo que figures/lphi4_piloto_N128/comparacion_dufaux.png, para el control con VV2: El piloto
+    en las variables de las figs. 4, 5 y 6 de Dufaux et al. 2007: espectro acumulado de x = 90 a 240,
+    espectro hoy con su convencion y su pico (original y llevado a lambda = 9e-14), y rho_GW/rho contra
+    x.'
+  from_scratch: Traduccion x = A tau, K = k/A y traslado a hoy con su ec. 47.
+  from_library: matplotlib, numpy, scipy.special
+  choices: *id010
+  supports:
+  - integrador-lf-vv2-equivalentes
+- file: figures/convergencia_N/espectros_finales.png
+  produced_by: code/convergencia_N.py::main (1)
+  shows: Espectros de GWs y de chi a tau = 300 para N = 32, 48, 64, 96, 128 (kIR = 0.25) y N = 64 con
+    kIR = 0.5 y N = 128 con kIR = 0.5, con el cociente contra N = 128. Con kIR = 0.25 cada N chico apila energia en su borde UV;
+    N = 64 con kIR = 0.5 cae sobre la referencia.
+  from_scratch: Cocientes sobre bins de k comunes.
+  from_library: matplotlib, numpy
+  choices:
+  - Cociente en escala log, banda gris de 0.8 a 1.25.
+  supports:
+  - convergencia-kmax-no-N
+- file: figures/convergencia_N/historias.png
+  produced_by: code/convergencia_N.py::main (2)
+  shows: Fraccion de la energia en chi y rho_GW/rho contra tau para las seis corridas.
+  from_scratch: Fraccion = (E_kin + E_grad de chi)/E_tot.
+  from_library: matplotlib, numpy
+  choices: []
+  supports:
+  - convergencia-kmax-no-N
+- file: figures/convergencia_N/gws_hoy.png
+  produced_by: code/convergencia_N.py::main (3)
+  shows: h2 Omega_GW hoy (g* = 100) para las seis corridas.
+  from_scratch: Mismo traslado a hoy que code/analisis_corridas.py::gws_hoy.
+  from_library: matplotlib, numpy
+  choices: []
+  supports:
+  - convergencia-kmax-no-N
+- file: figures/comparacion_modelos/control_vs_U1.png
+  produced_by: code/comparar_modelos.py::main
+  shows: Fraccion de la energia en chi o en el U(1), rho_GW/rho contra tau, y espectro final de GWs para el
+    control, U(1) con la condicion de CosmoLattice y U(1) con vacio transversal (N = 64, kIR = 0.5).
+  from_scratch: Traduccion a unidades del control.
+  from_library: matplotlib, numpy
+  choices:
+  - Zona k > 4 sombreada como no convergida (seccion 3.3 de la bitacora).
+  supports:
+  - U1-semilla-transversal
+  - U1-vT-espectro-GW
+- file: figures/lphi4U1_N64_kIR0.5_VV2/mu_por_modo_vs_control.png
+  produced_by: code/crecimiento_por_modo_U1.py::main
+  shows: mu por modo del campo magnetico U(1) (condicion de CosmoLattice) y de chi del control en tres ventanas,
+    contra Floquet q = 60, 120, 240.
+  from_scratch: Ajuste lineal de ½ ln(Delta) en cada ventana.
+  from_library: matplotlib, numpy, scipy.special
+  choices:
+  - Espectro magnetico (transversal), no electrico.
+  supports:
+  - U1-semilla-transversal
+- file: figures/lphi4U1_vacioT_N64_kIR0.5_VV2/mu_por_modo_vs_control.png
+  produced_by: code/crecimiento_por_modo_U1.py::main
+  shows: Lo mismo para U(1) con vacio transversal.
+  from_scratch: Idem.
+  from_library: matplotlib, numpy, scipy.special
+  choices:
+  - Idem.
+  supports:
+  - U1-semilla-transversal

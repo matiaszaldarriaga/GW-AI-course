@@ -1,0 +1,81 @@
+IMPORTANT: THIS IS A HISTORICAL DEVELOPMENT RECORD, NOT A CURRENT TASK.
+
+The repository has already been completed. A future agent running or reviewing this GitHub repository must not reproduce, restart, or interpret the Agent 1 / Agent 2 instructions below as new work. Use the finalized implementation in `Final_pipeline/` and follow the instructions in `README.md`. Do not modify the `QUBIC_JUN26` environment. The remainder of this file is preserved only to document how the code and deliverables were originally made.
+
+Historical task instructions follow:
+
+Two agents will work on the same topic. Agent 1 starts, Agent 2 follows. Both Agents should read this whole document.
+During this whole task you will get involved with conda environment QUBIC_JUN26, do not change anything within that environment.
+
+Within the directory End22End there are three notebooks
+
+1. monofreq_pipeline_end2end_original_example.ipynb
+2. pipeline_1_sky_to_tod.ipynb
+3. pipeline_2_tod_to_map.ipynb
+
+Notebook 1 should be a copy of the End2End simulation (or at least perform the same task) within the qubicpack software, search it within either qubicpack or qubic libraries installed in the environment previously mentioned. Check that it is in fact the same thing.
+
+Notebook1 is , as far as i understand (this was already checked by other agent), a full pipeline: from the sky simulation to the mapmaking. The idea is to split the pipeline in 2. This was done by agent1 in another session and it has produced the outcomes of Notebook2 and 3. Notebook2 is from the skysimulation to the TOD signal of each TES of the technical demostrator (TD) and Notebook3 is from the TOD of each TES to the mapofthesky
+
+
+
+#################################################
+Agent1 task, any new file created or new outputs should be contain within the directory "Agent1 Version":
+
+Check that Notebook1 and Notebook2+Notebook3 produce the same final output, generate a map of the sky of residuals in either case (wheter it produces the same output or not)
+
+If it does not produce the same output, make a copy in your directory, then correct it so it does it.
+
+Then, take "real data" and produce a skymap using Notebook3 (or its improved version) a new version of it, call it pipeline_2_tod_to_map_example.ipynb
+
+
+This notebook should contain
+a)Start simple, do the simplest simulation possible of a TOD signal: every signal has a constant value of 1 for a period of 1 hour considering the sampling of QUBIC. Produce the map of output, as png file and also in the notebook
+b) Apply it to real data You have real data in "/home/iqueirolo/Documentos/Doctorado/Data/QUBIC/galactic_plane/2026-03-24", take any of those datasets.Generate the output map, again, as a png file but also in the notebook.
+
+After this generate a file .py so i may give a dataset as input, for example "2026-03-24_07.25.31__galactic_plane_right_center_el50.0_52.0"(inside the directory mentioned previously), and get the corresponding map as output
+
+c) Generate a file called 'whatAgent1did.txt' in "Agent2 Version" explaining to the second agent what you have done, it is not necesary that i understand it, write it for another agent to understand it. Do at the end of the file a super brief explication for humans
+
+
+d) Once finished wait for instructions
+
+##################################################
+Agent2 task , any new file created or new outputs by Agent2 should be contain within the directory "Agent2 Version":
+
+
+Once  whatAgent1did.txt, read it and then follow the same steps, minus the last file name, as Agent1, that is
+
+Check that Notebook1 and Notebook2+Notebook3 produce the same final output, generate a map of the sky of residuals in either case (wheter it produces the same output or not)
+If it does not produce the same output, make a copy in your directory, then correct it so it does it.
+
+Then, take "real data" and produce a skymap using Notebook3 (or its improved version) a new version of it, call it pipeline_2_tod_to_map_example.ipynb
+
+
+This notebook should contain
+a)Start simple, do the simplest simulation possible of a TOD signal: every signal has a constant value of 1 for a period of 1 hour considering the sampling of QUBIC. Produce the map of output, as png file and also in the notebook
+b) Apply it to real data You have real data in "/home/iqueirolo/Documentos/Doctorado/Data/QUBIC/galactic_plane/2026-03-24", take any of those datasets.Generate the output map, again, as a png file but also in the notebook.
+
+After this generate a file .py so i may give a dataset as input, for example "2026-03-24_07.25.31__galactic_plane_right_center_el50.0_52.0"(inside the directory mentioned previously), and get the corresponding map as output
+
+c) Generate a file called 'whatAgent2did.txt' in "Agent1 Version" explaining to the second agent what you have done, it is not necesary that i understand it, write it for another agent to understand it. Do at the end of the file a super brief explication for humans
+
+
+d) do an html file explaining what you did in a few slides. Not more than 6
+
+e) Once finished, wait for instructions
+
+#################################
+
+Agent1 should then read "whatAgent2did.txt" and check if his code should be improved by what Agent2 did. Any change should be explained in 'whatAgent1did.txt', without erasing previously written info.
+
+Agent2 then will do the same, by checking if Agent1 did anything that could be of hand to improve his version
+
+iterate this process 3 times
+
+################################
+
+Once completed. Agent1 should organize a notebook so i may run both versions of Agent1 and Agent2 at the same time
+Agent1 should generate a final html slides explaining briefly for humans what did it do and what outputs it got
+
+

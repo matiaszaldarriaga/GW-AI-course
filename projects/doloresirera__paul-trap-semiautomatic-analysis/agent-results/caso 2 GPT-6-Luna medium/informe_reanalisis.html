@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Caso 2 — reanálisis GPT-6-Luna medium</title>
+<style>
+:root{--ink:#1f2933;--muted:#52606d;--paper:#f6f7f9;--card:#fff;--accent:#176b68;--line:#d9e2ec}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,Segoe UI,sans-serif}main{max-width:1200px;margin:auto;padding:30px 22px 64px}h1,h2{line-height:1.2}h1{font-size:2rem}h2{margin-top:2.1rem;color:var(--accent)}.lead{font-size:1.12rem;color:var(--muted)}.callout{background:#fff8e7;border-left:5px solid #cf8b22;padding:15px 18px;margin:18px 0}.card{background:var(--card);padding:18px;border:1px solid var(--line);border-radius:10px;margin:18px 0}table{border-collapse:collapse;width:100%;font-size:.9rem;background:white}th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#edf3f4}.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(440px,1fr));gap:14px}figure{margin:0;background:white;border:1px solid var(--line);border-radius:8px;padding:10px}img{max-width:100%;height:auto}figcaption{font-size:.88rem;color:var(--muted)}code{background:#edf2f7;padding:2px 5px;border-radius:4px}.small{font-size:.9rem;color:var(--muted)}
+</style></head><body><main>
+<h1>Reanálisis de videos de micromoción</h1>
+<p class="lead">Caso 2 · GPT-6-Luna medium · modelo eficiente basado en momentos de imagen/PCA</p>
+<div class="callout"><strong>Resultado principal:</strong> el procesamiento automático estima <b>Q/m = (6,5 ± 1,9)×10⁻⁴ C/kg</b> al combinar los seis videos que superaron los controles geométricos. Es un resultado exploratorio: la dispersión entre videos domina la incertidumbre.</div>
+<h2>Relación con el Caso 2</h2><div class="card"><p>Este análisis usa los mismos 21 videos y el mismo problema físico del Caso 2. La diferencia está en el estimador geométrico: cada traza se representa mediante el autovalor principal de sus píxeles. El modelo es más eficiente computacionalmente que el área–perímetro del Caso 4 porque usa una sola segmentación, no calcula perímetros ni repite cinco umbrales.</p></div>
+<h2>Resumen de videos retenidos</h2><div class="card"><table><thead><tr><th>Video</th><th>Detecciones</th><th>Centro (px)</th><th>c</th><th>Q/m [C/kg]</th><th>Estado</th></tr></thead><tbody>
+<tr><td>15_08_05</td><td>313</td><td>(113,2; 49,3)</td><td>0,341 ± 0,038</td><td>(5,67 ± 0,91)×10⁻⁴</td><td>Retenido</td></tr>
+<tr><td>15_06_06</td><td>251</td><td>(48,0; 92,5)</td><td>0,309 ± 0,051</td><td>(5,15 ± 1,04)×10⁻⁴</td><td>Retenido</td></tr>
+<tr><td>15_14_39</td><td>228</td><td>(192,5; 62,4)</td><td>0,404 ± 0,077</td><td>(6,72 ± 1,49)×10⁻⁴</td><td>Retenido</td></tr>
+<tr><td>15_07_04</td><td>221</td><td>(230,1; 103,2)</td><td>0,525 ± 0,052</td><td>(8,74 ± 1,32)×10⁻⁴</td><td>Retenido</td></tr>
+<tr><td>15_09_48</td><td>175</td><td>(178,4; 148,6)</td><td>0,552 ± 0,034</td><td>(9,19 ± 1,19)×10⁻⁴</td><td>Retenido</td></tr>
+<tr><td>15_02_20</td><td>164</td><td>(20,0; 164,8)</td><td>0,294 ± 0,077</td><td>(4,89 ± 1,40)×10⁻⁴</td><td>Retenido</td></tr>
+</tbody></table></div>
+<h2>Vista conjunta</h2><div class="card"><img src="fig_resumen_qm.png" alt="Estimaciones de Q sobre m por video"><p class="small">Los puntos rojos corresponden a videos rechazados por centro en el borde o bootstrap inestable; los verdes son los seis retenidos.</p></div>
+<h2>Modelo y ecuaciones</h2><div class="card"><p>Para una componente conexa se calcula la covarianza de sus píxeles. Con λ₁ como autovalor mayor, <code>L_PCA = √(12λ₁)</code>. El ajuste robusto es <code>L_PCA = cR</code>, con el centro y <code>c</code> libres.</p><p>La conversión usada es <code>Q/m = c r₀²(2πf)²/(4V)</code>, con r₀ = 8,90 ± 0,50 mm, V = 1175 ± 24 V y f = 50 Hz.</p></div>
+<h2>Comparación crítica</h2><div class="card"><ul><li>Evita esqueletización, búsqueda de extremos y recorrido de grafos.</li><li>Usa una sola segmentación y un cálculo de momentos por componente.</li><li>Es más rápido y simple que área–perímetro, pero la PCA subestima trazas curvas.</li><li>La dispersión obtenida es mayor; eficiencia computacional no significa mayor precisión.</li><li>El centro sigue siendo el principal problema cuando las trazas cubren un abanico angular reducido.</li></ul></div>
+<h2>Qué hice</h2><div class="card"><ol><li>Procesé los 21 videos con 40 cuadros equiespaciados.</li><li>Segmenté el canal rojo con umbral 30 y filtré componentes por área y elongación.</li><li>Medí la longitud mediante momentos de imagen/PCA.</li><li>Ajusté centro y pendiente con pérdida robusta.</li><li>Estimé la incertidumbre de `c` con 300 bootstrap.</li><li>Propagué r₀ y V y agregué la dispersión entre los seis videos retenidos.</li></ol></div>
+<h2>Figuras por video</h2><div class="gallery">
+<figure><img src="WIN_20260624_15_08_05_Pro.png"><figcaption>15_08_05: detecciones y ajuste PCA.</figcaption></figure>
+<figure><img src="WIN_20260624_15_06_06_Pro.png"><figcaption>15_06_06: detecciones y ajuste PCA.</figcaption></figure>
+<figure><img src="WIN_20260624_15_14_39_Pro.png"><figcaption>15_14_39: detecciones y ajuste PCA.</figcaption></figure>
+<figure><img src="WIN_20260624_15_07_04_Pro.png"><figcaption>15_07_04: detecciones y ajuste PCA.</figcaption></figure>
+</div>
+<h2>Archivos para reproducir</h2><p><a href="analisis_reproducible.py">Código</a> · <a href="resultados_videos.csv">CSV</a> · <a href="resultados_videos.json">JSON</a> · <a href="fig_resumen_qm.png">Figura resumen</a></p>
+</main></body></html>

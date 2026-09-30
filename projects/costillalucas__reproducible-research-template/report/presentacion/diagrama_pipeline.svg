@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 530" width="1300" height="530"
+     font-family="Helvetica, Arial, sans-serif" aria-label="Diagrama de bloques del pipeline multiespectral: capturas, grilla comun, reconstruccion por canal, desenvolvimiento multi-lambda y ajuste de Cauchy, con dos agentes de control">
+  <rect width="1300" height="530" fill="#fcfcfb"/>
+
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#52514e"/>
+    </marker>
+    <marker id="ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8984"/>
+    </marker>
+  </defs>
+
+  <!-- ===== cadena principal ===== -->
+  <g>
+    <rect x="30" y="96" width="215" height="100" rx="10" fill="#eef4fd" stroke="#2a78d6" stroke-width="2"/>
+    <text x="137" y="132" font-size="18" font-weight="bold" fill="#0b0b0b" text-anchor="middle">81 capturas</text>
+    <text x="137" y="156" font-size="18" font-weight="bold" fill="#0b0b0b" text-anchor="middle">× 3 colores</text>
+    <text x="137" y="180" font-size="15" fill="#52514e" text-anchor="middle">630 / 530 / 470 nm</text>
+
+    <rect x="290" y="96" width="215" height="100" rx="10" fill="#eef4fd" stroke="#2a78d6" stroke-width="2"/>
+    <text x="397" y="130" font-size="18" font-weight="bold" fill="#0b0b0b" text-anchor="middle">Grilla HR común</text>
+    <text x="397" y="158" font-size="15" fill="#52514e" text-anchor="middle">sobremuestreo compartido</text>
+    <text x="397" y="178" font-size="15" fill="#52514e" text-anchor="middle">(manda el azul)</text>
+
+    <rect x="550" y="96" width="215" height="100" rx="10" fill="#eef4fd" stroke="#2a78d6" stroke-width="2"/>
+    <text x="657" y="130" font-size="18" font-weight="bold" fill="#0b0b0b" text-anchor="middle">Reconstrucción</text>
+    <text x="657" y="152" font-size="18" font-weight="bold" fill="#0b0b0b" text-anchor="middle">por canal</text>
+    <text x="657" y="178" font-size="15" fill="#52514e" text-anchor="middle">Wirtinger flow / GD</text>
+
+    <rect x="810" y="96" width="215" height="100" rx="10" fill="#eef4fd" stroke="#2a78d6" stroke-width="2"/>
+    <text x="917" y="130" font-size="18" font-weight="bold" fill="#0b0b0b" text-anchor="middle">Desenvolvimiento</text>
+    <text x="917" y="152" font-size="18" font-weight="bold" fill="#0b0b0b" text-anchor="middle">multi-λ</text>
+    <text x="917" y="178" font-size="15" fill="#52514e" text-anchor="middle">batido Λ ≈ 4.1 µm</text>
+
+    <rect x="1070" y="96" width="215" height="100" rx="10" fill="#eef4fd" stroke="#2a78d6" stroke-width="2"/>
+    <text x="1177" y="130" font-size="18" font-weight="bold" fill="#0b0b0b" text-anchor="middle">Ajuste de Cauchy</text>
+    <text x="1177" y="158" font-size="15" fill="#52514e" text-anchor="middle">por píxel, mínimos</text>
+    <text x="1177" y="178" font-size="15" fill="#52514e" text-anchor="middle">cuadrados, 3 canales</text>
+  </g>
+
+  <g stroke="#52514e" stroke-width="2" marker-end="url(#a)">
+    <line x1="247" y1="146" x2="284" y2="146"/>
+    <line x1="507" y1="146" x2="544" y2="146"/>
+    <line x1="767" y1="146" x2="804" y2="146"/>
+    <line x1="1027" y1="146" x2="1064" y2="146"/>
+  </g>
+  <text x="657" y="74" font-size="15" fill="#8a8984" text-anchor="middle">tres φ(λ) del mismo objeto, apilables sin resize</text>
+
+  <!-- ===== salida ===== -->
+  <path d="M 1177 198 L 1177 240" stroke="#52514e" stroke-width="2" marker-end="url(#a)" fill="none"/>
+  <rect x="905" y="244" width="380" height="96" rx="10" fill="#fcf0ea" stroke="#eb6834" stroke-width="2"/>
+  <text x="1095" y="278" font-size="18" font-weight="bold" fill="#0b0b0b" text-anchor="middle">OPL(λ) = C + D/λ²</text>
+  <text x="1095" y="304" font-size="16" fill="#52514e" text-anchor="middle">C = A·t y D = B·t: sólo se miden los productos,</text>
+  <text x="1095" y="324" font-size="16" fill="#52514e" text-anchor="middle">índice y espesor quedan degenerados</text>
+
+  <!-- ===== agentes ===== -->
+  <g>
+    <rect x="550" y="300" width="215" height="84" rx="10" fill="#f4f4f1" stroke="#8a8984" stroke-width="1.8" stroke-dasharray="7 5"/>
+    <text x="657" y="330" font-size="17" font-weight="bold" fill="#52514e" text-anchor="middle">agente</text>
+    <text x="657" y="354" font-size="15" fill="#52514e" text-anchor="middle">reintenta / acepta /</text>
+    <text x="657" y="374" font-size="15" fill="#52514e" text-anchor="middle">abandona la reconstrucción</text>
+
+    <rect x="905" y="384" width="380" height="72" rx="10" fill="#f4f4f1" stroke="#8a8984" stroke-width="1.8" stroke-dasharray="7 5"/>
+    <text x="1095" y="414" font-size="17" font-weight="bold" fill="#52514e" text-anchor="middle">agente</text>
+    <text x="1095" y="438" font-size="15" fill="#52514e" text-anchor="middle">QC de consistencia entre canales</text>
+  </g>
+  <g stroke="#8a8984" stroke-width="1.8" stroke-dasharray="6 5" marker-end="url(#ad)" fill="none">
+    <path d="M 657 298 L 657 200"/>
+    <path d="M 1095 382 L 1095 344"/>
+  </g>
+
+  <text x="30" y="424" font-size="17" fill="#0b0b0b">Todo implementado y testeado: 242 tests automáticos, y</text>
+  <text x="30" y="448" font-size="17" fill="#0b0b0b">cada número publicado con su procedencia verificable</text>
+  <text x="30" y="472" font-size="16" font-family="monospace" fill="#52514e">scripts/check_provenance.py · reproduce.sh</text>
+</svg>

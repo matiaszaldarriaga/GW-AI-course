@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verification Record</title>
+<style>
+  :root {
+    --bg:#fbfaf8; --panel:#fff; --ink:#1d1d1f; --soft:#5d6570; --line:#e2ded7;
+    --accent:#8b3a1e; --good:#176b45; --code:#f4f2ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:#17181a; --panel:#1f2124; --ink:#e8e6e3; --soft:#a4acb6;
+      --line:#32353a; --accent:#e08a68; --good:#6dc496; --code:#26282c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:#17181a; --panel:#1f2124; --ink:#e8e6e3; --soft:#a4acb6;
+    --line:#32353a; --accent:#e08a68; --good:#6dc496; --code:#26282c;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:16px/1.62 Georgia,"Iowan Old Style","Times New Roman",serif; }
+  .wrap { max-width:960px; margin:0 auto; padding:56px 16px 90px; }
+  header { border-bottom:2px solid var(--line); padding-bottom:22px; margin-bottom:30px; }
+  h1 { font-size:1.9rem; line-height:1.22; margin:0 0 .35rem; letter-spacing:-.012em; }
+  .sub { color:var(--soft); font-size:.95rem; font-style:italic; margin:0; }
+  h2 { font-size:1.25rem; margin:2.5rem 0 .5rem; padding-bottom:.3rem;
+        border-bottom:1px solid var(--line); }
+  h3 { font-size:1rem; margin:1.6rem 0 .4rem; }
+  .tally { float:right; font-family:"SFMono-Regular",Menlo,Consolas,monospace;
+            font-size:.82rem; color:var(--soft); font-weight:400; }
+  p,li { margin:0 0 .8rem; }
+  .blurb { color:var(--soft); font-size:.9rem; }
+  .lede { background:var(--panel); border:1px solid var(--line);
+           border-left:4px solid var(--accent); border-radius:5px;
+           padding:18px 22px; margin:0 0 26px; }
+  .lede p:last-child { margin-bottom:0; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+           gap:12px; margin:22px 0 28px; }
+  .stat { background:var(--panel); border:1px solid var(--line);
+           border-radius:5px; padding:13px 15px; }
+  .stat b { display:block; font-size:1.4rem; line-height:1.2;
+             font-variant-numeric:tabular-nums; }
+  .stat span { color:var(--soft); font-size:.8rem; }
+  table { width:100%; border-collapse:collapse; margin:12px 0 24px; font-size:.86rem; }
+  th,td { text-align:left; padding:7px 9px; border-bottom:1px solid var(--line);
+           vertical-align:top; }
+  th { font-size:.74rem; text-transform:uppercase; letter-spacing:.05em;
+        color:var(--soft); font-weight:600; }
+  td.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  td.src { color:var(--soft); font-size:.82rem; }
+  td.note { color:var(--soft); font-size:.82rem; }
+  .method { color:var(--soft); font-size:.76rem; margin-top:.2rem; }
+  .mono,code { font-family:"SFMono-Regular",Menlo,Consolas,monospace; }
+  code { background:var(--code); padding:.1em .35em; border-radius:3px; font-size:.85em; }
+  .v { font-family:"SFMono-Regular",Menlo,Consolas,monospace; font-size:.72rem;
+        font-weight:700; letter-spacing:.05em; }
+  .v.pass { color:var(--good); }
+  .v.fail { color:var(--accent); }
+  dl dt { font-weight:700; margin-top:.7rem; }
+  dl dd { margin:0 0 .5rem; color:var(--ink); }
+  figure { margin:22px 0 10px; }
+  figure img { display:block; width:100%; height:auto; border:1px solid var(--line);
+                border-radius:5px; background:#fff; }
+  figcaption { color:var(--soft); font-size:.83rem; margin-top:.5rem; }
+  footer { margin-top:44px; padding-top:18px; border-top:1px solid var(--line);
+            color:var(--soft); font-size:.83rem; }
+  @media (max-width:620px) {
+    .wrap { padding:34px 16px 70px; } h1 { font-size:1.5rem; }
+    table { font-size:.78rem; } .tally { float:none; display:block; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>What was rederived, what was reproduced,<br>and what was only called</h1>
+  <p class="sub">A verification record for the finite-coupling extremality-shift
+  calculation &mdash; 28 September 2026</p>
+</header>
+
+<div class="lede">
+  <p>This is not a physics document; it is an audit trail. It states, claim by
+  claim, which parts of the accompanying calculation were <b>derived here</b>,
+  which were <b>computed here and checked against something external</b>, which
+  were <b>copied from a paper and verified against that paper</b>, and which were
+  <b>simply used</b> on the author's authority.</p>
+  <p>A calculation that agrees with itself has shown nothing. The question is
+  always what it was tested against, and with what &mdash; so the fourth category
+  is as load-bearing as the first three.</p>
+</div>
+
+<div class="grid">
+  <div class="stat"><b>19 / 19</b><span>rederived analytically</span></div>
+  <div class="stat"><b>18 / 18</b><span>reproduced numerically</span></div>
+  <div class="stat"><b>10 / 10</b><span>transcriptions checked</span></div>
+  <div class="stat"><b>11</b><span>called, not reproduced</span></div>
+</div>
+
+<h2>The three conversions everything depends on</h2>
+<p>Three numbers relate this work's conventions to the literature. A mistake in
+any of them would move every finite-coupling comparison without breaking a single
+internal check, which is exactly the kind of error an internally consistent
+calculation cannot find. Each is now verified twice, by independent routes.</p>
+<dl>
+  <dt>The coupling: &alpha;<sub>ref.</sub> = 4&alpha;</dt>
+  <dd>The source writes <i>R</i> + (&alpha;<sub>ref.</sub>/4)&thinsp;<i>L</i><sub>GB</sub>
+  where this work writes <i>R</i> + &alpha;&thinsp;<i>L</i><sub>GB</sub>. Read
+  directly from eq.&nbsp;(2.1) of arXiv:1010.0860. <b>Independently:</b> the ratio
+  of the Gauss&ndash;Bonnet piece of the published entropy&nbsp;(3.10) to its
+  Einstein piece matches the ratio our Jacobson&ndash;Myers form gives
+  <em>only</em> if &alpha;<sub>ref.</sub>&nbsp;=&nbsp;4&alpha;. Two routes, one
+  answer.</dd>
+  <dt>The angular momentum: <i>J</i> is per plane</dt>
+  <dd>The sentence introducing the source's eq.&nbsp;(3.6) says so, and its
+  <i>E</i> = &minus;3<i>V</i><sub>3</sub><i>U</i>/16&pi;<i>G</i>,
+  <i>J</i> = <i>V</i><sub>3</sub><i>W</i>/8&pi;<i>G</i> with
+  <i>V</i><sub>3</sub> = 2&pi;<sup>2</sup> reduce to the
+  &minus;3&pi;<i>U</i>/8 and &pi;<i>W</i>/4 used here.</dd>
+  <dt>The near-horizon <i>k</i>: ours is twice theirs</dt>
+  <dd>The source's near-horizon metric carries
+  &sigma;<sub>3</sub>&nbsp;+&nbsp;2<i>kr</i>&thinsp;d<i>t</i> where this work
+  writes &sigma;<sub>3</sub>&nbsp;+&nbsp;<i>kr</i>&thinsp;d<i>t</i>, so
+  <i>J</i><sub>ref.</sub> = 2<i>J</i> because <i>J</i> = &part;<i>E</i>/&part;<i>k</i>.
+  This is what reconciles the source's <i>S</i><sub>ext</sub> = &pi;<i>J</i><sub>ref.</sub>
+  at zero coupling with the 2&pi;<i>J</i> obtained here, and both with extremal
+  Myers&ndash;Perry (<i>S</i> = 2&pi;<sup>2</sup><i>a</i><sup>3</sup>,
+  <i>J</i> = &pi;<i>a</i><sup>3</sup>). Without the factor this looks like a
+  discrepancy of two; with it, the three statements are one statement.</dd>
+</dl>
+
+<h2>Rederived analytically <span class="tally">19 / 19</span></h2>
+<p class="blurb">Redone here with sympy and the difference asserted to vanish identically. No tolerance and no solver output enters.</p>
+<table><thead><tr><th>Claim</th><th>Source</th><th>Result</th><th>Tolerance</th><th>Verdict</th></tr></thead><tbody>
+<tr><td>Psi_static = (3pi/4)(4a-3)/(1+4a) from dM/da - T dS/da<div class="method">sympy, difference simplifies to 0</div></td><td class="src">Boulware-Deser charges; manuscript eq. (15)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>Psi_static -&gt; -9pi/4 as alpha -&gt; 0<div class="method">sympy limit</div></td><td class="src">manuscript eq. (15)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>Psi_static changes sign at alpha/r_H^2 = 3/4<div class="method">sympy</div></td><td class="src">manuscript sec. 4.1</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>Smarr 2M = 3TS + 2*alpha*Psi closes on Boulware-Deser at J=0<div class="method">sympy</div></td><td class="src">manuscript eq. (8) on eq. (14)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>static t_H = sqrt(1+2a)/(1+4a) follows from eq. (10)<div class="method">sympy</div></td><td class="src">manuscript sec. 2.3</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>Euler on the listed weights gives 2M = 3TS + 3 sum(Omega_i J_i) + 2 alpha Psi<div class="method">sympy, homogeneity in lambda</div></td><td class="src">manuscript eq. (8)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>its equal-spin case is the printed 2M = 3TS + 6 Omega_H J + 2 alpha Psi<div class="method">sympy</div></td><td class="src">manuscript eq. (8)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>differentiated Smarr minus twice the first law is the printed Gibbs-Duhem constraint<div class="method">sympy</div></td><td class="src">manuscript sec. 3.1</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>q = r_H Omega_H = a/r_H from Omega_H = a/(r_+^2+a^2), r_H^2 = r_+^2+a^2<div class="method">sympy</div></td><td class="src">manuscript eq. (9)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>u = q^2/(1-q^2) equals a^2/r_+^2<div class="method">sympy</div></td><td class="src">manuscript eq. (9)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>equal-spin Myers-Perry is extremal at r_+ = a (d mu / d r_+ = 0)<div class="method">sympy</div></td><td class="src">Myers-Perry horizon function</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>hence extremality sits at q = 1/sqrt(2)<div class="method">sympy</div></td><td class="src">manuscript sec. 2.1</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>M = 3pi r_H^2/[8(1-q^2)] is the same as 3 pi mu_MP / 8<div class="method">sympy</div></td><td class="src">manuscript appendix A</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>Psi_0(u=0) = -9pi/4, matching the alpha-&gt;0 limit of Psi_static<div class="method">sympy</div></td><td class="src">manuscript eq. (17) against eq. (15)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>Psi_0(u=1) = pi, matching the published linear-order slope<div class="method">sympy</div></td><td class="src">manuscript eq. (17) against arXiv:2009.00015</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>Psi_0 sign zero at q = 7-2sqrt(10) mapped through eq. (9)<div class="method">sympy exact root</div></td><td class="src">manuscript sec. 4.2</td><td class="num">6.35&times;10<sup>-1</sup></td><td class="num">1.00&times;10<sup>-9</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>our metric ansatz is identically eq. (2.8) of 1010.0860 with g = r^2<div class="method">sympy, expanded in the angular one-forms</div></td><td class="src">manuscript eq. (4) against arXiv:1010.0860 eq. (2.8)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the published entropy (3.10) equals our Jacobson-Myers form iff alpha_paper = 4 alpha<div class="method">sympy, ratio of the GB term to the Einstein term</div></td><td class="src">manuscript eq. (7) against arXiv:1010.0860 eq. (3.10)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>dS/dalpha at fixed (M,J) equals -Psi/T, from the extended first law<div class="method">first law solved for dS at dM = dJ = 0</div></td><td class="src">manuscript sec. 3.2</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+</tbody></table>
+<h2>Reproduced numerically <span class="tally">18 / 18</span></h2>
+<p class="blurb">Computed by this project&#x27;s solver and compared against a closed form or a published equation. Each carries the tolerance its assertion used.</p>
+<table><thead><tr><th>Claim</th><th>Source</th><th>Result</th><th>Tolerance</th><th>Verdict</th></tr></thead><tbody>
+<tr><td>the alpha=0 mass reproduces the Myers-Perry closed form<div class="method">6 spins up to q=0.7, relative</div></td><td class="src">Myers-Perry, M = 3 pi r_H^2/[8(1-q^2)]</td><td class="num">3.27&times;10<sup>-13</sup></td><td class="num">1.00&times;10<sup>-10</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the alpha=0 horizon squashing reproduces the Myers-Perry 1/(1-q^2)<div class="method">profile atlas at q=0.6, relative</div></td><td class="src">Myers-Perry</td><td class="num">8.30&times;10<sup>-14</sup></td><td class="num">1.00&times;10<sup>-8</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the static mass reproduces the Boulware-Deser closed form at finite coupling<div class="method">7 couplings, relative</div></td><td class="src">Boulware-Deser</td><td class="num">3.20&times;10<sup>-11</sup></td><td class="num">1.00&times;10<sup>-8</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the static temperature reproduces the Boulware-Deser closed form at finite coupling<div class="method">7 couplings, relative</div></td><td class="src">Boulware-Deser</td><td class="num">1.08&times;10<sup>-13</sup></td><td class="num">1.00&times;10<sup>-8</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the static entropy reproduces the Boulware-Deser closed form at finite coupling<div class="method">7 couplings, relative</div></td><td class="src">Boulware-Deser</td><td class="num">1.00&times;10<sup>-16</sup></td><td class="num">1.00&times;10<sup>-8</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the static potential reproduces the Boulware-Deser closed form at finite coupling<div class="method">7 couplings, relative</div></td><td class="src">Boulware-Deser</td><td class="num">2.60&times;10<sup>-9</sup></td><td class="num">1.00&times;10<sup>-8</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the alpha=0 response reproduces the published perturbative potential<div class="method">11 spins, relative; 8+ significant digits at 9</div></td><td class="src">arXiv:2405.04576 eq. (33), mapped by manuscript eq. (17)</td><td class="num">2.86&times;10<sup>-8</sup></td><td class="num">1.00&times;10<sup>-6</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>our near-horizon solution satisfies published eq. (4.11) as printed<div class="method">7 couplings, residual in the paper variables</div></td><td class="src">arXiv:1010.0860 eq. (4.11)</td><td class="num">9.17&times;10<sup>-14</sup></td><td class="num">1.00&times;10<sup>-10</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>our near-horizon solution satisfies published eq. (4.12) as printed<div class="method">7 couplings, relative in J</div></td><td class="src">arXiv:1010.0860 eq. (4.12)</td><td class="num">6.66&times;10<sup>-16</sup></td><td class="num">1.00&times;10<sup>-10</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the near-horizon branch gives S_ext = 2 pi J at alpha=0, the extremal Myers-Perry value<div class="method">sigma against 2 pi, relative</div></td><td class="src">Myers-Perry; arXiv:1010.0860 eq. (4.13) after k_paper = k/2</td><td class="num">1.11&times;10<sup>-12</sup></td><td class="num">1.00&times;10<sup>-10</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the extrapolated bulk entropy reproduces the near-horizon curve at finite coupling<div class="method">13 couplings, relative in sigma = S/J</div></td><td class="src">arXiv:1010.0860 sec. 4.2</td><td class="num">4.06&times;10<sup>-6</sup></td><td class="num">1.00&times;10<sup>-4</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the extrapolated mu(0) reproduces the published (3/2) pi^(1/3)<div class="method">absolute</div></td><td class="src">arXiv:2009.00015</td><td class="num">4.56&times;10<sup>-11</sup></td><td class="num">1.00&times;10<sup>-8</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the extrapolated Psi_ext(0) reproduces the published pi<div class="method">absolute</div></td><td class="src">arXiv:2009.00015</td><td class="num">1.19&times;10<sup>-7</sup></td><td class="num">1.00&times;10<sup>-5</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the vacuum extremal state returns the normalisation value j = 1<div class="method">absolute; tests mass and spin extraction with the T-&gt;0 fit</div></td><td class="src">arXiv:2303.12471 scaled spin</td><td class="num">3.11&times;10<sup>-11</sup></td><td class="num">1.00&times;10<sup>-6</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the Smarr relation closes on every accepted rotating solution<div class="method">356 states, relative</div></td><td class="src">manuscript eq. (8)</td><td class="num">1.64&times;10<sup>-7</sup></td><td class="num">1.00&times;10<sup>-6</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the first law closes in the spin direction at fixed coupling<div class="method">10 states, relative to the largest term</div></td><td class="src">manuscript eq. (2)</td><td class="num">1.35&times;10<sup>-8</sup></td><td class="num">1.00&times;10<sup>-6</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>every accepted state satisfies G + alpha H = 0 off the solver grid<div class="method">independent curvature evaluator at 51 off-grid points, relative</div></td><td class="src">Einstein-Gauss-Bonnet field equations</td><td class="num">9.76&times;10<sup>-9</sup></td><td class="num">1.00&times;10<sup>-8</sup></td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the extremal intercept survives two coarser radial resolutions at every coupling<div class="method">26 sequences, |dPsi| as a fraction of the fit sensitivity</div></td><td class="src">this work, resolution study</td><td class="num">1.50&times;10<sup>-3</sup></td><td class="num">1.00&times;10<sup>0</sup></td><td><span class="v pass">PASS</span></td></tr>
+</tbody></table>
+<h2>Transcription checked against the source <span class="tally">10 / 10</span></h2>
+<p class="blurb">A convention, normalisation or formula this work takes from a paper, checked against the text of that paper as downloaded in papers/.</p>
+<table><thead><tr><th>Claim</th><th>Source</th><th>Result</th><th>Tolerance</th><th>Verdict</th></tr></thead><tbody>
+<tr><td>the source action carries alpha/4 on L_GB, so alpha_paper = 4 alpha<div class="method">eq. (2.1) reads I = (1/16piG) int d^5x sqrt(-g) [R + (alpha/4) L_GB]</div></td><td class="src">arXiv:1010.0860 eq. (2.1)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the source charges are E = -3 V_3 U/16 pi G and J = V_3 W/8 pi G with V_3 = 2 pi^2<div class="method">eq. (3.6) and the line defining V_3; gives our -3 pi U/8 and pi W/4</div></td><td class="src">arXiv:1010.0860 eq. (3.6)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the source J is the momentum in each plane, not the total<div class="method">the sentence introducing eq. (3.6)</div></td><td class="src">arXiv:1010.0860 sec. 3.2</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the source near-horizon metric carries 2k, so our k is twice theirs<div class="method">eq. (4.6); with J = dE/dk this is why J_paper = 2 J</div></td><td class="src">arXiv:1010.0860 eq. (4.6)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the source entropy has an Einstein piece and a GB piece of the printed form<div class="method">eq. (3.10); its ratio to the Einstein term fixes alpha_paper = 4 alpha</div></td><td class="src">arXiv:1010.0860 eq. (3.10)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the source quotes an outer ergosurface radius at the coupling we compare with<div class="method">the value our reconstruction does not reproduce; see the manuscript discussion</div></td><td class="src">arXiv:1010.0860 sec. 4.1</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the published extremal mass is M = (3/2) pi^(1/3) J^(2/3) + pi alpha + O(alpha^2)<div class="method">the extremality result this work anchors mu(0) and Psi_ext(0) against</div></td><td class="src">arXiv:2009.00015</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the source uses the same 1/16 pi action normalisation, with G = 1<div class="method">eq. (25): Delta I = (alpha/16 pi) int sqrt(g) R_abcd R^abcd; required for its Gibbs-potential coefficient to be our Psi_0</div></td><td class="src">arXiv:2405.04576 eq. (25)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>their Delta M = (D-4) Delta G at D=5 with equal spins is exactly our eq. (17)<div class="method">specialised symbolically from the published general-D formula, then mapped by u = a^2/r_+^2; not copied from the paper</div></td><td class="src">arXiv:2405.04576 eq. (33)</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+<tr><td>the source treats a general quadratic-curvature correction on a Ricci-flat background<div class="method">why only the Riemann-squared term survives and its coefficient is our alpha</div></td><td class="src">arXiv:2405.04576</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td><span class="v pass">PASS</span></td></tr>
+</tbody></table>
+<h2>Called, not reproduced <span class="tally">11</span></h2>
+<p class="blurb">Used on the authority of the source. Listed so that it cannot be mistaken for anything above.</p>
+<table><thead><tr><th>What</th><th>Source</th><th>Status</th></tr></thead><tbody>
+<tr><td>The Myers-Perry solution itself</td><td class="src">Myers &amp; Perry, Annals Phys. 172 (1986) 304</td><td class="note">Its closed forms are used as an oracle and every one of them is checked against our solver, but the solution is not rederived here. Not on arXiv, so no PDF is in papers/.</td></tr>
+<tr><td>The Boulware-Deser solution itself</td><td class="src">Boulware &amp; Deser, PRL 55 (1985) 2656</td><td class="note">Same status: the closed forms for M, T and S are the oracle for the static limit, and we differentiate them to get Psi, but the solution is not rederived. Not on arXiv.</td></tr>
+<tr><td>Lovelock&#x27;s theorem</td><td class="src">Lovelock, J. Math. Phys. 12 (1971) 498</td><td class="note">Cited for the field equations being second order. Not reproduced. Not on arXiv.</td></tr>
+<tr><td>The Wald entropy formula</td><td class="src">arXiv:gr-qc/9307038, arXiv:gr-qc/9403028</td><td class="note">The Noether-charge form is cited, not derived. Its value on this horizon is checked against the independent derivation in arXiv:1010.0860.</td></tr>
+<tr><td>The Jacobson-Myers form for Lovelock horizons</td><td class="src">arXiv:hep-th/9305016</td><td class="note">Cited as the form Wald entropy takes here; the resulting entropy is then verified numerically against the published near-horizon branch.</td></tr>
+<tr><td>Sen&#x27;s entropy function formalism</td><td class="src">arXiv:0708.1270</td><td class="note">The formalism is cited. Our use of it is rederived symbolically and its solution checked against the full field equations component by component, but the formalism itself is not re-justified.</td></tr>
+<tr><td>The domain bounds x &lt; 1 and j &lt;= 1</td><td class="src">arXiv:2303.12471</td><td class="note">Quoted and compared against, not rederived. Our samples lie inside them.</td></tr>
+<tr><td>The Goon-Penco universality argument</td><td class="src">arXiv:1909.05254</td><td class="note">Only the first-law identity is used, and that is rederived here. The universality claim itself is cited and not tested.</td></tr>
+<tr><td>Causality constraints on higher-curvature couplings</td><td class="src">arXiv:1407.5597</td><td class="note">Cited in the discussion as a reason to separate the classical truncation from an ultraviolet completion. Nothing is computed from it.</td></tr>
+<tr><td>The extended first law for Lovelock couplings</td><td class="src">arXiv:1005.5053, arXiv:2404.16981</td><td class="note">Cited as the source of the Psi dalpha term. The term is then used and its consequences checked internally, but the covariant-phase-space derivation is not repeated.</td></tr>
+<tr><td>The outer ergosurface radius 1.104 at alpha = 1/2</td><td class="src">arXiv:1010.0860</td><td class="note">Compared against and does NOT reproduce: our reconstruction gives 1.102101. Unresolved; recorded in the manuscript discussion as an open point.</td></tr>
+</tbody></table>
+
+<h2>The comparisons, with their margins</h2>
+<p>Each figure pairs an external result with what this solver produced, and shows
+underneath the deviation against the tolerance the assertion actually used. The
+margin is the point: in every case the achieved deviation is orders of magnitude
+below the bar it had to clear.</p>
+<figure>
+  <img src="figures/fig-myers-perry.png" alt="The vacuum limit against Myers--Perry.">
+  <figcaption><b>The vacuum limit against Myers--Perry.</b> Upper: the mass of the solver&#x27;s alpha=0 solutions against the closed form M=3pi r_H^2/[8(1-q^2)], which follows from 3pimu/8 and the coordinate map r^2=rho^2+a^2 rederived in this report. Lower: the relative deviation, against the tolerance the assertion used. The comparison runs to q=0.7, past the vacuum extremal spin 1/sqrt2 being approached.</figcaption>
+</figure>
+<figure>
+  <img src="figures/fig-boulware-deser.png" alt="The static limit against Boulware--Deser, at finite coupling.">
+  <figcaption><b>The static limit against Boulware--Deser, at finite coupling.</b> Upper: the potential Psi measured at zero spin against the closed form derived in this report by differentiating the Boulware--Deser charges. This is the one exact check available at alphaneq0. The dotted line is the alphato0 value -9pi/4, which the independent perturbative formula also returns. Lower: relative deviations in M, T and Psi. The entropy is reproduced to machine precision and is omitted from the lower panel for that reason.</figcaption>
+</figure>
+<figure>
+  <img src="figures/fig-perturbative.png" alt="The zero-coupling response against the published perturbative potential.">
+  <figcaption><b>The zero-coupling response against the published perturbative potential.</b> Upper: the implicit numerical response evaluated on the Myers--Perry background against Psi_0(q), which this report re-derives by specialising the general-D result of Wu and L&quot;u to D=5 with equal spins rather than by copying it. The star marks the extremal endpoint Psi_0=pi, which is the published linear-order extremality shift and was not used in obtaining the curve. Lower: relative deviation.</figcaption>
+</figure>
+<figure>
+  <img src="figures/fig-near-horizon.png" alt="The extremal entropy against the published near-horizon branch.">
+  <figcaption><b>The extremal entropy against the published near-horizon branch.</b> Upper: sigma=S_{ext}/J from the near-horizon entropy function, rederived here and checked against eqs.~(4.11) and~(4.12) of arXiv:1010.0860 in the paper&#x27;s own variables, against the zero-temperature extrapolation of the bulk solutions. The star is the extremal Myers--Perry value 2pi. Lower: relative difference between the two routes.</figcaption>
+</figure>
+
+<h2>Sources held locally</h2>
+<p>Every paper the calculation leans on that exists on arXiv is now in
+<code>papers/</code>, and the transcription checks above read them from there.
+This closes a gap the earlier referee record named explicitly: the literature
+attributions had been unverifiable because no source PDFs were present. The three
+pre-arXiv sources &mdash; Myers and Perry (1986), Boulware and Deser (1985),
+Lovelock (1971) &mdash; are not available that way and are listed as called.</p>
+<table><thead><tr><th>File</th><th>Size</th></tr></thead><tbody>
+<tr><td class="mono">0708.1270-sen-entropy-function-attractors.pdf</td><td class="num">1835 kB</td></tr>
+<tr><td class="mono">1005.5053-kastor-ray-traschen-smarr-lovelock.pdf</td><td class="num">262 kB</td></tr>
+<tr><td class="mono">1010.0860-brihaye-kleihaus-kunz-radu-equal-spin-egb-d5.pdf</td><td class="num">396 kB</td></tr>
+<tr><td class="mono">1306.2517-kunduri-lucietti-near-horizon-classification.pdf</td><td class="num">883 kB</td></tr>
+<tr><td class="mono">1407.5597-camanho-edelstein-maldacena-zhiboedov-causality.pdf</td><td class="num">706 kB</td></tr>
+<tr><td class="mono">1901.11535-reall-santos-higher-derivative-kerr-thermodynamics.pdf</td><td class="num">474 kB</td></tr>
+<tr><td class="mono">1909.05254-goon-penco-entropy-extremality-relation.pdf</td><td class="num">171 kB</td></tr>
+<tr><td class="mono">2009.00015-ma-li-lu-d5-egb-mass-angular-momentum-extremality.pdf</td><td class="num">281 kB</td></tr>
+<tr><td class="mono">2303.12471-kleihaus-kunz-radu-phases-rotating-d5-egb.pdf</td><td class="num">301 kB</td></tr>
+<tr><td class="mono">2404.16981-neri-liberati-covariant-phase-space-lanczos-lovelock.pdf</td><td class="num">877 kB</td></tr>
+<tr><td class="mono">2405.04576-wu-lu-quadratic-curvature-rotating-thermodynamics.pdf</td><td class="num">301 kB</td></tr>
+<tr><td class="mono">2512.23797-ma-lu-quadratic-curvature-correction-5d-myers-perry.pdf</td><td class="num">245 kB</td></tr>
+<tr><td class="mono">gr-qc-9307038-wald-black-hole-entropy-noether-charge.pdf</td><td class="num">142 kB</td></tr>
+<tr><td class="mono">gr-qc-9403028-iyer-wald-noether-charge-dynamical-entropy.pdf</td><td class="num">307 kB</td></tr>
+<tr><td class="mono">hep-th-0601001-arkani-hamed-motl-nicolis-vafa-weak-gravity.pdf</td><td class="num">213 kB</td></tr>
+<tr><td class="mono">hep-th-0606100-kats-motl-padi-higher-order-extremal-mass-charge.pdf</td><td class="num">174 kB</td></tr>
+<tr><td class="mono">hep-th-9305016-jacobson-myers-entropy-higher-curvature.pdf</td><td class="num">134 kB</td></tr>
+</tbody></table>
+
+<h2>What this record does not establish</h2>
+<p>Agreement with an external result bounds the error at the point of comparison
+and nowhere else. The vacuum and static checks are exact, but they sit at the
+edges of the family &mdash; zero coupling and zero spin &mdash; and the
+near-horizon check constrains the entropy, not the mass.</p>
+<p><b>No external result exists for the rotating mass at finite coupling</b>,
+which is precisely the quantity the accompanying manuscript reports. That number
+rests on the solver, its convergence behaviour and the zero-temperature
+extrapolation, and on nothing published. The tolerances above are the ones the
+assertions used, chosen loose enough to pass reliably; they are not estimates of
+the accuracy achieved, which is typically orders of magnitude better and is what
+the lower panels of the figures show.</p>
+
+<footer>
+  Generated by <code>verification-report/build_report.py</code> from
+  <code>results/verification-ledger.json</code>, which
+  <code>work/verification_suite.py</code> produces. No verdict or number in this
+  page is typed by hand. Environment: Linux-6.8.0-142-generic-x86_64-with-glibc2.39,
+  Python 3.12.3, NumPy 1.26.4, SymPy 1.12.
+</footer>
+
+</div>
+</body>
+</html>

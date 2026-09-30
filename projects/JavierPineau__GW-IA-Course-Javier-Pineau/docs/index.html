@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Espectro tensorial en gravedad unimodular con difusión</title>
+<style>
+body{font:16px/1.55 -apple-system,"Helvetica Neue",Arial,sans-serif;max-width:980px;margin:2rem auto;padding:0 1rem;color:#1a1a1a}
+h1{font-size:1.55rem;margin-bottom:.2rem}h2{font-size:1.15rem;border-bottom:2px solid #2a78d6;padding-bottom:.2rem;margin-top:2.2rem}
+.sub{color:#555;margin-top:0} table{border-collapse:collapse;width:100%;margin:.8rem 0;font-size:.92rem}
+th,td{border:1px solid #ddd;padding:.35rem .55rem;text-align:left;vertical-align:top} th{background:#f4f4f4}
+figure{margin:1rem 0} img{max-width:100%;border:1px solid #e3e3e3} figcaption{font-size:.85rem;color:#555}
+.warn{background:#fff7e0;border-left:4px solid #e8a05c;padding:.5rem 1rem;margin:1rem 0}
+.ok{background:#eef8f0;border-left:4px solid #2e9d5b;padding:.5rem 1rem;margin:1rem 0}
+code{background:#f4f4f4;padding:.05em .3em;font-size:.88em} a{color:#1f5fb0}
+</style></head><body>
+<h1>Espectro tensorial primordial en gravedad unimodular con difusión</h1>
+<p class="sub">Javier Pineau · Curso GW IA — trabajo final · 28-sep-2026 ·
+<a href="paper_UG.pdf">Paper (PDF)</a> · <a href="informe_UG.pdf">Informe largo (PDF)</a> · Código, datos y registro de procedencia: en este repositorio (<code>README.md</code>, <code>REPRODUCCION.md</code>)</p>
+
+<h2>Pregunta</h2>
+<p>En gravedad unimodular (UG) el tensor energía-impulso puede no conservarse, <code>∇ₐTᵃᵇ = ∇ᵇQ</code>, con <code>Q</code> una función escalar (la <em>difusión</em>). ¿Cambia por eso el espectro de potencia tensorial primordial <code>P_T(k)</code> respecto de la relatividad general (RG)?</p>
+
+<h2>Resultados</h2>
+<table>
+<tr><th>#</th><th>Resultado</th><th>Estatus</th></tr>
+<tr><td>1</td><td>Sobre FLRW plano la ecuación de los modos TT es la de RG: <code>ḧ + 3Hḣ + k²h/a² = 0</code>; <code>Q</code> y <code>Λ₀</code> entran solo por <code>H(t)</code>.</td><td>Derivada a mano; verificada con SymPy a 1.er orden. La acción a 2.º orden: solo a mano, y se adopta como hipótesis de la realización efectiva (la ecuación de propagación no fija la normalización cuántica). Supone materia sin parte TT.</td></tr>
+<tr><td>2</td><td>Inflatón + <code>Q(N)=Q_i e^{−γN}</code>, cuadrático: a igual <code>k</code> UG suprime <code>P_T</code> (0.914→0.344 veces RG); a igual N* lo <em>aumenta</em> (×1.5). Starobinsky: aproximadamente 9.6–9.8 % a igual N* y 5.3–20.4 % a igual k: 0.90 a igual N*, entre 0.947 y 0.796 a igual <code>k</code>.</td><td>Numérico, 10+8 controles. <code>Q(N)</code> es fenomenológica. Igual N* es una convención ilustrativa (falta el recalentamiento).</td></tr>
+<tr><td>3</td><td>Para un escalar canónico con <code>Q</code> como ley local <code>Q(φ)</code>, UG se reescribe como RG con <code>V_eff=V+Q(φ)+Λ₀</code>. Si se impone <code>δQ=0</code> en el marco especificado y la perturbación del inflatón es inhomogénea, resulta <code>Q̇=0</code>.</td><td>Simbólico (fondo y 1.er orden); la equivalencia perturbativa, a mano. No cubre perturbaciones uniformes ni otros gauges (<code>δQ</code> depende del gauge); con <code>Q(N)</code> vale solo sobre la rama reconstruida.</td></tr>
+<tr><td>4</td><td>Modelo de radiación con difusión Q (arXiv:2202.04029; arXiv:2307.06329) (radiación pura + <code>Q</code>, sin inflatón): <code>P_T</code> = RG con el mismo <code>H(N)</code> (≲10⁻⁶). En el punto de referencia de Piccirilli–León: <code>A_s</code> = 2.12·10⁻⁹ (+1.1 % vs Planck) con su fórmula escalar; ×5.2 con la de arXiv:2202.04029.</td><td><b>Condicional</b>: el sector escalar no está derivado; normalización de la referencia, no reajustada.</td></tr>
+</table>
+
+<div class="warn"><b>Límites.</b> No se deriva el sector escalar con difusión (factor 3<sup>3/2</sup> en disputa entre arXiv:2202.04029 y arXiv:2307.06329); no se modela el recalentamiento; Starobinsky solo como forma de potencial y con <code>M</code> calibrada. Detalle en el <a href="paper_UG.pdf">paper</a> y en <code>provenance/PROVENANCE.md</code>.</div>
+
+<h2>Figuras</h2>
+<figure><img src="img/fig1_PT_k_RG_vs_UG.png" alt="P_T(k) RG vs UG"><figcaption>Fig. 1. <code>P_T(k)</code> en RG y UG (cuadrático) a igual <code>k</code>.</figcaption></figure>
+<figure><img src="img/fig8_igual_Nstar.png" alt="igual N*"><figcaption>Fig. 2. Comparación a igual número de e-folds antes del final: el signo del cociente cambia en el cuadrático; en Starobinsky es ≈0.9.</figcaption></figure>
+<figure><img src="img/fig6_fondo_starobinsky.png" alt="fondo Starobinsky"><figcaption>Fig. 3. Fondo con potencial de Starobinsky (RG dura 387 e-folds, UG 100).</figcaption></figure>
+<figure><img src="img/fig9_fondo_leon.png" alt="modelo de radiación con difusión Q (arXiv:2202.04029; arXiv:2307.06329)"><figcaption>Fig. 4. Modelo de radiación con difusión Q (arXiv:2202.04029; arXiv:2307.06329) (escenario 1): <code>ε₁</code>, <code>Q</code>, <code>ρ</code>, <code>H</code>.</figcaption></figure>
+<figure><img src="img/fig10_leon_PT_As.png" alt="P_T y A_s con modelo de radiación con difusión Q (arXiv:2202.04029; arXiv:2307.06329)"><figcaption>Fig. 5. <code>P_T</code> con radiación+<code>Q</code> vs inflatón de RG reconstruido; <code>A_s</code> y <code>r</code> según tres fórmulas escalares (condicional).</figcaption></figure>
+
+<div class="ok"><b>Mensaje central.</b> A igual fondo, y bajo las hipótesis adoptadas, la propagación tensorial no distingue UG de RG; las diferencias de los ejemplos provienen del fondo <code>H(t)</code> y del criterio de comparación. El acoplamiento escalar y las fórmulas alternativas de <code>A_s</code> son discusión condicionada.</div>
+
+<h2>Cómo se comprobó</h2>
+<ul>
+<li><b>Límite estándar de RG:</b> de Sitter exacto, slow-roll a 2.º orden (Martin–Ringeval–Vennin), UG con <code>γ=0</code> = RG (10⁻¹³), integrador independiente (4·10⁻¹⁰).</li>
+<li><b>Los controles pueden fallar:</b> control de mutaciones (código roto a propósito) y control negativo; 4 comprobaciones simbólicas; no se conservan pruebas de mutación simbólica.</li>
+<li><b>Modelo de radiación con difusión Q (arXiv:2202.04029; arXiv:2307.06329):</b> continuidad integrada independiente (1.7·10⁻⁸), formas cerradas de Piccirilli–León (3·10⁻¹¹), RG con inflatón reconstruido (P_T a 10⁻¹⁰).</li>
+<li><b>Honestidad de criterios:</b> cuatro ajustes hechos <em>después</em> de ver un fallo, todos declarados.</li>
+</ul>
+
+<h2>Reproducir</h2>
+<p>Seguir <code>REPRODUCCION.md</code> en la raíz del repositorio para instalar el entorno y ejecutar el notebook. Con ese entorno activado:</p>
+<pre><code>make all PY="$PWD/.venv/bin/python"  # resultados → 47 pruebas → PDF → docs</code></pre>
+<p>Las cifras escritas a mano en esta página y en el paper no se regeneran: <code>provenance/numbers.json</code> es la fuente.</p>
+<p><b>Alcance del validador.</b> <code>validate_provenance.py</code> realiza un chequeo estructural de campos, claves y existencia de archivos/funciones. No ejecuta productores ni certifica la verdad de las afirmaciones o la cobertura del HTML/PDF. Las citas textuales no se verifican. El registro incluye controles, tablas, diagnósticos y datasets completos.</p>
+<p>Procedencia: <code>provenance/numbers.json</code> (valores, entradas, referencias y datasets), <code>provenance/claims.yaml</code> (24 afirmaciones, 10 figuras), <code>provenance/PROVENANCE.md</code>.</p>
+<p>Referencias del modelo: <a href="https://arxiv.org/abs/2202.04029">Inflation and the cosmological (not-so) constant in unimodular gravity (2022)</a>; <a href="https://arxiv.org/abs/2307.06329">Reconstruction of inflationary scenarios in non-conservative unimodular gravity (2023)</a>.</p>
+</body></html>

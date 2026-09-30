@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bitácora del proyecto</title>
+<style>
+:root {
+  --fondo: #ffffff; --texto: #1a1a1a; --suave: #666; --linea: #e6e6e6;
+  --acento: #e8a05c; --enlace: #a5651e; --caja: #fafafa;
+  --verde: #2f6b3c; --verde-fondo: #f3f9f4; --rojo-fondo: #fcf5f5; --rojo: #c0504d;
+}
+body { font: 16px/1.7 -apple-system, "Helvetica Neue", sans-serif;
+       max-width: 780px; margin: 2rem auto; padding: 0 16px;
+       color: var(--texto); background: var(--fondo); }
+h1 { font-size: 1.7rem; margin-bottom: .2rem; }
+.subtitulo { color: var(--suave); margin-top: 0; }
+h2 { font-size: 1.3rem; margin-top: 2.6rem; border-bottom: 2px solid var(--acento);
+     padding-bottom: .2rem; }
+h3 { font-size: 1.08rem; margin-top: 1.8rem; }
+a { color: var(--enlace); }
+code { background: #f2f2f2; padding: .05em .3em; font-size: .85em; border-radius: 3px; }
+.analogia { border-left: 4px solid var(--acento); background: var(--caja);
+            padding: .7rem 1.1rem; margin: 1.1rem 0; }
+.analogia::before { content: "Una forma de pensarlo"; display: block; font-weight: 600;
+                    font-size: .8rem; text-transform: uppercase; letter-spacing: .04em;
+                    color: var(--enlace); margin-bottom: .2rem; }
+.leccion { border-left: 4px solid var(--verde); background: var(--verde-fondo);
+           padding: .7rem 1.1rem; margin: 1.1rem 0; }
+.leccion::before { content: "Lo que me llevo"; display: block; font-weight: 600;
+                   font-size: .8rem; text-transform: uppercase; letter-spacing: .04em;
+                   color: var(--verde); margin-bottom: .2rem; }
+.abierto { border-left: 4px solid var(--rojo); background: var(--rojo-fondo);
+           padding: .7rem 1.1rem; margin: 1.1rem 0; }
+.tecnico { font-size: .88rem; color: #555; }
+.tecnico::before { content: "Para quien quiera el detalle: "; font-weight: 600; }
+ol, ul { padding-left: 1.3rem; }
+li { margin: .3rem 0; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .92rem; }
+th, td { border: 1px solid var(--linea); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+th { background: var(--caja); }
+.tabla { overflow-x: auto; }
+nav.indice { background: var(--caja); border: 1px solid var(--linea); padding: .8rem 1.2rem;
+             border-radius: 6px; font-size: .95rem; }
+nav.indice ol { margin: .3rem 0 0; }
+dl dt { font-weight: 600; margin-top: .8rem; }
+dl dd { margin-left: 1rem; }
+.fecha { color: var(--suave); font-size: .85rem; font-weight: normal; }
+footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--linea);
+         color: var(--suave); font-size: .85rem; }
+/* texto justificado (con guiones, en castellano) */
+p, li, dd, figcaption, blockquote { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+</style>
+</head>
+<body>
+
+<h1>Bitácora del proyecto</h1>
+<p class="subtitulo">Qué hice, qué aprendí y por qué importa, contado para que lo
+entienda cualquiera. Proyecto final de <em>Ondas gravitacionales e investigación
+asistida por IA</em> (UBA, 2026).</p>
+
+<p>Esta página es un diario de trabajo. No hace falta saber física para leerla:
+cada vez que aparece una palabra técnica, está explicada ahí mismo o en el
+<a href="#glosario">glosario</a> del final. Quien quiera las ecuaciones las
+encuentra en las páginas técnicas, enlazadas en cada sección.</p>
+
+<nav class="indice">
+<strong>Contenido</strong>
+<ol>
+<li><a href="#pregunta">La pregunta del proyecto, en palabras simples</a></li>
+<li><a href="#herramienta">La herramienta: simular el universo en una caja</a></li>
+<li><a href="#hecho">Lo que hice hasta ahora</a></li>
+<li><a href="#aprendido">Lo que aprendí</a></li>
+<li><a href="#siguiente">Lo que sigue, y lo que falta decidir</a></li>
+<li><a href="#glosario">Glosario</a></li>
+</ol>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="pregunta">1. La pregunta del proyecto, en palabras simples</h2>
+
+<p>Las <strong>ondas gravitacionales</strong> son arrugas en el propio espacio
+que viajan a la velocidad de la luz. Las producen fenómenos muy violentos, como
+el choque de dos agujeros negros, y desde 2015 se detectan con instrumentos como
+LIGO. Algunas de esas ondas podrían venir de los primeros instantes del
+universo, y traer información de una época de la que no nos llega ninguna
+luz.</p>
+
+<p>Una de esas épocas es el <strong>recalentamiento</strong> (en inglés,
+<em>preheating</em>). Según la idea más aceptada, el universo recién nacido
+pasó por una <strong>inflación</strong>: una expansión muy rápida impulsada por
+un campo llamado <strong>inflatón</strong>. Cuando la inflación terminó, el
+inflatón quedó oscilando, y en esas oscilaciones le fue pasando su energía a
+todas las demás partículas. Esa transferencia fue violenta y desordenada, y
+un proceso así produce ondas gravitacionales.</p>
+
+<div class="analogia">
+Pensá en una hamaca. Si la empujás en el momento justo de cada vaivén, cada
+empujón suma y la hamaca sube cada vez más: eso es una <em>resonancia</em>. El
+inflatón oscilando hace lo mismo con los otros campos: les da "empujones" en
+el momento justo y los hace crecer muy rápido. Esa energía que crece de golpe
+y de forma desordenada es la que agita el espacio y produce las ondas.
+</div>
+
+<p>Casi todos los estudios de este proceso suponen que el inflatón sólo le pasa
+energía a campos "simples" (los <strong>campos escalares</strong>, que en cada
+punto tienen un solo número). Pero el inflatón también podría estar conectado
+con <strong>campos de gauge</strong>, que son los que transmiten fuerzas: el
+campo electromagnético es el ejemplo más conocido. Un campo de gauge se
+comporta distinto: tiene dirección, forma líneas de campo y puede armar tubos
+de flujo.</p>
+
+<p><strong>La pregunta del proyecto es: si al recalentamiento se le agrega un
+campo de gauge, ¿cuánto cambia la "huella" de ondas gravitacionales que
+deja?</strong> Esa huella es el <strong>espectro</strong>: cuánta onda hay en
+cada frecuencia. Cambiar el campo de gauge podría mover el pico del espectro,
+cambiar su altura o dejar marcas propias que un modelo sin campos de gauge no
+tiene.</p>
+
+<!-- ============================================================ -->
+<h2 id="herramienta">2. La herramienta: simular el universo en una caja</h2>
+
+<p>Este proceso es demasiado complicado para resolverlo con lápiz y papel:
+todo interactúa con todo al mismo tiempo. Lo que se hace es
+<strong>simularlo en una computadora</strong>. Se toma un cubo de espacio, se
+lo divide en una grilla de puntos (una <strong>red</strong> o
+<em>lattice</em>) y en cada punto se guarda cuánto vale cada campo. Después se
+avanza en el tiempo de a pasitos, aplicando las leyes de la física en cada
+punto.</p>
+
+<div class="analogia">
+Es como una foto digital: la imagen real es continua, pero la cámara la guarda
+como una grilla de píxeles. Con suficientes píxeles, la foto se parece mucho a
+la realidad. Acá los píxeles son puntos del espacio, y en vez de colores
+guardan los valores de los campos.
+</div>
+
+<p>El programa que uso se llama <a href="https://cosmolattice.net/">CosmoLattice</a>.
+Es público, y lo escribió un grupo de físicos que se especializa en esto.
+Su gran ventaja es que simula campos de gauge <em>respetando exactamente</em>
+sus reglas, no de forma aproximada. Trae tres modelos armados que sirven justo
+para la comparación del proyecto:</p>
+
+<div class="tabla">
+<table>
+<tr><th>Modelo</th><th>Qué tiene</th><th>Para qué lo uso</th></tr>
+<tr><td><code>lphi4</code></td><td>El inflatón y otro campo escalar. Sin campos de gauge.</td><td><strong>El control:</strong> la versión "sin" contra la que comparar.</td></tr>
+<tr><td><code>lphi4U1</code></td><td>El inflatón con carga, conectado a un campo de gauge parecido al electromagnético.</td><td>El caso con un campo de gauge.</td></tr>
+<tr><td><code>lphi4SU2U1</code></td><td>El inflatón conectado a dos campos de gauge, parecidos a los de la fuerza electrodébil.</td><td>Un caso de gauge más rico, si el tiempo alcanza.</td></tr>
+</table>
+</div>
+
+<p class="tecnico">qué ecuaciones resuelve CosmoLattice y cómo pone los campos
+de gauge en la red está en <a href="what-is-cosmolattice.html">¿Qué es
+CosmoLattice?</a>.</p>
+
+<!-- ============================================================ -->
+<h2 id="hecho">3. Lo que hice hasta ahora</h2>
+
+<p>Antes de correr la primera simulación "de verdad" (sección 3.1), primero me aseguré de
+entender exactamente qué hace el programa, porque si no, cualquier resultado
+que saliera podría estar mal interpretado. Fue en este orden:</p>
+
+<ol>
+<li><strong>Instalé CosmoLattice</strong> y compilé los tres modelos. Corrí una
+prueba chiquita (una caja de 16×16×16 puntos, durante muy poco tiempo) sólo
+para confirmar que el programa funciona. Esa prueba no dice nada de física.</li>
+<li><strong>Junté la bibliografía</strong>: 13 artículos científicos, entre los
+que explican el programa y los que estudiaron antes ondas gravitacionales con
+campos de gauge. Están en <a href="../bibliografía/BIBLIOGRAFIA.md">bibliografía/</a>,
+con una nota de para qué sirve cada uno.</li>
+<li><strong>Escribí una introducción</strong> al programa,
+<a href="what-is-cosmolattice.html">¿Qué es CosmoLattice?</a>.</li>
+<li><strong>Estudié en detalle cómo el programa convierte la física en
+números</strong> y lo escribí en
+<a href="bases-teoricas-modelos-gauge.html">Bases teóricas de los modelos
+gauge</a>.</li>
+<li><strong>Verifiqué cada cuenta.</strong> Escribí un programa,
+<a href="../code/verificar_variables_de_programa.py"><code>verificar_variables_de_programa.py</code></a>,
+que rehace las cuentas del artículo y las compara con lo que hace el código de
+CosmoLattice. Hoy hace 21 comprobaciones y todas dan bien. Así, si mañana
+alguien cambia algo, se puede volver a correr y ver si sigue todo en orden.</li>
+<li><strong>Anoté de dónde sale cada número.</strong> Cada número o afirmación
+del proyecto queda registrado en <code>provenance/</code>, con qué programa lo
+calculó y qué decisiones hubo que tomar. La idea es que cualquiera pueda
+rastrearlo sin tener que preguntarme.</li>
+</ol>
+
+<h3 id="piloto">3.1. La primera simulación: el piloto del control (23 de septiembre de 2026)</h3>
+
+<p>Corrí el modelo de control, <code>lphi4</code>, con los parámetros acordados pero en una caja
+más chica (128 puntos por lado en lugar de 256), para probar que todo funciona antes de gastar
+tiempo en la corrida grande. Tardó 1 hora y 17 minutos en esta computadora (usando sus 8 núcleos) y la
+energía se conservó muy bien (el error nunca pasó de 2 en 10 000). Los parámetros están en
+<a href="../code/lphi4_piloto_N128.in"><code>code/lphi4_piloto_N128.in</code></a> y las salidas en
+<code>data/lphi4_piloto_N128/</code>.</p>
+
+<p>Para mirar los resultados armé un cuaderno interactivo,
+<a href="../code/analisis_corridas.py"><code>code/analisis_corridas.py</code></a> (se abre con
+<code>marimo edit code/analisis_corridas.py</code>). Muestra cómo se expande el universo, cómo
+oscila el inflatón, en qué escalas crece el campo hijo y cuándo aparecen las ondas
+gravitacionales. Lo que se ve:</p>
+
+<ul>
+<li><strong>El campo hijo crece donde y como dice la teoría</strong>, pero sólo si se usa la
+amplitud <em>real</em> del inflatón. Al principio, mientras el universo todavía no se expande como
+radiación, el inflatón gana un poco de energía y su amplitud queda un 14 % más grande que la de
+partida. Con esa amplitud, la teoría y la simulación coinciden al 0,4 %. Sin ella parecía haber una
+diferencia del 14 % que no era un error: era física que la cuenta simple no tenía en cuenta.</li>
+<li><strong>Las ondas gravitacionales siguen a los gradientes.</strong> Mientras el campo hijo
+crece, la energía de las ondas crece cuatro veces más rápido (en el exponente), como se espera
+porque la fuente es el cuadrado del campo. Dejan de crecer rápido cuando la energía de
+"arrugas" del campo (los gradientes) llega al 1 % del total, cerca de τ ≈ 84. Una estimación a
+mano del fin de la resonancia da entre 77 y 88. La mitad de las ondas finales ya está hecha en
+τ ≈ 130.</li>
+<li><strong>Hoy</strong>, esas ondas tendrían una frecuencia de unos 100 millones de Hz y una
+amplitud h²Ω ≈ 7×10⁻¹¹. Es muchísimo más agudo que lo que miden LIGO o LISA.</li>
+<li><strong>Una advertencia:</strong> en las escalas más chicas que resuelve la caja, el espectro
+de ondas todavía sigue creciendo al final. Esa parte depende de la resolución y hay que confirmarla
+con una caja más fina.</li>
+</ul>
+
+<p><strong>Comparación con lo publicado.</strong> Dufaux y colaboradores (2007) simularon este
+mismo modelo. Al traducir las diferencias (usaron un λ nueve veces menor), nuestro resultado
+coincide con el de ellos en la altura del pico (3,8×10⁻¹¹ contra ∼3×10⁻¹¹), en su frecuencia (a
+20 %), en la forma de la cola de frecuencias bajas y en los momentos en que pasa cada cosa. La única
+diferencia está en las escalas más chicas: nuestra caja no llega a resolverlas, y ahí el espectro
+sigue creciendo al final. Para eso hace falta la caja de 256 puntos.</p>
+
+<p>El análisis completo, con todas las figuras, está en
+<a href="piloto-lphi4.html">El piloto del control</a>.</p>
+
+<p><strong>Cuánto van a tardar los modelos con gauge.</strong> Hice pruebas cortas de los tres
+modelos con la caja de 128 puntos (<code>data/pruebas_costo_N128/</code>). El control tarda
+unos 80 minutos. El de U(1), unas 8 horas y media. El de SU(2)×U(1), unos 3 días y medio: sus
+campos son matrices y cada paso cuesta diez veces más. Los tres entran en la memoria, de a uno
+por vez. Además apareció una restricción del programa: con campos de gauge y ondas
+gravitacionales no se puede usar el integrador del piloto (LF) y hay que usar otro (VV2). Por
+eso conviene repetir el control con VV2, para que los tres usen el mismo. La ley de Gauss se
+cumple desde el primer instante, con un error de una parte en cien mil millones.</p>
+
+<h3 id="integradores">3.2. El control con el otro integrador: ¿cambia algo? (23 de septiembre de 2026)</h3>
+
+<p>Un <em>integrador</em> es la receta que usa el programa para avanzar el universo de un
+instante al siguiente. El piloto usó uno llamado LF (<em>leapfrog</em>, "salto de rana"), que
+calcula los campos y sus velocidades en instantes alternados, medio paso corridos. Los modelos
+con gauge no pueden usarlo junto con las ondas gravitacionales. La fuente de las ondas necesita
+el campo eléctrico y el magnético en el mismo instante, y LF los tiene medio paso corridos. Por
+eso los modelos con gauge van a usar VV2 (<em>velocity Verlet</em>), que sí los sincroniza.</p>
+
+<p>Para que la comparación entre modelos sea justa, los tres tienen que usar el mismo
+integrador. Así que repetí el control con VV2: mismos parámetros, misma semilla (el mismo
+"ruido" inicial exacto), solo cambia el integrador. Entrada:
+<a href="../code/lphi4_control_N128_VV2.in"><code>code/lphi4_control_N128_VV2.in</code></a>,
+salidas en <code>data/lphi4_control_N128_VV2/</code> y figuras en
+<code>figures/lphi4_control_N128_VV2/</code> (hechas con el mismo cuaderno). Tardó 1 hora y
+32 minutos (el piloto, 1 hora y 17) y usó la misma memoria, 318 MB.</p>
+
+<table>
+<tr><th>qué se mide</th><th>piloto (LF)</th><th>control (VV2)</th><th>diferencia</th></tr>
+<tr><td>amplitud real del inflatón, A</td><td>1,138</td><td>1,138</td><td>ninguna</td></tr>
+<tr><td>velocidad de crecimiento del campo hijo, μ</td><td>0,2002</td><td>0,2001</td><td>0,02 %</td></tr>
+<tr><td>velocidad de crecimiento de las ondas</td><td>0,757</td><td>0,757</td><td>ninguna</td></tr>
+<tr><td>los gradientes llegan al 1 % (τ)</td><td>83,9</td><td>83,9</td><td>ninguna</td></tr>
+<tr><td>50 % / 90 % de las ondas hechas (τ)</td><td>130 / 203</td><td>130 / 201</td><td>&lt; 1 %</td></tr>
+<tr><td>energía final en ondas, ρ_GW/ρ</td><td>9,87×10⁻⁶</td><td>9,92×10⁻⁶</td><td>0,4 %</td></tr>
+<tr><td>pico del espectro hoy, h²Ω (g★ = 100)</td><td>6,8×10⁻¹¹ a 1,1×10⁸ Hz</td><td>6,9×10⁻¹¹ a 1,1×10⁸ Hz</td><td>2 % en altura, nada en frecuencia</td></tr>
+<tr><td>pico de (Ω_gw)_p en x ≈ 150</td><td>2,83×10⁻⁶</td><td>2,70×10⁻⁶</td><td>5 %</td></tr>
+<tr><td>crecimiento del pico entre x ≈ 170 y el final</td><td>22 %</td><td>28 %</td><td>6 puntos</td></tr>
+<tr><td>error máximo de la energía (Friedmann)</td><td>2,1×10⁻⁴</td><td>7,7×10⁻⁴</td><td>ver abajo</td></tr>
+</table>
+
+<p>Lo que se ve:</p>
+<ul>
+<li><strong>La física no cambia.</strong> Todo lo que depende de la resonancia coincide a menos
+del 0,1 %: la amplitud del inflatón, la velocidad de crecimiento, los tiempos y el crecimiento de
+las ondas. Las dos corridas arrancan del mismo ruido inicial, así que durante la fase lineal
+recorren prácticamente el mismo camino.</li>
+<li><strong>Las diferencias aparecen en la fase turbulenta</strong> y son chicas: entre 2 y 5 % en
+el pico del espectro. En la fase caótica dos cálculos que difieren muy poco terminan separándose
+(como dos hojas que caen juntas y terminan lejos), así que esas diferencias no dicen cuál
+integrador es "mejor". Dan una idea de la incertidumbre numérica de esa parte del espectro. El
+crecimiento del pico al final (22 % contra 28 %) es justo la parte que ya sabíamos poco confiable
+por la resolución de la caja.</li>
+<li><strong>El error de energía se comporta distinto.</strong> Con LF oscila alrededor de 10⁻⁴
+durante toda la corrida y no crece. Con VV2 arranca diez veces más chico (10⁻⁵) pero crece de a poco
+y llega a 8×10⁻⁴ al final. Sigue siendo chico: la energía se conserva a mejor que una parte en mil.
+Si en corridas más largas siguiera creciendo, habría que achicar el paso de tiempo.</li>
+</ul>
+
+<p><strong>Conclusión:</strong> el cambio de integrador no afecta los resultados. El control con
+VV2 pasa a ser la referencia con la que se van a comparar los modelos con gauge, que usan el mismo
+integrador. El piloto con LF queda como la validación contra Dufaux: da lo mismo.</p>
+
+<h3 id="convergencia">3.3. ¿Se puede usar una caja con menos puntos? (24 de septiembre de 2026)</h3>
+
+<p>Los modelos con gauge son caros: con 128 puntos por lado, U(1) tarda unas 8 horas y media y
+SU(2)×U(1) unos 3 días y medio. El costo crece como N³, así que con 64 puntos por lado serían
+8 veces menos. Antes de hacerlo hay que saber cuánto cambian los resultados. Lo probé con el
+control, que es barato: repetí la corrida de la sección 3.2 cambiando solo N (32, 48, 64 y 96),
+con la misma caja y la misma semilla. Además hice otra con 64 puntos y la caja a la mitad de
+tamaño (kIR = 0,5). Así los puntos quedan igual de juntos que con 128 y la red resuelve las
+mismas longitudes de onda cortas. Entradas en <code>code/lphi4_N*_VV2.in</code>, salidas en
+<code>data/convergencia_N/</code>, figuras en <code>figures/convergencia_N/</code>, y el script
+de la comparación es <code>code/convergencia_N.py</code>.</p>
+
+<table>
+<tr><th>corrida</th><th>longitud de onda más corta que resuelve (k máximo)</th><th>energía final en ondas / la de N = 128</th><th>altura del máximo del espectro / la de N = 128</th><th>tiempo</th></tr>
+<tr><td>N = 32</td><td>7</td><td>×6,0</td><td>×19</td><td>1,2 min</td></tr>
+<tr><td>N = 48</td><td>10,5</td><td>×2,5</td><td>×8,5</td><td>4,5 min</td></tr>
+<tr><td>N = 64</td><td>13,8</td><td>×1,75</td><td>×5,1</td><td>10,5 min</td></tr>
+<tr><td>N = 96</td><td>20,8</td><td>×1,21</td><td>×2,0</td><td>37,5 min</td></tr>
+<tr><td>N = 128 (referencia)</td><td>27,8</td><td>1</td><td>1</td><td>92 min</td></tr>
+<tr><td><strong>N = 64, caja a la mitad</strong></td><td>27,5</td><td><strong>×1,003</strong></td><td><strong>×1,02</strong></td><td><strong>10,8 min</strong></td></tr>
+<tr><td>N = 128, caja a la mitad</td><td>55,5</td><td>×0,84</td><td>×0,98</td><td>79 min</td></tr>
+</table>
+
+<p>Lo que se ve:</p>
+<ul>
+<li><strong>La resonancia no depende de N.</strong> En todas las corridas el campo hijo recibe
+el 10 % de la energía en el mismo instante (τ ≈ 88,5).</li>
+<li><strong>Con la misma caja, menos puntos arruinan las ondas.</strong> El espectro de ondas es
+una meseta ancha que llega hasta k ≈ 15–20. Si la red no llega tan lejos, la energía que en la
+realidad seguiría bajando hacia longitudes de onda más cortas se amontona en las más cortas que
+la red puede representar. Aparece un pico falso, y la energía total en ondas sale inflada. Incluso
+con 96 puntos el error es del 20 %.</li>
+<li><strong>Lo que importa es qué tan juntos están los puntos, no cuántos hay.</strong> Con 64
+puntos y la caja a la mitad, el espectro de ondas coincide con el de N = 128 dentro de ~9 % en
+todo k, y la energía total dentro de 0,3 %, con 8,5 veces menos tiempo. Lo que se pierde son las
+longitudes de onda más largas: el campo hijo sale ~25 % más bajo para k &lt; 1 y desaparece el modo
+k = 0,25, que es el primer punto del espectro de ondas.</li>
+</ul>
+
+<p><strong>Conclusión:</strong> achicar la caja sirve para abaratar las corridas; bajar la
+resolución con la misma caja, no.</p>
+
+<p><strong>¿Y N = 128, está convergido?</strong> Para saberlo corrí también 128 puntos con la caja
+a la mitad (k máximo ≈ 55, el doble que la referencia; 79 minutos). La respuesta es que
+<strong>no del todo</strong>:</p>
+<ul>
+<li>En el pico y las longitudes de onda largas (k de 0,5 a 4) coincide con la referencia dentro de
+~12 % (entre 0,84 y 1,18 veces).</li>
+<li>En la parte alta de la meseta (k de 5 a 20) la corrida más fina da entre 1,1 y 3 veces
+<em>menos</em>. La referencia también tenía un poco de energía amontonada en su borde, igual que
+N = 64 pero más suave.</li>
+<li>La energía total en ondas es un 16 % menor que en la referencia, y la altura del máximo del
+espectro, casi igual (−2 %).</li>
+</ul>
+<p>Eso explica por qué N = 64 con la caja a la mitad coincidía tan bien con N = 128: las dos
+llegan al mismo k máximo y tienen el mismo error en el borde. Para comparar modelos, la parte
+confiable del espectro es el pico y lo que está a su izquierda (k ≲ 4). La meseta a la derecha
+del pico depende de la resolución.</p>
+
+<p><strong>¿La caja a la mitad alcanza para los campos de gauge?</strong> Revisé en qué longitudes
+de onda resuena cada modelo (<code>code/analisis_parametros.py::banda_principal</code>, con la
+amplitud real del inflatón A = 1,138). En las unidades del control:</p>
+<ul>
+<li><strong>U(1)</strong> (q = 120): la misma banda que el control, de k ≈ 0 a 2, con el máximo
+en k ≈ 1,4. El modo más largo de la caja no crece, así que achicarla no corta la resonancia.</li>
+<li><strong>SU(2)×U(1)</strong> (q = 60 en cada sector): una banda angosta, de k ≈ 1,7 a 2,2.
+Con la caja a la mitad caen en ella unas 200 ondas de la red (con la caja grande, unas 1700).
+Alcanza, pero el espectro va a salir más ruidoso.</li>
+</ul>
+<p>Con eso se decidió (24 de septiembre de 2026) correr U(1) con 64 puntos y la caja a la mitad:
+<code>code/lphi4U1_N64_kIR0.5_VV2.in</code>.</p>
+
+<h3 id="condicion-inicial-gauge">3.4. El primer modelo con gauge, U(1), y un problema con cómo arranca (24 de septiembre de 2026)</h3>
+
+<p>La primera corrida de U(1) (64 puntos, caja a la mitad, 1 hora y 16 minutos) salió
+numéricamente bien: la ley de Gauss se cumplió todo el tiempo con un error menor a una parte en mil
+millones. Pero la resonancia del campo gauge llegó mucho más tarde que la del campo hijo en el
+control: al 1 % de la energía en τ ≈ 105 en lugar de 68.</p>
+
+<p><strong>La causa es cómo arranca el campo gauge en CosmoLattice.</strong> Un campo gauge, como
+el electromagnético, tiene dos partes. La parte <em>longitudinal</em> la fijan las cargas, a través
+de la ley de Gauss. La parte <em>transversal</em> son las ondas, como la luz. Es la que resuena con
+el inflatón y la que produce ondas gravitacionales. CosmoLattice arranca el campo gauge solo con la
+parte longitudinal, y la transversal en cero exacto (así lo dicen el código,
+<code>u1initializer.h</code>, y el paper del código, arXiv:2102.01031, ecs. 97–102). La parte
+transversal solo se enciende después, alimentada por combinaciones de segundo orden de las
+fluctuaciones del inflatón, que son muchísimo más chicas. El campo hijo del control, en cambio,
+arranca con sus fluctuaciones cuánticas de vacío. La comparación no estaba en igualdad de
+condiciones.</p>
+
+<p><strong>Lo que hice:</strong> le agregué a CosmoLattice una condición inicial nueva,
+<code>ICtype_U1 = RandomWithMatterTransverseVacuum</code>. Hace lo mismo que la original (el
+inflatón arranca con el mismo ruido exacto y la parte longitudinal se fija con la ley de Gauss) y
+además le da a la parte transversal sus fluctuaciones de vacío, con el mismo criterio que usa el
+programa para el campo hijo. El cambio está en <code>code/parches/u1_vacio_transversal.patch</code>,
+explicado en <code>code/parches/LEEME.md</code>. Lo probé antes de usarlo: la ley de Gauss sigue
+en una parte en cien mil millones, el ruido del inflatón es idéntico, y la energía que se agrega es
+la de dos polarizaciones con la energía de vacío del campo hijo.</p>
+
+<p><strong>Midiendo bien el crecimiento.</strong> Para ver qué crece hay que mirar el campo
+<em>magnético</em>, que es puramente transversal. El eléctrico mezcla la parte longitudinal, que no
+resuena. Mirando el eléctrico me pareció que la resonancia gauge "se frenaba" a mitad de camino.
+Era un error de lectura: en las dos corridas los modos transversales crecen al ritmo que predice
+la teoría (Floquet con q = 120: μ ≈ 0,20–0,23 en k de 0,5 a 2), igual que el campo hijo. Lo único
+que cambia es desde qué tamaño arrancan.</p>
+
+<table>
+<tr><th>qué se mide (unidades del control)</th><th>control (campo hijo χ)</th><th>U(1), como arranca CosmoLattice</th><th>U(1), con vacío transversal</th></tr>
+<tr><td>el campo hijo/gauge llega al 1 % de la energía (τ)</td><td>68</td><td>105</td><td>68</td></tr>
+<tr><td>... al 10 % (τ)</td><td>89</td><td>148</td><td>86</td></tr>
+<tr><td>fracción máxima de la energía</td><td>49 %</td><td>40 %</td><td>41 %</td></tr>
+<tr><td>energía final en ondas, ρ_GW/ρ</td><td>9,9×10⁻⁶</td><td>7,1×10⁻⁶ (−29 %)</td><td>1,5×10⁻⁵ (+53 %)</td></tr>
+<tr><td>espectro de ondas en k de 0,5 a 2,5 (parte confiable), respecto del control</td><td>1</td><td>0,3 veces</td><td>0,6–0,7 veces</td></tr>
+<tr><td>espectro de ondas en k de 3 a 4, respecto del control</td><td>1</td><td>0,4–0,5 veces</td><td>0,85–1,1 veces</td></tr>
+</table>
+
+<p>Lo que se ve:</p>
+<ul>
+<li><strong>Con vacío transversal, la resonancia gauge va a la par de la del control.</strong> Llega
+al 1 % en el mismo instante. El retraso de la primera corrida era un efecto de cómo arranca el
+campo, no de la física del campo gauge.</li>
+<li><strong>Aun así, las ondas gravitacionales son distintas.</strong> En la parte confiable del
+espectro (k ≲ 2,5) el modelo con gauge da entre 0,6 y 0,7 veces lo del control. La energía total
+en ondas sale 53 % más alta, pero eso viene de las longitudes de onda cortas (k &gt; 4), que no están
+convergidas (sección 3.3), así que ese número no es confiable.</li>
+<li><strong>La condición inicial importa mucho.</strong> Con la de CosmoLattice, el espectro en la
+parte confiable baja a 0,3 veces el del control. La mitad de la diferencia con el control se debía
+a la semilla.</li>
+</ul>
+
+<p><strong>Cuidado:</strong> esto es con una sola semilla y en la red chica. Faltan otras semillas
+para saber cuánto varía el espectro por puro azar (entre dos integradores, sección 3.2, la fase
+turbulenta variaba 2–5 %). <em>Actualización del 27 de septiembre: con tres semillas el cociente es
+0,56–0,79 (medio 0,68); ver sección 3.6.</em></p>
+
+<p>Datos en <code>data/lphi4U1_N64_kIR0.5_VV2/</code> y
+<code>data/lphi4U1_vacioT_N64_kIR0.5_VV2/</code>. Figuras en
+<code>figures/comparacion_modelos/</code> (hechas con <code>code/comparar_modelos.py</code>) y el
+crecimiento por modo en <code>figures/lphi4U1_*/mu_por_modo_vs_control.png</code> (con
+<code>code/crecimiento_por_modo_U1.py</code>).</p>
+
+<h3 id="vacio-su2">3.5. SU(2) arranca igual, y al arreglarlo apareció un "fotón" (27 de septiembre de 2026)</h3>
+
+<p>Antes de largar la corrida larga de SU(2)×U(1) (~11 horas) revisé cómo arranca el campo SU(2).
+<strong>Tiene el mismo problema que tenía U(1)</strong> (sección 3.4): CosmoLattice lo arranca con
+el campo en cero exacto y solo la parte longitudinal que fija la ley de Gauss
+(<code>su2initializer.h</code>). La parte transversal, la que resuena y produce ondas
+gravitacionales, arranca en cero. Así que hacía falta un cambio parecido al de U(1).</p>
+
+<p><strong>Cómo lo armé.</strong> Agregué la opción <code>ICtype_SU2 = RandomWithMatterTransverseVacuum</code>
+(<code>code/parches/su2_vacio_transversal.patch</code>, explicado en
+<code>code/parches/LEEME.md</code>). Para eso tuve que averiguar cómo guarda el programa el campo
+SU(2). No guarda el campo directamente: guarda "links", unas matrices que conectan puntos vecinos de
+la red. Leyendo cómo calcula la energía y cómo avanza en el tiempo, el campo B entra como
+g·dx·B/2 en el link y el campo eléctrico se guarda dividido por 2. Hubo un detalle más: el programa
+elige los números al azar a partir del <em>nombre</em> de cada campo auxiliar. Si usaba un solo
+auxiliar para todo, los tres "colores" de SU(2) (y el U(1)) habrían recibido exactamente el mismo
+ruido.</p>
+
+<p><strong>La primera versión estaba mal, y la prueba lo mostró.</strong> Hice dos corridas cortas
+con la misma semilla, una con el arranque de CosmoLattice y otra con el vacío nuevo, y verifiqué:</p>
+<ul>
+<li>el inflatón arranca con exactamente el mismo ruido (diferencia de 2×10⁻¹⁵);</li>
+<li>la energía que se agrega coincide con la cuenta a mano (la magnética al 3 %);</li>
+<li>la ley de Gauss sigue cumpliéndose muy bien.</li>
+</ul>
+<p>Pero al dejar evolucionar un rato, el vacío no se quedaba quieto como debería: la energía iba y
+venía entre la parte eléctrica y la magnética, y la magnética del U(1) llegó a multiplicarse por 3,6.
+Eso pasa cuando a un campo se le da el vacío de una masa que no es la que realmente tiene.</p>
+
+<p><strong>La causa: los dos campos gauge se mezclan.</strong> En este modelo, el inflatón tiene carga
+de los dos campos a la vez (U(1) y SU(2)). Eso hace que una combinación del campo U(1) con uno de los
+colores de SU(2) se comporte como un campo aparte, con su propia masa. Es lo mismo que pasa en el
+Modelo Estándar de partículas, donde de la mezcla salen el fotón y la partícula Z. Con nuestros
+parámetros (q_A = q_B = 60) quedan cuatro campos independientes:</p>
+
+<table>
+<tr><th>campo</th><th>qué combinación es</th><th>masa² (unidades del programa)</th><th>equivale a</th></tr>
+<tr><td>"fotón"</td><td>U(1) + color 1, a medias</td><td>0</td><td>no resuena</td></tr>
+<tr><td>"Z"</td><td>U(1) − color 1, a medias</td><td>240</td><td>q = 120, como el campo hijo del control</td></tr>
+<tr><td>dos "W"</td><td>colores 2 y 3</td><td>120</td><td>q = 60</td></tr>
+</table>
+
+<p>Mi primera versión le daba masa 120 al U(1) y a cada color por separado, sin ver la mezcla. La
+versión final no escribe las masas a mano: al arrancar, el programa las <em>calcula</em> con las
+mismas operaciones que usa para mover los campos, verifica que la cuenta sea consistente, separa los
+cuatro campos independientes y le da a cada uno su vacío con su masa. El resultado fue justo la
+tabla de arriba.</p>
+
+<table>
+<tr><th>cuánto cambia la parte agregada en el primer instante (t de 0 a 0,7)</th><th>energía eléctrica</th><th>energía magnética</th></tr>
+<tr><td>referencia: U(1) solo (<code>lphi4U1</code>, ya validado)</td><td>1,00–1,18</td><td>0,87–1,00</td></tr>
+<tr><td>primera versión, sin mezcla: U(1)</td><td>0,73–1,40</td><td>1,0–3,6</td></tr>
+<tr><td>versión final: U(1)</td><td>1,00–1,16</td><td>0,87–1,00</td></tr>
+<tr><td>versión final: SU(2)</td><td>1,00–1,17</td><td>0,86–1,00</td></tr>
+</table>
+
+<p>Con la mezcla bien tratada, los dos campos se comportan como la referencia.</p>
+
+<p><strong>Dos cosas a tener en cuenta para el análisis:</strong></p>
+<ul>
+<li><strong>La energía magnética de SU(2) se mide mal cuando es muy chica.</strong> El programa la
+calcula restando dos números casi iguales a 1 que difieren en 0,00000000000001, y ahí la
+computadora pierde precisión. Con el vacío real parecía crecer un 35 %. Para comprobar que era un
+problema de la medición y no de la física, repetí la prueba con las fluctuaciones multiplicadas por
+1000: ahí se ve bien y no crece. Cuando la resonancia amplifique el campo esto deja de importar.
+Además, el "espectro" que guarda el programa para SU(2) no es el de cada modo sino el de la
+intensidad total del campo, así que para medir cómo crece cada modo va a haber que usar otra cosa.</li>
+<li><strong>La ley de Gauss de SU(2) se cumple un poco peor.</strong> Pasa de un error de una parte en
+mil millones a una en tres millones. Es esperable: en SU(2) el campo "se ve a sí mismo", y eso agrega
+un término de segundo orden. Sigue siendo muy chico.</li>
+</ul>
+
+<p><strong>Lo que esto dice del modelo:</strong> en SU(2)×U(1) no son "dos campos gauge con q = 60
+cada uno". Hay uno que resuena como el campo hijo del control (la Z), dos que resuenan más débil (las
+W) y uno que no resuena (el fotón). Va a ser importante para interpretar las ondas gravitacionales.</p>
+
+<p>Datos de las pruebas en <code>data/prueba_su2_vacioT/</code> (con su <code>LEEME.md</code>),
+verificación con <code>code/validar_vacio_su2.py</code>. La corrida larga usa
+<code>code/lphi4SU2U1_vacioT_N64_kIR0.5_VV2.in</code> y guarda en
+<code>data/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/</code>.</p>
+
+<h3 id="semillas">3.6. ¿Es azar? U(1) contra el control con tres semillas (27 de septiembre de 2026)</h3>
+
+<p>La "semilla" es el número con el que el programa elige el ruido inicial (las fluctuaciones
+cuánticas). Cambiarla es como repetir el experimento con otra tirada de dados: la física es la misma,
+pero los detalles cambian. En la sección 3.4 el espectro de ondas de U(1) salió 0,6–0,7 veces el del
+control, pero con una sola semilla. Corrí dos semillas más (2345 y 3456) de los dos modelos, con todo
+lo demás igual.</p>
+
+<table>
+<tr><th>semilla</th><th>resonancia al 1 % (τ), control / U(1)</th><th>espectro U(1) / control en k = 0,5–2,5</th><th>energía total en ondas, U(1) / control</th></tr>
+<tr><td>1234</td><td>68,3 / 68,1</td><td>0,61–0,69 (medio 0,66)</td><td>1,53</td></tr>
+<tr><td>2345</td><td>68,4 / 68,1</td><td>0,47–0,89 (medio 0,67)</td><td>1,65</td></tr>
+<tr><td>3456</td><td>68,4 / 68,1</td><td>0,56–0,85 (medio 0,72)</td><td>1,64</td></tr>
+<tr><td><strong>con los promedios de las tres</strong></td><td></td><td><strong>0,56–0,79 (medio 0,68)</strong></td><td></td></tr>
+</table>
+
+<p>Lo que se ve:</p>
+<ul>
+<li><strong>El resultado es real.</strong> En las tres semillas U(1) da menos ondas que el control en la
+parte confiable del espectro: en promedio unas dos terceras partes.</li>
+<li><strong>Cuándo empieza la resonancia no depende del azar.</strong> Varía menos de una décima de
+unidad de tiempo entre semillas.</li>
+<li><strong>El espectro sí depende bastante del azar.</strong> En un mismo punto del espectro, el
+control cambia hasta 34 % de una semilla a otra (U(1) hasta 18 %). Por eso el rango de la sección
+3.4 (0,61–0,69), con una sola semilla, parecía más preciso de lo que es. La barra honesta es
+0,56–0,79.</li>
+<li>La energía total en ondas de U(1) es 1,5–1,65 veces la del control en las tres semillas, pero sale de
+las longitudes de onda cortas, que no están convergidas (sección 3.3). No la tomo como resultado.</li>
+</ul>
+
+<p>Datos en <code>data/semillas/</code> (con su <code>LEEME.md</code>), análisis con
+<code>code/semillas_U1.py</code>, figura en <code>figures/semillas/U1_vs_control_semillas.png</code>.</p>
+
+<h3 id="resultados-su2u1">3.7. SU(2)×U(1): los resultados (28 de septiembre de 2026)</h3>
+
+<p>La corrida larga arrancó a las 23:18 del 27 y terminó bien a las 08:40 del 28 (9 horas y 22 minutos
+con los 8 núcleos, 249 MB de memoria). La calidad numérica fue buena: la ley de Gauss de SU(2) tuvo un
+error máximo de una parte en un millón (y al final una en cien mil millones), la de U(1) una en mil
+millones, y la ecuación de Friedmann (la cuenta de energía del universo) cerró con un error máximo de
+0,04 %. Es una sola semilla (1234), la misma que las primeras del control y de U(1).</p>
+
+<p><strong>Cómo separé los campos.</strong> El programa guarda la energía de U(1) y la de SU(2) (los tres
+colores juntos), no la de cada campo de la tabla de la sección 3.5. Pero se pueden despejar: como el
+fotón y la Z son mitad U(1) y mitad color 1, la energía de "Z + fotón" es el doble de la del U(1), y la
+de las dos W es la de SU(2) menos la de U(1). Esto vale salvo un término cruzado entre la Z y el fotón,
+que medí: es ~0,1 % de la energía del U(1), así que no cambia nada. Solo en τ ≈ 75–110 la resta para las
+W no es confiable, porque ahí las W todavía son muy chicas comparadas con ese término.</p>
+
+<table>
+<tr><th>qué se mide (unidades del control)</th><th>control (χ)</th><th>U(1) (A)</th><th>SU(2)×U(1), todos</th><th>... Z + fotón</th><th>... las dos W</th></tr>
+<tr><td>llega al 1 % de la energía (τ)</td><td>68,3</td><td>68,1</td><td>68,1</td><td>68,1</td><td>117</td></tr>
+<tr><td>llega al 10 % (τ)</td><td>88,6</td><td>86,0</td><td>85,7</td><td>85,7</td><td>130</td></tr>
+<tr><td>fracción de la energía al final</td><td>48 %</td><td>40 %</td><td><strong>64 %</strong></td><td>31 %</td><td>32 %</td></tr>
+<tr><td>ritmo de crecimiento en la fase lineal (μ de la energía, τ 30–70)</td><td>0,16</td><td>0,16</td><td></td><td>0,16</td><td>0,07</td></tr>
+<tr><td>ritmo de crecimiento tardío (τ 100–125)</td><td>0,02</td><td>0,04</td><td></td><td>0,03</td><td><strong>0,18</strong></td></tr>
+</table>
+
+<p>Lo que se ve:</p>
+<ul>
+<li><strong>La Z resuena igual que el campo hijo del control.</strong> Llega al 1 % en el mismo instante
+y crece al mismo ritmo. Mirando modo por modo (con el espectro magnético del U(1), que es mitad Z), el
+ritmo máximo es 0,225 en k = 1,5, igual que el A del modelo U(1) (0,23) y cerca de lo que predice la
+teoría de Floquet para q = 120 (0,20). Era lo esperado: la Z tiene la misma masa que ese campo.</li>
+<li><strong>Las W casi no resuenan al principio.</strong> Con q = 60, la teoría predice una banda
+angosta (k de 1,75 a 2,2) y un ritmo máximo de 0,12. Medí 0,07 con la energía total. Esa medida siempre
+queda por debajo del máximo (para χ da 0,16 contra 0,20), y más para una banda angosta con pocos
+modos, así que es compatible. Al 1 % las W llegan recién en τ = 117, 50 unidades de tiempo después que
+la Z.</li>
+<li><strong>Después las W se disparan.</strong> Cuando la Z ya se llevó una parte grande de la energía y
+todo se volvió no lineal (τ ≈ 100), las W empiezan a crecer a un ritmo de 0,18, más rápido que en la fase
+lineal. Al final tienen tanta energía como la Z y el fotón juntos. Mi hipótesis, que todavía no probé:
+en SU(2) los colores interactúan entre sí, y el campo del color 1 (que forma parte de la Z), ya grande,
+empuja a los colores 2 y 3 (las W). Esto no pasa ni en el control ni en U(1).</li>
+<li><strong>En total, los campos gauge se llevan más energía que el campo hijo del control</strong>: 64 %
+contra 48 % (y 40 % en U(1)). Además, el doblete guarda 16 % en su energía de gradiente, que en este
+modelo incluye la masa que les da a los campos gauge.</li>
+</ul>
+
+<p><strong>Las ondas gravitacionales</strong> (figura
+<code>figures/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/ondas_gravitacionales.png</code>):</p>
+
+<table>
+<tr><th>k (unidades del control)</th><th>0,5</th><th>1</th><th>1,5</th><th>2</th><th>2,5</th><th>promedio</th></tr>
+<tr><td>SU(2)×U(1) / control</td><td>0,80</td><td>1,06</td><td>1,92</td><td>1,66</td><td>0,64</td><td>1,11</td></tr>
+<tr><td>SU(2)×U(1) / U(1)</td><td>1,28</td><td>1,53</td><td>3,13</td><td>2,39</td><td>0,93</td><td>1,68</td></tr>
+<tr><td>U(1) / control (misma semilla)</td><td>0,63</td><td>0,69</td><td>0,61</td><td>0,69</td><td>0,69</td><td>0,66</td></tr>
+</table>
+
+<ul>
+<li><strong>En la parte confiable del espectro, SU(2)×U(1) da más ondas que U(1) y, cerca del pico,
+también más que el control.</strong> En k = 2, SU(2)×U(1) tiene 1,7 veces las ondas del control
+(6,6×10⁻⁶ contra 4,0×10⁻⁶). <em>Corrección del 28 de septiembre (sección 3.9): acá escribí "el pico está
+en k = 2 en los dos", pero el control no tiene un pico ahí: tiene una meseta de k = 2 a 4.</em> En k = 1,5–2 el cociente con el control (1,7–1,9) es más grande que lo
+que varía el control entre semillas (hasta 34 %), así que probablemente es real. En los extremos (0,80 en
+k = 0,5 y 0,64 en k = 2,5) está dentro de lo que puede ser azar.</li>
+<li><strong>Las ondas se producen antes.</strong> La energía en ondas llega a la mitad de su valor final en
+τ = 117, contra 130 del control y 146 de U(1).</li>
+<li><strong>La energía total en ondas es menor</strong> (0,71 veces la del control), porque SU(2)×U(1) tiene
+menos en las longitudes de onda cortas. Pero esa zona no está convergida (sección 3.3), así que no lo
+tomo como resultado.</li>
+</ul>
+
+<p><strong>Cuidado:</strong> es una sola semilla. Las semillas de la sección 3.6 muestran que el
+espectro por punto varía hasta un tercio de una tirada a otra. Para afirmar el "más ondas cerca del
+pico" hacen falta más semillas de SU(2)×U(1) (~9 horas cada una).</p>
+
+<p>Datos en <code>data/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/</code> (con su <code>LEEME.md</code>), análisis
+con <code>code/analisis_SU2U1.py</code> y <code>code/crecimiento_por_modo_U1.py</code>, figuras en
+<code>figures/lphi4SU2U1_vacioT_N64_kIR0.5_VV2/</code>.</p>
+
+<h3 id="produccion-gws">3.8. Cómo se producen las ondas en cada modelo (28 de septiembre de 2026)</h3>
+
+<p>Como no daba el tiempo para más semillas, hice cuatro análisis con las corridas que ya estaban,
+para entender <em>cómo</em> produce ondas gravitacionales cada modelo y no solo cuántas. Todos usan
+la semilla 1234 de los tres modelos. El programa guardó el espectro de ondas cada 5 unidades de
+tiempo, así que se puede seguir cómo se arma. Código en <code>code/produccion_gws.py</code>, figuras en
+<code>figures/produccion_gws/</code>, números en <code>data/produccion_gws.json</code>.</p>
+
+<p><strong>1. ¿Las ondas de SU(2)×U(1) vienen de las W?</strong> Las W se disparan tarde (τ ≈ 110–130,
+sección 3.7), así que parecían las candidatas naturales para explicar el pico más alto. Para
+averiguarlo miré qué parte de las ondas finales ya existía antes de ese disparo. Una aclaración para
+poder hacerlo: en estos modelos el universo se expande como si estuviera lleno de radiación, y las
+ondas también se diluyen como radiación. Por eso, una vez que la fuente se apaga, la cantidad
+dΩ_GW/d ln k ya no cambia, y comparar el espectro en dos instantes dice cuánto se produjo en el
+medio.</p>
+
+<table>
+<tr><th>qué parte de las ondas finales (k ≤ 4) ya existía</th><th>control</th><th>U(1)</th><th>SU(2)×U(1)</th></tr>
+<tr><td>en τ = 100 (antes de que las W crezcan)</td><td>3 %</td><td>2 %</td><td><strong>25 %</strong> (33 % en k = 1,5–2)</td></tr>
+<tr><td>en τ = 120 (las W recién llegan al 1 %)</td><td>48 %</td><td>35 %</td><td><strong>80 %</strong></td></tr>
+<tr><td>instante en que llega a la mitad de las ondas finales (τ)</td><td>121</td><td>126</td><td>112</td></tr>
+</table>
+
+<p><strong>La respuesta es que no.</strong> SU(2)×U(1) produce sus ondas <em>antes</em>, no después. El pico
+en k = 2 ya está formado en τ ≈ 85–100 (figura <code>espectros_en_el_tiempo.png</code>), y cuando las W
+llegan al 10 % de la energía ya está el 80 % de las ondas. En τ = 100, SU(2)×U(1) tenía 10 veces las
+ondas del control y 33 veces las de U(1). Al final esa ventaja se achica a 1,24 y 1,86 veces (en
+k ≤ 2,5), porque el control y U(1) producen la mayor parte más tarde. El exceso cerca del pico viene del
+período en que la resonancia de la Z empieza a saturar, no de las W. Qué lo causa exactamente no lo
+sé. Hay dos candidatos: el fotón, que se empieza a llenar en ese momento (se ve en el término cruzado
+de la sección 3.7), y las interacciones propias de SU(2). Separarlos requeriría guardar los campos
+completos.</p>
+
+<p><strong>2. ¿Crecen las ondas como el cuadrado del campo?</strong> Las ondas las produce el
+"estiramiento" del campo (su tensión), que es cuadrático en el campo. Si el campo crece como
+e<sup>μτ</sup>, su energía crece como e<sup>2μτ</sup> y la energía en ondas como e<sup>4μτ</sup>: el doble
+de rápido que la del campo, en escala logarítmica. Medí las dos pendientes en la fase lineal
+(τ = 35–62):</p>
+
+<table>
+<tr><th></th><th>control</th><th>U(1)</th><th>SU(2)×U(1)</th></tr>
+<tr><td>μ del campo que resuena</td><td>0,20</td><td>0,21</td><td>0,21</td></tr>
+<tr><td>pendiente de las ondas / pendiente de la energía del campo (se espera 2)</td><td>1,88</td><td>1,78</td><td>1,76</td></tr>
+</table>
+
+<p>Se cumple en los tres modelos, con un 10 % de diferencia que es razonable, porque la energía total
+del campo incluye modos que no resuenan. <strong>En la fase lineal los tres producen ondas por el
+mismo mecanismo.</strong> Cuidado: en esa fase el nivel de ondas de los modelos gauge está bastante
+por encima del control (en τ = 60, 30 veces en U(1) y 1000 en SU(2)×U(1)). Pero ahí pesan también las
+ondas que siembra el vacío de todos los campos, y los modelos gauge tienen más grados de libertad (el
+control, uno; SU(2)×U(1), ocho polarizaciones). Por eso no tomo esa diferencia como un resultado.</p>
+
+<p><strong>3. ¿Producen menos ondas porque reciben menos energía?</strong> La estimación estándar dice
+que la energía en ondas es proporcional al cuadrado de la fracción de energía que tiene el campo
+fuente, por un factor que depende de la escala típica de la fuente, (k de esa escala)⁻². Supuse que esa
+escala es la misma en los tres modelos. Es solo aproximado: la sección 3.9 muestra que SU(2)×U(1) tiene
+un pico en k = 2, mientras el control tiene una meseta de k = 2 a 4 y U(1) sube hasta el borde de lo
+confiable. Dividí las ondas en la parte confiable del espectro por el cuadrado de la fracción media de
+energía en el campo mientras se producen (τ = 70–150):</p>
+
+<table>
+<tr><th>respecto del control</th><th>ondas (k ≤ 2,5)</th><th>(fracción de energía)²</th><th>eficiencia</th></tr>
+<tr><td>U(1)</td><td>0,66</td><td>0,70</td><td><strong>0,94</strong></td></tr>
+<tr><td>SU(2)×U(1)</td><td>1,24</td><td>0,94</td><td><strong>1,31</strong></td></tr>
+</table>
+
+<p><strong>U(1) produce menos ondas casi solo porque el campo gauge recibe menos energía</strong>
+(eficiencia 0,94, es decir, casi igual que el control). No hace falta invocar algo especial de los
+campos gauge. SU(2)×U(1), en cambio, produce un 30 % más de ondas de lo que su energía explicaría.
+Coincide con el punto 1: el pico se forma temprano y de forma más eficiente. Es una estimación de
+orden de magnitud y con una semilla, pero la diferencia entre 0,94 y 1,31 es más grande que la
+dispersión entre semillas del cociente de U(1) (0,66–0,72 de medio). Como la escala típica de la fuente
+no es exactamente la misma (ver arriba), estas eficiencias valen como tendencia y no como número
+preciso: si la escala del control está algo por encima de k = 2, la ventaja de SU(2)×U(1) sería algo menor.</p>
+
+<p><strong>4. El espectro de hoy.</strong> Con la misma cuenta que el piloto (sección 3.1: después de la
+simulación, el universo se expande como radiación hasta hoy, con g★ = 100), el máximo de la parte
+confiable (k ≤ 4) queda en la siguiente tabla. En el control es una meseta y en U(1) está en el borde de lo
+confiable (sección 3.9), así que la frecuencia del máximo solo es precisa en SU(2)×U(1).</p>
+
+<table>
+<tr><th></th><th>control</th><th>U(1)</th><th>SU(2)×U(1)</th></tr>
+<tr><td>frecuencia hoy</td><td>6,4×10⁷ Hz</td><td>1,3×10⁸ Hz</td><td>6,4×10⁷ Hz</td></tr>
+<tr><td>h²Ω_GW hoy</td><td>6,6×10⁻¹¹</td><td>6,8×10⁻¹¹</td><td>1,1×10⁻¹⁰</td></tr>
+</table>
+
+<p>Una unidad de k corresponde a 3,2×10⁷ Hz hoy en los tres modelos, como debe ser, porque es la misma
+física. Las diferencias entre modelos son factores 0,7–1,9. Todo queda en la zona de ~10⁸ Hz, muy
+lejos de las frecuencias de los detectores actuales, que miden de nanohertz a kilohertz. Esto es
+propio del preheating a la escala de energía de λφ⁴: los campos gauge cambian la forma del espectro,
+pero no lo acercan a algo observable hoy (figura <code>espectro_hoy.png</code>).</p>
+
+<p><strong>En resumen:</strong> en la fase lineal los tres modelos producen ondas de la misma manera. U(1)
+produce menos solo porque se lleva menos energía. SU(2)×U(1) produce más, y antes, en el período en que
+la resonancia satura; no por las W tardías. Todo esto es con una semilla por modelo.</p>
+
+<h3 id="forma-espectro">3.9. La forma del espectro: la respuesta a la pregunta del proyecto (28 de septiembre de 2026)</h3>
+
+<p>La pregunta del proyecto es cuánto de la <em>forma</em> del espectro de ondas se debe al campo gauge:
+posición y altura del pico, y pendientes a cada lado. Hasta acá había comparado alturas. Medí la forma en
+las siete corridas que hay: control y U(1) con tres semillas cada uno, y SU(2)×U(1) con una. Ajusté una
+recta en escala logarítmica (dΩ_GW/d ln k ∝ kⁿ) a cada lado del máximo, solo en la parte confiable
+(k ≤ 4): del lado de las ondas largas (IR) con k = 0,5–1,5, y del lado de las cortas (UV) con k = 2–4.
+Código en <code>code/pendientes_espectro.py</code>, figura en <code>figures/pendientes_espectro.png</code>.</p>
+
+<table>
+<tr><th>parte confiable (k ≤ 4)</th><th>control (3 semillas)</th><th>U(1) (3 semillas)</th><th>SU(2)×U(1) (1 semilla)</th></tr>
+<tr><td>forma</td><td>sube y queda en una <strong>meseta</strong> de k = 2 a 4</td><td>sube hasta el borde de lo confiable</td><td><strong>pico</strong> en k = 2</td></tr>
+<tr><td>pendiente IR (k = 0,5–1,5)</td><td>1,14 ± 0,34</td><td>0,85 ± 0,17</td><td>1,51</td></tr>
+<tr><td>pendiente UV cercana (k = 2–4)</td><td>0,09 ± 0,12</td><td>0,55 ± 0,12</td><td>−1,78</td></tr>
+<tr><td>altura máxima (dΩ_GW/d ln k)</td><td>3,9–4,0×10⁻⁶</td><td>4,1–4,3×10⁻⁶ (en k = 4)</td><td>6,6×10⁻⁶ (en k = 2)</td></tr>
+</table>
+
+<p>Lo que se ve:</p>
+<ul>
+<li><strong>Del lado IR, las pendientes son compatibles entre sí</strong> (alrededor de 1, como en el
+piloto, f<sup>0,96</sup>). Con solo tres puntos por modelo la barra de error es grande: el campo gauge no
+cambia la pendiente IR más allá de lo que se puede medir con esta caja.</li>
+<li><strong>Cerca del máximo, la forma sí cambia con el campo gauge.</strong> El control es plano entre
+k = 2 y 4. U(1) sube hacia las ondas cortas, así que su máximo cae en el borde de la zona confiable o
+más allá. SU(2)×U(1) es el único con un pico definido en k = 2, 1,7 veces más alto que la meseta del
+control, que después cae.</li>
+<li><strong>¿Es real el pico de SU(2)×U(1) con una sola semilla?</strong> Su altura (6,6×10⁻⁶) está 60 %
+por encima del máximo de las seis corridas del control y de U(1) (3,9–4,3×10⁻⁶), que varían entre sí
+menos de 10 %. Es muy probable que sea real, aunque confirmarlo requiere otra semilla.</li>
+<li><strong>La posición del máximo no es una buena medida para comparar</strong>, porque en el control es
+una meseta y en U(1) está en el borde. Por eso comparo formas y alturas, no la posición.</li>
+</ul>
+
+<p><strong>La respuesta a la pregunta del proyecto</strong>, con la red usada (N = 64, parte confiable
+k ≤ 4):</p>
+<ol>
+<li><strong>Altura:</strong> en la parte confiable, con U(1) el espectro queda en 0,56–0,79 veces el del
+control (tres semillas). Con SU(2)×U(1) sube hasta 1,7–1,9 veces cerca de k = 1,5–2 (una semilla).</li>
+<li><strong>Forma:</strong> U(1) desplaza el máximo hacia las ondas cortas; SU(2)×U(1) convierte la meseta
+del control en un pico en k = 2 y produce las ondas antes.</li>
+<li><strong>Pendiente IR:</strong> sin cambios medibles.</li>
+<li><strong>Por qué:</strong> U(1) produce menos ondas porque el campo gauge se lleva menos energía, no por
+producirlas de otra manera. SU(2)×U(1) produce más de lo que su energía explica, en el período en que la
+resonancia de la Z satura (sección 3.8). Las W, que se disparan tarde, no son la causa.</li>
+<li><strong>Lo que no se puede decir:</strong> nada sobre las ondas cortas (k &gt; 4), que no están
+convergidas, ni sobre la energía total en ondas, que depende de esa zona.</li>
+</ol>
+
+<h3 id="problemas">3.10. Los problemas que tuve en el camino (27 y 28 de septiembre de 2026)</h3>
+
+<p>Anoto todo lo que salió mal o me hizo perder tiempo, para no repetirlo.</p>
+
+<p><strong>Problemas de física y de medición</strong></p>
+<ul>
+<li><strong>El arranque de SU(2)</strong> (sección 3.5): CosmoLattice lo arranca sin parte transversal,
+igual que a U(1). Hubo que escribir un segundo parche.</li>
+<li><strong>La mezcla entre U(1) y SU(2)</strong> (sección 3.5): la primera versión del parche le daba a
+cada campo su propia masa y el vacío no se quedaba quieto. Lo descubrí porque la energía iba y venía
+entre la parte eléctrica y la magnética. La solución fue calcular la matriz de masas y separar los
+campos independientes.</li>
+<li><strong>Un modelo de juguete mal armado</strong>: para entender ese vaivén integré a mano las
+ecuaciones de cada modo, primero con la masa equivocada (me olvidé de que en las unidades del programa
+la masa se multiplica por el factor de escala del universo). Con la masa bien puesta, el juguete sí dio
+un vacío quieto y sirvió para comparar.</li>
+<li><strong>Las semillas por nombre</strong>: CosmoLattice elige el ruido a partir del nombre de cada
+campo auxiliar. Si no le daba un nombre distinto a cada campo, todos habrían recibido exactamente el
+mismo ruido. Lo vi leyendo el código, antes de que pasara.</li>
+<li><strong>La energía magnética de SU(2) se mide mal cuando es chica</strong> (resta de números casi
+iguales), y el "espectro" de SU(2) no es el de cada modo. Para validar tuve que repetir la prueba con el
+vacío multiplicado por 1000 (con un interruptor solo para pruebas en el parche).</li>
+<li><strong>La ley de Gauss de SU(2) se cumple un poco peor</strong> con el vacío nuevo (una parte en tres
+millones), por un efecto no lineal propio de SU(2). Es chico, pero queda anotado.</li>
+<li><strong>Un 10 % sin explicar</strong>: la energía eléctrica que agrega el vacío transversal da 0,90 de
+mi cuenta a mano, tanto en U(1) como en SU(2). Como pasa igual en el U(1) ya validado, creo que es de mi
+cuenta y no del programa, pero no lo resolví.</li>
+<li><strong>El término cruzado Z·fotón</strong>: al separar las W aparecieron energías negativas, que no
+pueden existir. Eran dos cosas distintas: el redondeo al principio y el término cruzado entre la Z y el
+fotón en τ ≈ 75–110. Ahí la separación no vale.</li>
+<li><strong>Una sola semilla engaña</strong> (sección 3.6): el rango 0,61–0,69 de U(1) parecía preciso y
+en realidad es 0,56–0,79.</li>
+<li><strong>Una hipótesis equivocada</strong> (sección 3.8): supuse que el pico más alto de SU(2)×U(1)
+venía de las W, porque se disparan tarde y se llevan mucha energía. Siguiendo el espectro en el tiempo
+resultó al revés: las ondas se producen antes de que las W crezcan.</li>
+<li><strong>"El pico" que no era un pico</strong> (sección 3.9): durante varios análisis hablé del pico
+del control en k = 2, porque tomaba el máximo del espectro de una semilla. Con tres semillas se ve que el
+control tiene una meseta, y el máximo cae en k = 2, 3,5 o 4 según la semilla. Corregí las frases que
+dependían de eso (secciones 3.7 y 3.8).</li>
+<li><strong>Un error de redondeo en k</strong>: en los modelos gauge los valores de k salen como 4,000002 en
+lugar de 4 (por el factor √2 de las unidades). Al buscar el máximo "con k ≤ 4", U(1) perdía su último
+punto y su máximo aparecía en k = 3,5 en vez de k = 4. Lo encontré al hacer la figura de pendientes y lo
+corregí en todos los scripts con una tolerancia. Solo cambió ese número; los demás análisis ya usaban la
+grilla del control, que es exacta.</li>
+<li><strong>Comparar niveles de ondas en la fase lineal no es limpio</strong>: ahí pesan las ondas que
+siembra el vacío de todos los campos, y cada modelo tiene una cantidad distinta de campos. Las
+pendientes sí se pueden comparar; los niveles, no.</li>
+</ul>
+
+<p><strong>Problemas con la computadora y las herramientas</strong></p>
+<ul>
+<li><strong>Muchas cosas a la vez en 8 núcleos.</strong> Mientras corrían las semillas compilé dos veces
+y corrí pruebas; todo se frenó (las pruebas a ~4 segundos por paso en lugar de ~1,3, y una semilla de
+U(1) tardó 2 h 10 min en lugar de 1 h 10). Encima, compilar CosmoLattice con SU(2) usa tanta memoria que
+quedaron libres solo ~130 MB de los 3,7 GB (antes había cerrado Firefox). Por eso encolé la corrida larga
+para que arrancara sola cuando terminaran las semillas, con la máquina libre.</li>
+<li><strong>Un comando que se cortó a sí mismo.</strong> Para frenar una prueba usé
+<code>pkill -f</code> con un texto que también aparecía en el propio comando, y lo cortó. Parecido: varias
+esperas del tipo "esperar mientras el proceso exista" (<code>pgrep -f</code>) nunca terminaban, porque
+se encontraban a sí mismas. Hubo que cerrarlas a mano. La solución es esperar por el número de proceso
+o por un archivo, no por el texto del comando.</li>
+<li><strong>El script de encolado falló la primera vez</strong>: la búsqueda del proceso de las semillas
+devolvió dos números (el script y una copia interna) y el script quedó mal escrito. Lo arreglé usando
+solo el principal.</li>
+<li><strong>Un archivo reescrito con otro formato</strong>: al agregar números a
+<code>provenance/numbers.json</code> lo reescribí con otra sangría, y git lo mostraba como mil líneas
+borradas. Lo volví al formato original antes de commitear.</li>
+<li><strong>Leer la hora de <code>date</code></strong>: el script de avance no entendía la zona horaria
+("-03") y hubo que ajustarlo.</li>
+<li><strong>Las notificaciones al celular</strong>: estaban apagadas y la opción no aparece en el menú de
+configuración de Claude Code. Hubo que activarla a mano en el archivo de configuración
+(<code>agentPushNotifEnabled</code>). Además, el sistema no manda la notificación si la sesión se usó
+hace poco, así que no se podía probar en el momento.</li>
+<li><strong>Generar el PDF</strong>: no había Chrome ni otra herramienta para pasar la página a PDF.
+Instalé WeasyPrint aparte, pero con el Python de miniconda no encontraba las bibliotecas de texto del
+sistema (pango); con el Python del sistema funcionó. La primera versión tenía una página casi en blanco
+porque una tabla larga no podía partirse; lo arreglé permitiendo cortes entre filas. El script quedó en
+<code>code/generar_pdf.py</code>.</li>
+<li><strong>El control de procedencia marcaba archivos que no son resultados</strong> (logos de las
+dependencias de CosmoLattice y los PDF de la bibliografía). Un agente que clonara el repo habría
+chocado con eso. Ahora esas dos carpetas se ignoran.</li>
+<li><strong>Fallas pasajeras del control de permisos</strong>: en dos de los reportes de cada hora, la
+herramienta que verifica los comandos no respondió. Leí el registro de la simulación directamente, que
+no necesita ese control.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="aprendido">4. Lo que aprendí</h2>
+
+<h3>4.1. El programa trabaja en sus propias unidades</h3>
+<p>En este problema aparecen números enormes y diminutos a la vez. Los campos
+valen alrededor de \(10^{18}\) (un uno con dieciocho ceros) y los acoplamientos
+alrededor de \(10^{-14}\). Una computadora pierde precisión con números así.
+La solución de CosmoLattice es cambiar de unidades: elige una unidad de campo y
+una de tiempo "cómodas" para el problema, de modo que casi todo quede cerca
+de 1. Son las <strong>variables de programa</strong>.</p>
+
+<div class="analogia">
+Nadie mide la distancia entre ciudades en milímetros, ni el grosor de un pelo
+en kilómetros: se elige la unidad que deja números manejables. El programa
+hace lo mismo, y elige como unidad de tiempo más o menos lo que dura una
+oscilación del inflatón.
+</div>
+
+<div class="leccion">
+Los números de los archivos de configuración están en esas unidades. Por
+ejemplo, <code>dt = 0.01</code> no significa "una centésima de segundo" sino
+"una centésima de la unidad de tiempo del programa". Para interpretar bien
+cualquier resultado hay que saber traducir de vuelta a unidades físicas.
+</div>
+
+<h3>4.2. La ley de Gauss: una cuenta que tiene que cerrar siempre</h3>
+<p>Los campos de gauge tienen una regla que se debe cumplir en cada instante y
+en cada punto: la <strong>ley de Gauss</strong>. Dice que las líneas de campo
+eléctrico sólo pueden nacer o terminar donde hay carga. No es algo que "pase
+con el tiempo": es una condición que tiene que valer siempre.</p>
+
+<div class="analogia">
+Es como la contabilidad de una empresa: el dinero que entra y el que sale
+tienen que cuadrar. Si los libros arrancan cuadrados y cada operación se anota
+bien, siguen cuadrados para siempre. Pero si arrancan descuadrados, ninguna
+operación posterior lo arregla.
+</div>
+
+<p>Por eso importa tanto cómo arranca la simulación. Verifiqué que CosmoLattice
+prepara el estado inicial de forma que la ley de Gauss se cumpla
+<em>exactamente</em>, no casi. Eso vuelve útil a la ley de Gauss como alarma
+durante la simulación: si en algún momento deja de cumplirse, el problema está
+en el cálculo, no en el punto de partida.</p>
+
+<div class="leccion">
+Cuando un control de calidad falla, a veces el que falla es el control. La
+primera vez que corrí la comprobación de la ley de Gauss dio "FALLA". Revisé la
+cuenta a mano y el resultado era cero, como correspondía: la herramienta de
+álgebra no lograba simplificar la expresión. Arreglé la herramienta, no la
+física. Antes de creerle a una alarma, conviene mirar qué está midiendo.
+</div>
+
+<h3>4.3. El misterio del factor \(\sqrt2\)</h3>
+<p>Un campo con carga eléctrica se describe con un <strong>número
+complejo</strong>, es decir, con dos números: una "parte real" y una "parte
+imaginaria". Hay dos maneras habituales de escribirlo, y difieren en un factor
+\(\sqrt2\) (aproximadamente 1,41). Tenía la sospecha de que el código mezclaba
+las dos convenciones.</p>
+
+<p>Leí cómo el código calcula la energía de ese campo, cómo lo hace evolucionar
+y cómo produce las ondas gravitacionales. Las tres partes coinciden: el código
+es consistente y no hay ningún error. Pero apareció otra cosa, más
+importante.</p>
+
+<div class="analogia">
+Dos recetas dicen "2 tazas de harina", pero una usa tazas de té y la otra tazas
+de desayuno. El número es el mismo; la cantidad de harina, no.
+</div>
+
+<p>Eso pasa con los archivos de ejemplo que trae el programa. El control
+(<code>lphi4</code>) y el modelo con gauge (<code>lphi4U1</code>) escriben el
+mismo número para el valor inicial del inflatón, pero en cada modelo ese
+número significa algo distinto. Resultado: <strong>el modelo con gauge arranca
+con 4 veces más energía que el control</strong>, y con una "intensidad de
+resonancia" (el parámetro \(q\)) de 1370 contra 300. Si los hubiera comparado
+tal cual, habría atribuido al campo de gauge diferencias que en realidad vienen
+de haber arrancado distinto.</p>
+
+<div class="leccion">
+Para que la comparación sea justa hay que cambiar una sola cosa por vez. Calculé
+qué valores poner en los modelos con gauge para que arranquen exactamente igual
+que el control, de modo que la única diferencia sea el campo de gauge. Los
+valores están en la <a href="bases-teoricas-modelos-gauge.html#complejo">página
+técnica</a>.
+</div>
+
+<h3>4.4. El caso SU(2): cuatro cuentas que tienen que dar cero</h3>
+<p>El modelo más completo tiene dos campos de gauge, y el inflatón tiene cuatro
+componentes en lugar de dos. Al arrancar, a cada componente se le agrega un
+poco de "ruido" que imita las fluctuaciones cuánticas del vacío. El problema es
+que ese ruido, si se genera al azar, deja en la caja un poco de carga neta. En
+una caja cerrada la ley de Gauss no tiene solución con carga neta: las líneas
+de campo no tienen dónde terminar.</p>
+
+<p>El artículo del programa propone generar el ruido con ciertas reglas que
+cancelan la carga, y comprobé que el código las sigue. Pero encontré un detalle
+que no está escrito en ningún lado. La fórmula del artículo le da a cada una de
+las cuatro componentes su propia frecuencia, mientras que el código usa la
+misma para las cuatro. Hice la cuenta: <strong>con frecuencias distintas, la
+carga no se cancela</strong>. El código hace lo correcto y la fórmula del
+artículo, tomada al pie de la letra, no lo haría. En estos modelos las
+frecuencias coinciden, así que no cambia nada, pero sí importaría en otros
+casos.</p>
+
+<div class="leccion">
+El código y el artículo no siempre dicen exactamente lo mismo, y cuando
+difieren no siempre el que tiene razón es el artículo. Vale la pena comparar
+los dos.
+</div>
+
+<h3>4.5. Un error del programa que ya estaba corregido</h3>
+<p>Al revisar cómo el programa controla la ley de Gauss en el caso SU(2),
+encontré un comentario que explica una corrección hecha el 3 de agosto de 2026.
+Antes de esa fecha, el control tenía un error de escala. Su indicador, que
+debería valer 0 cuando la ley se cumple, marcaba alrededor de 0,6 aun cuando se
+cumplía perfectamente. La
+versión que instalé ya tiene la corrección.</p>
+
+<div class="leccion">
+Si alguna simulación hecha con una versión anterior mostró que la ley de Gauss
+fallaba en el caso SU(2), probablemente era una falsa alarma del control, no
+un problema físico. Conviene saber con qué versión exacta del programa se
+trabaja, y por eso el proyecto la deja anotada.
+</div>
+
+<h3>4.6. Qué parámetros usar para que la comparación sea justa</h3>
+<p>Antes de correr, revisé qué valores usan los autores de cada artículo y por
+qué. Después calculé qué pasa con cada opción. El detalle completo está en
+<a href="analisis-parametros.html">Parámetros comparables</a>. Lo principal:</p>
+<ul>
+<li><strong>El empujón por defecto era flojo.</strong> El archivo de ejemplo del
+control usa q = 300. Calculé qué tan rápido crece el campo hijo con cada valor de
+q, y con 300 crece poco y en una franja muy angosta: el valor cae justo en el
+borde de una "banda" de resonancia. Con q = 120, el valor que usó el estudio de
+referencia de 2007, crece más del doble de rápido y en una escala bien definida.
+Además, como ese estudio ya calculó las ondas gravitacionales del control con
+q = 120, nuestra primera simulación se puede comparar contra un resultado
+publicado.</li>
+<li><strong>Los valores iniciales del programa tienen explicación.</strong> Rehice la
+cuenta de cómo termina la inflación, y los números del archivo de ejemplo salen
+exactamente de ahí, dígito por dígito. En cambio, el ejemplo del modelo más
+completo venía de una versión vieja del manual, que arrancaba un poco antes.</li>
+<li><strong>λ casi no importa para la forma del espectro.</strong> El modelo
+λφ⁴ más simple está descartado por las mediciones del fondo cósmico: predice
+demasiadas ondas gravitacionales primordiales. Pero dentro de la simulación, λ
+sólo cambia la escala (en qué frecuencia caen las ondas hoy) y el tamaño del
+ruido inicial. Lo que importa es usar la misma λ en los tres modelos.</li>
+<li><strong>Con dos campos de gauge hay que repartir.</strong> Según el artículo,
+los dos campos de gauge del modelo más completo resuenan juntos, con la suma de
+sus intensidades. Si a cada uno le doy la intensidad del control, el total es el
+doble y la resonancia cambia de lugar. Por eso a cada uno le toca la mitad. La
+primera simulación de ese modelo va a mostrar si el artículo tiene razón: según
+cuál sea el caso, el pico aparece en un lugar u otro.</li>
+</ul>
+
+<div class="leccion">
+"Comparar de igual a igual" no sale solo: hay que decidir qué se mantiene fijo, y
+calcularlo. Acá significa que el inflatón arranque en el mismo estado, que cada
+modelo tenga un solo canal que recibe la energía con la misma intensidad, y que la
+grilla cubra la misma porción física del espacio en los tres.
+</div>
+
+<h3>4.7. Sobre la forma de trabajar</h3>
+<ul>
+<li><strong>Entender antes de correr.</strong> Todo lo de esta sección apareció
+antes de la primera simulación. Si hubiera corrido primero, habría tenido
+resultados, pero no hubiera sabido si comparaban lo que yo creía.</li>
+<li><strong>Verificar con un programa, no sólo leyendo.</strong> Una cuenta
+revisada con los ojos puede tener un error que no se ve. Una cuenta que
+un programa rehace y compara queda comprobada, y se puede volver a comprobar.</li>
+<li><strong>Anotar el origen de cada número.</strong> Un número sin su origen
+no se puede revisar. Por eso existe <code>provenance/</code>.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="siguiente">5. Lo que sigue, y lo que falta decidir</h2>
+
+<p>El piloto del control ya está corrido y validado contra Dufaux et al. (2007) (sección 3.1 y
+<a href="piloto-lphi4.html">El piloto del control</a>), y el control definitivo usa el mismo
+integrador que los modelos con gauge (sección 3.2). Con 256 puntos por lado los modelos con gauge no
+entran en la memoria de esta computadora. La prueba de la sección 3.3 mostró que 64 puntos con la
+caja a la mitad dan las mismas ondas que 128 puntos, 8 veces más rápido. Ninguna de las dos resuelve
+bien las longitudes de onda cortas (k &gt; 4 o 5), así que la comparación entre modelos se apoya en el
+pico y en las longitudes de onda largas.</p>
+
+<p><strong>Entrega (28 de septiembre de 2026).</strong> El curso pidió el repositorio completo y un PDF breve
+(5 páginas como máximo) con texto y figuras. Quedaron dos informes: <code>informe-definitivo.pdf</code> (el
+pedido, 5 páginas, escrito aparte desde <code>informe-definitivo.html</code>) e
+<code>informe-extendido.pdf</code> (la página completa del proyecto). Los dos se generan con
+<code>code/generar_pdf.py</code>, que además verifica el límite de páginas. La presentación se prepara
+durante la semana.</p>
+
+<p>Los tres modelos ya están corridos con el vacío transversal: U(1) con tres semillas (secciones 3.4
+y 3.6) y SU(2)×U(1) con una (sección 3.7). Lo que sigue:</p>
+<ul>
+<li><strong>Más semillas de SU(2)×U(1)</strong> (~9 horas cada una), para saber si el "más ondas
+cerca del pico" (1,7–1,9 veces el control en k = 1,5–2) es real.</li>
+<li><strong>Entender qué hace que SU(2)×U(1) produzca las ondas antes</strong> (sección 3.8): ¿el
+fotón o las interacciones propias de SU(2)? Y el disparo tardío de las W (sección 3.7). Para las dos
+cosas habría que guardar los campos completos en algunos instantes y medir cada componente por
+separado.</li>
+<li><strong>Medir el crecimiento modo por modo en SU(2)</strong>: el espectro que guarda el programa
+no sirve para eso. Habría que agregar una medición propia.</li>
+<li><strong>El 10 % de la energía eléctrica</strong> del vacío transversal que no cierra con mi cuenta
+(sección 3.10).</li>
+</ul>
+
+<p>Las tres decisiones sobre los parámetros quedaron tomadas el 22 de septiembre de 2026. Las
+razones están en <a href="analisis-parametros.html">Parámetros comparables</a>:</p>
+
+<div class="leccion">
+<ol>
+<li><strong>Intensidad de resonancia:</strong> q = 120 en lugar de 300.</li>
+<li><strong>Con dos campos de gauge:</strong> a cada uno le toca la mitad (60 y 60),
+para que el total sea igual al del control.</li>
+<li><strong>Campos extra:</strong> apagados, para que en cada modelo haya un solo
+canal que recibe la energía.</li>
+</ol>
+<p>Decisiones confirmadas. La tabla con todos los valores está en
+<a href="analisis-parametros.html#tabla">Parámetros comparables</a>.</p>
+</div>
+
+<p>Cuando esté la primera simulación, la primera verificación va a ser
+justamente lo que aprendí acá: que la ley de Gauss se cumpla desde el primer
+instante, y que el inflatón del modelo con gauge arranque oscilando igual que
+el del control.</p>
+
+<!-- ============================================================ -->
+<h2 id="glosario">6. Glosario</h2>
+<dl>
+<dt>Campo</dt>
+<dd>Una magnitud que tiene un valor en cada punto del espacio, como la
+temperatura en cada punto de una habitación. En física moderna, las partículas
+son "vibraciones" de campos.</dd>
+<dt>Campo escalar</dt>
+<dd>Un campo que en cada punto tiene un solo número, como la temperatura.</dd>
+<dt>Campo de gauge</dt>
+<dd>Un campo que transmite una fuerza entre partículas con carga. El campo
+electromagnético es uno. Tiene dirección y cumple la ley de Gauss.</dd>
+<dt>U(1) y SU(2)</dt>
+<dd>Los nombres matemáticos de dos tipos de campo de gauge. U(1) es el tipo del
+electromagnetismo. SU(2) es el de la fuerza débil, más complicado porque el
+campo interactúa consigo mismo.</dd>
+<dt>Mezcla (fotón, Z y W)</dt>
+<dd>Cuando un campo tiene carga de U(1) y de SU(2) a la vez, algunas combinaciones de los
+campos gauge se comportan como campos separados, cada uno con su masa. En el Modelo Estándar así
+aparecen el fotón (sin masa) y las partículas Z y W. En este proyecto pasa lo mismo con el
+inflatón (sección 3.5).</dd>
+<dt>Inflación</dt>
+<dd>Una expansión rapidísima que, según la teoría más aceptada, tuvo el
+universo en su primera fracción de segundo.</dd>
+<dt>Inflatón</dt>
+<dd>El campo que impulsó la inflación. Cuando la inflación terminó, quedó
+oscilando.</dd>
+<dt>Recalentamiento (preheating)</dt>
+<dd>La etapa en que el inflatón, al oscilar, le pasa su energía a los demás
+campos, de forma rápida y violenta.</dd>
+<dt>q (parámetro de resonancia)</dt>
+<dd>Qué tan fuerte "empuja" el inflatón al campo que recibe la energía, en cada
+oscilación. Decide en qué escala y qué tan rápido crece ese campo.</dd>
+<dt>Resonancia</dt>
+<dd>Cuando un empuje periódico coincide con el ritmo natural de algo y lo hace
+crecer cada vez más, como al empujar una hamaca en el momento justo.</dd>
+<dt>Ondas gravitacionales</dt>
+<dd>Ondulaciones del propio espacio que viajan a la velocidad de la luz.</dd>
+<dt>Espectro</dt>
+<dd>Cuánta señal hay en cada frecuencia. Es la "huella" que se quiere
+comparar entre modelos.</dd>
+<dt>Red (lattice)</dt>
+<dd>La grilla de puntos en que se divide el espacio para simularlo en una
+computadora.</dd>
+<dt>Variables de programa</dt>
+<dd>Las unidades propias que usa el programa para que los números queden cerca
+de 1.</dd>
+<dt>Ley de Gauss</dt>
+<dd>La regla de que las líneas de campo eléctrico sólo nacen o terminan donde
+hay carga. Tiene que cumplirse en todo momento.</dd>
+<dt>Número complejo</dt>
+<dd>Un par de números (parte real y parte imaginaria) que se manejan como uno
+solo. Se usan para describir campos con carga.</dd>
+<dt>Control</dt>
+<dd>La versión del experimento sin el ingrediente que se quiere estudiar. Acá,
+el modelo sin campos de gauge.</dd>
+<dt>Provenance (procedencia)</dt>
+<dd>El registro de dónde sale cada número y cada afirmación del proyecto.</dd>
+</dl>
+
+<footer>
+Última actualización: 28 de septiembre de 2026. Esta bitácora se actualiza a
+medida que avanza el trabajo. Parte del
+<a href="https://github.com/TomasCiccarella/GWs-IA-Final---CosmoLattice-studies-with-gauge">repositorio
+del proyecto final</a>. Las páginas técnicas son
+<a href="what-is-cosmolattice.html">¿Qué es CosmoLattice?</a> y
+<a href="bases-teoricas-modelos-gauge.html">Bases teóricas de los modelos gauge</a>.
+</footer>
+
+<script>
+MathJax = { tex: { inlineMath: [['\\(','\\)']] } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

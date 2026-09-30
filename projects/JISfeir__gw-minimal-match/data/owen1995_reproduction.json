@@ -1,0 +1,170 @@
+{
+  "advanced_ligo": {
+    "J": {
+      "1": 1.2612136995038665,
+      "10": 1.487933050525359,
+      "12": 2.305917916764776,
+      "13": 3.0282616561317224,
+      "15": 5.803269382559515,
+      "17": 12.667337898645894,
+      "4": 0.9185098740586025,
+      "7": 1.0,
+      "9": 1.259700553927578
+    },
+    "chirp_time_coordinate_area_seconds_squared": 25.012996118193783,
+    "eigenvalues_divided_by_2pi_f0_squared": [
+      1.2421422622692941,
+      0.009451854394684767
+    ],
+    "eigenvectors_columns_in_tau_basis": [
+      [
+        0.8988762356764147,
+        0.4382025934841081
+      ],
+      [
+        0.4382025934841081,
+        -0.8988762356764146
+      ]
+    ],
+    "f0_hz": 70.0,
+    "fs_over_f0": 0.14285714285714285,
+    "g_divided_by_2pi_f0_squared": [
+      [
+        1.005439185167272,
+        0.48554429864689064
+      ],
+      [
+        0.48554429864689064,
+        0.24615493149670684
+      ]
+    ],
+    "gamma_divided_by_2pi_f0_squared": [
+      [
+        0.20877665538035833,
+        -0.2574923464168534,
+        -0.18334059942283987
+      ],
+      [
+        -0.2574923464168534,
+        1.3230144827620363,
+        0.7116653707219864
+      ],
+      [
+        -0.18334059942283987,
+        0.7116653707219864,
+        0.40715844664301093
+      ]
+    ],
+    "minimal_match": 0.97,
+    "minimum_component_mass_solar": 0.2,
+    "name": "advanced LIGO",
+    "sqrt_det_g_divided_by_2pi_f0_squared": 0.10835380842616303,
+    "square_grid_spacings_ms_at_MM_0p97": [
+      0.49970310457306366,
+      5.728477418496523
+    ],
+    "square_grid_template_count_at_MM_0p97": 8738048.735329403
+  },
+  "event_rate_fraction_at_MM_0p97": 0.912673,
+  "event_rate_loss_at_MM_0p97": 0.08732700000000004,
+  "initial_ligo": {
+    "J": {
+      "1": 1.2745006253100017,
+      "10": 1.4414003957179458,
+      "12": 2.1277488302537484,
+      "13": 2.694642728232836,
+      "15": 4.670142576112701,
+      "17": 8.884237993310759,
+      "4": 0.9265475610884195,
+      "7": 1.0,
+      "9": 1.238492255494169
+    },
+    "chirp_time_coordinate_area_seconds_squared": 0.1864160305164684,
+    "eigenvalues_divided_by_2pi_f0_squared": [
+      0.7202844816759993,
+      0.004704094014145288
+    ],
+    "eigenvectors_columns_in_tau_basis": [
+      [
+        0.8743775871335885,
+        0.48524615930313525
+      ],
+      [
+        0.48524615930313525,
+        -0.8743775871335885
+      ]
+    ],
+    "f0_hz": 200.0,
+    "fs_over_f0": 0.2,
+    "g_divided_by_2pi_f0_squared": [
+      [
+        0.5517911792615965,
+        0.30361243337783944
+      ],
+      [
+        0.30361243337783944,
+        0.1731973964285481
+      ]
+    ],
+    "gamma_divided_by_2pi_f0_squared": [
+      [
+        0.20800512117555164,
+        -0.21989047013585372,
+        -0.1677630106021727
+      ],
+      [
+        -0.21989047013585372,
+        0.7842461235596214,
+        0.4809613710589654
+      ],
+      [
+        -0.1677630106021727,
+        0.4809613710589654,
+        0.30850381372849256
+      ]
+    ],
+    "minimal_match": 0.97,
+    "minimum_component_mass_solar": 0.2,
+    "name": "initial LIGO",
+    "sqrt_det_g_divided_by_2pi_f0_squared": 0.05820898486259466,
+    "square_grid_spacings_ms_at_MM_0p97": [
+      0.22967500373320593,
+      2.842024155006549
+    ],
+    "square_grid_template_count_at_MM_0p97": 285589.18634513806
+  },
+  "method": "adaptive quadrature; analytic mass integral; symmetric eigendecomposition",
+  "paper_reported_benchmarks": {
+    "advanced_ligo": {
+      "chirp_time_area_seconds_squared": 24.0,
+      "computing_power_gflops_at_event_loss_0p1": 270.0,
+      "eigenvalues_divided_by_2pi_f0_squared": [
+        1.25,
+        0.00984
+      ],
+      "square_grid_spacings_ms_at_MM_0p97": [
+        0.49,
+        5.6
+      ],
+      "square_grid_template_count_at_MM_0p97": 8400000.0
+    },
+    "initial_ligo": {
+      "chirp_time_area_seconds_squared": 0.18,
+      "computing_power_gflops_at_event_loss_0p1": 20.0,
+      "eigenvalues_divided_by_2pi_f0_squared": [
+        0.721,
+        0.00427
+      ],
+      "square_grid_spacings_ms_at_MM_0p97": [
+        0.22,
+        2.9
+      ],
+      "square_grid_template_count_at_MM_0p97": 270000.0
+    }
+  },
+  "source": "Owen, arXiv:gr-qc/9511032v1, Eqs. (17), (18), (33), (34), (50)",
+  "typo_check": {
+    "reason": "For N=2, Eq. (16) has denominator 2(1-MM), as repeated in Eq. (43).",
+    "statement": "Eqs. (44)-(45) must scale with (1-MM)^-1, not MM^-1."
+  }
+}
